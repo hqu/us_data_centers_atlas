@@ -1,0 +1,1517 @@
+<title>U.S. Data Center Atlas</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+figure.dw.embed{background:var(--surface);border-radius:8px;padding:6px}
+figure.dw.embed iframe{display:block}
+
+/* Layout: civic planning sheet — header facts, filter strip, map with county docket panel beside it (stacks on phones), state ledger below */
+:root{
+  --bg:#f4f5f2; --surface:#ffffff; --ink:#1d2421; --muted:#5d6762; --line:#d9ddd8; --empty:#e4e7e2; --stateline:#ffffff;
+  --mor:#1f6fc5; --ban:#c8102e; --zone:#f0b400; --expired:#a9c9ec; --focus:#1d2421; --land:#e4e7e2; --s0:#9aa3a0; --s1:#9cc5ee; --s2:#5a9fe0; --s3:#2f78c6; --s4:#1b4f9c; --s5:#4b2a8c; --push:#c8102e; --dotline:#ffffff; --base:#3f6fa6; --pushfill:#ff7a00; --navbg:#1d2421; --navfg:#f4f5f2; --link:#0b5c99; --tagtext:#ffffff; --zonetext:#1d2421;
+  --f-display:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-body:"Public Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-data:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#141917; --surface:#1c2220; --ink:#e7ebe7; --muted:#9aa49f; --line:#2f3734; --empty:#29302d; --stateline:#141917;
+  --mor:#4a9ff0; --ban:#ff4d5e; --zone:#ffcc33; --expired:#2f4d6e; --focus:#e7ebe7; --land:#29302d; --s0:#6d7672; --s1:#2f5f8f; --s2:#3f86cc; --s3:#62a7ec; --s4:#9cc9f7; --s5:#c9a8ff; --push:#ff4d5e; --dotline:#141917; --base:#6c9fd6; --pushfill:#ff9a2e; --navbg:#0c100e; --navfg:#e7ebe7; --link:#8cc4f5; --tagtext:#0f1412; --zonetext:#0f1412; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141917; --surface:#1c2220; --ink:#e7ebe7; --muted:#9aa49f; --line:#2f3734; --empty:#29302d; --stateline:#141917;
+  --mor:#4a9ff0; --ban:#ff4d5e; --zone:#ffcc33; --expired:#2f4d6e; --focus:#e7ebe7; --land:#29302d; --s0:#6d7672; --s1:#2f5f8f; --s2:#3f86cc; --s3:#62a7ec; --s4:#9cc9f7; --s5:#c9a8ff; --push:#ff4d5e; --dotline:#141917; --base:#6c9fd6; --pushfill:#ff9a2e; --navbg:#0c100e; --navfg:#e7ebe7; --link:#8cc4f5; --tagtext:#0f1412; --zonetext:#0f1412; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5}
+.wrap{max-width:1240px;margin:0 auto;padding-block:28px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:22px}
+header{display:grid;gap:10px}
+.eyebrow{font-family:var(--f-data);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(26px,4vw,40px);line-height:1.08;margin:0;text-wrap:balance;letter-spacing:-.01em}
+.lede{margin:0;color:var(--muted);max-width:68ch}
+.facts{display:flex;flex-wrap:wrap;gap:10px 28px;margin-top:6px}
+.fact{display:grid}
+.fact b{font-family:var(--f-data);font-weight:500;font-size:26px;font-variant-numeric:tabular-nums;line-height:1.1}
+.fact span{font-size:12.5px;color:var(--muted)}
+.controls{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center}
+.chip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 12px;font:500 13.5px var(--f-body);cursor:pointer}
+.chip[aria-pressed="false"]{opacity:.5}
+.chip:focus-visible,select:focus-visible,input:focus-visible,button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.sw{width:12px;height:12px;border-radius:3px;display:inline-block;flex:none}
+.sw.mor{background:var(--mor)}.sw.ban{background:var(--ban)}.sw.zone{background:var(--zone)}.sw.exp{background:var(--expired)}
+.count{font-family:var(--f-data);font-size:12px;color:var(--muted)}
+.ctl{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;color:var(--muted)}
+select{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:5px 8px}
+.stage{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:18px;align-items:start}
+@media (max-width:900px){.stage{grid-template-columns:minmax(0,1fr)}}
+.mapbox{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px;position:relative;min-width:0}
+svg{display:block;width:100%;height:auto}
+.county{stroke:var(--stateline);stroke-width:.25;cursor:pointer}
+.county.empty{fill:var(--empty);cursor:default}
+.county.hit:hover{stroke:var(--focus);stroke-width:1}
+.county.sel{stroke:var(--focus);stroke-width:1.6}
+.states{fill:none;stroke:var(--stateline);stroke-width:1.1;pointer-events:none}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12.5px;color:var(--muted);padding:6px 4px 0}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend [data-lr]{cursor:default;padding:2px 6px;margin:-2px -6px;border-radius:5px}
+.legend [data-lr]:hover,.legend [data-lr].on{background:var(--bg);color:var(--ink)}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);font-size:12.5px;padding:6px 9px;border-radius:6px;max-width:240px;line-height:1.35}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;min-width:0;max-height:640px;overflow:auto;font-size:12px}
+.panel h2{font-family:var(--f-display);font-size:18px;margin:0 0 2px}
+.panel .sub{font-size:11.5px;color:var(--muted);margin:0 0 12px}
+.pol{border-top:1px solid var(--line);padding:10px 0;display:grid;gap:4px}
+.pol .top{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.tag{font:500 10px var(--f-data);letter-spacing:.04em;text-transform:uppercase;padding:2px 6px;border-radius:4px;color:var(--tagtext)}
+.tag.mor{background:var(--mor)}.tag.ban{background:var(--ban)}.tag.zone{background:var(--zone);color:var(--zonetext)}
+.tag.exp{background:transparent;color:var(--muted);border:1px solid var(--line)}
+.pol .place{font-weight:600;font-size:12.5px}
+.pol .meta{font-family:var(--f-data);font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
+.pol p{margin:0;font-size:12px;color:var(--ink)}
+.pol a{color:var(--link);font-size:11.5px;word-break:break-word}
+.empty-note{color:var(--muted);font-size:12px}
+.ledger{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;min-width:0}
+.ledger h2{font-family:var(--f-display);font-size:18px;margin:0 0 10px}
+.tbl{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-weight:600;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+th .sortbtn{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:2px;font:inherit;color:inherit;text-transform:inherit;letter-spacing:inherit}
+th .sortbtn:hover{color:var(--ink)}
+th .sortbtn:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:2px}
+th[aria-sort="ascending"],th[aria-sort="descending"]{color:var(--ink)}
+th .arr{font-size:9px}
+th.n .sortbtn{justify-content:flex-end;width:100%}
+td.n{font-family:var(--f-data);font-variant-numeric:tabular-nums;text-align:right}
+th.n{text-align:right}
+tr.row{cursor:pointer}tr.row:hover td{background:var(--bg)}
+.bar{height:8px;border-radius:2px;display:flex;overflow:hidden;min-width:120px;background:var(--empty)}
+.bar i{display:block;height:100%}
+.trend-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+.trend-head h2{margin:0}
+.trend .sub{font-size:13px;color:var(--muted);margin:2px 0 8px}
+.trend-head{align-items:center}
+.dw-link{color:var(--link);font-size:13.5px;font-weight:600}
+figure.dw{margin:6px 0 0;background:#ffffff;border-radius:6px;padding:12px}
+figure.dw img{display:block;width:100%;height:auto}
+figure.dw img.native{width:auto;max-width:100%;margin:0 auto}
+#trend{min-width:560px}
+#treemap{min-width:600px}
+#treemap .st{fill:none;stroke:var(--surface);stroke-width:3}
+#treemap .cell{stroke:var(--surface);stroke-width:.75}
+#treemap .sname{font:700 12px var(--f-body);fill:#ffffff;paint-order:stroke;stroke:rgba(0,0,0,.35);stroke-width:2px;pointer-events:none}
+#treemap .snum{font:500 11px var(--f-data);fill:#ffffff;paint-order:stroke;stroke:rgba(0,0,0,.35);stroke-width:2px;pointer-events:none}
+#trend .grid line{stroke:var(--line)}
+#trend .axis text{fill:var(--muted);font:12px var(--f-data)}
+#trend .axis path,#trend .axis line{stroke:var(--line)}
+#trend .yoy{fill:var(--ink);font:500 11.5px var(--f-data)}
+#trend .lbl{font:500 12px var(--f-data)}
+.legend i.ln{width:16px;height:3px;border-radius:2px;display:inline-block}
+.player.tl{display:flex;align-items:center;gap:10px;flex-wrap:nowrap;margin-top:10px;padding:6px 4px 0;border-top:1px solid var(--line)}
+.player.tl .playbtn{width:22px;height:22px;flex:none;border-radius:50%;border:1px solid var(--line);background:none;color:var(--ink);font:9px var(--f-body);cursor:pointer;display:grid;place-items:center;padding:0}
+.player.tl .playbtn:hover{background:var(--bg)}
+.player.tl input[type=range]{flex:1;min-width:80px;height:14px;margin:0;-webkit-appearance:none;appearance:none;background:none}
+.player.tl input[type=range]::-webkit-slider-runnable-track{height:2px;background:var(--line);border-radius:1px}
+.player.tl input[type=range]::-moz-range-track{height:2px;background:var(--line)}
+.player.tl input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:10px;height:10px;border-radius:50%;background:var(--ink);margin-top:-4px;border:0}
+.player.tl input[type=range]::-moz-range-thumb{width:10px;height:10px;border-radius:50%;background:var(--ink);border:0}
+.player.tl .when{font:400 11.5px var(--f-data);color:var(--muted);white-space:nowrap}
+.tlstatus{margin:2px 4px 0;font-size:12px;color:var(--muted)}
+.tlstatus b{color:var(--ink);font-family:var(--f-data);font-weight:500}
+footer{font-size:12.5px;color:var(--muted);max-width:90ch}
+footer a{color:var(--link)}
+@media (prefers-reduced-motion:no-preference){.county{transition:fill .15s}}
+
+footer{border-top:4px solid var(--ink);padding-top:18px;margin-top:8px;max-width:none;padding-right:max(0px,calc(100% - 92ch))}
+.stchip[hidden]{display:none}
+@media (min-width:901px){.stage.fitstage{align-items:stretch} .panel.fitpanel{height:0;min-height:100%;max-height:none}}
+.stchip{font-size:12.5px}
+
+/* Operating map */
+#view-operating .wrap{max-width:1240px;margin:0 auto;padding-block:28px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:22px}
+#view-operating header{display:grid;gap:10px}
+#view-operating .eyebrow{font-family:var(--f-data);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+#view-operating .eyebrow a{color:inherit}
+#view-operating h1{font-weight:800;font-size:clamp(26px,4vw,40px);line-height:1.08;margin:0;text-wrap:balance;letter-spacing:-.01em}
+#view-operating .lede{margin:0;color:var(--muted);max-width:70ch}
+#view-operating .facts{display:flex;flex-wrap:wrap;gap:10px 28px;margin-top:6px}
+#view-operating .fact{display:grid}
+#view-operating .fact b{font-family:var(--f-data);font-weight:500;font-size:26px;font-variant-numeric:tabular-nums;line-height:1.1}
+#view-operating .fact span{font-size:12.5px;color:var(--muted)}
+#view-operating .controls{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center}
+#view-operating .chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:5px 11px;font:500 13px var(--f-body);cursor:pointer}
+#view-operating .chip[aria-pressed="false"]{opacity:.45}
+#view-operating .chip:focus-visible,#view-operating select:focus-visible,#view-operating input:focus-visible,#view-operating button:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+#view-operating .dot{border-radius:50%;display:inline-block;flex:none;border:1px solid var(--dotline)}
+#view-operating .count{font-family:var(--f-data);font-size:12px;color:var(--muted)}
+#view-operating .ctl{display:inline-flex;align-items:center;gap:6px;font-size:13.5px;color:var(--muted)}
+#view-operating select,#view-operating input[type=search]{font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:5px 8px}
+#view-operating input[type=search]{width:190px}
+#view-operating .stage{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:18px;align-items:start}
+#view-operating .mapbox{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px;position:relative;min-width:0}
+#view-operating svg{display:block;width:100%;height:auto}
+#view-operating #o-map{cursor:grab;touch-action:none}
+#view-operating .land{fill:var(--land)}
+#view-operating .borders{fill:none;stroke:var(--stateline);stroke-linejoin:round}
+#view-operating .fac{stroke:var(--dotline);cursor:pointer}
+#view-operating .fac.push{stroke:var(--dotline)}
+#view-operating .fac.sel{stroke:var(--focus)}
+#view-operating .fac.approx{stroke:var(--ink);stroke-dasharray:1.5 1.5;fill-opacity:.55}
+#view-operating .zoombtns{position:absolute;right:18px;top:18px;display:grid;gap:4px}
+#view-operating .zoombtns button{width:32px;height:32px;border-radius:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:600 16px var(--f-body);cursor:pointer}
+#view-operating .legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--muted);padding:6px 4px 0;align-items:center}
+#view-operating .legend span{display:inline-flex;align-items:center;gap:6px}
+#view-operating .legend [data-lk]{cursor:pointer;padding:2px 6px;margin:-2px -6px;border-radius:5px}
+#view-operating .legend [data-lk]:hover,#view-operating .legend [data-lk].on{background:var(--bg);color:var(--ink)}
+#view-operating .legend [data-lk].pick{background:var(--ink);color:var(--surface)}
+#view-operating .legend [data-lk].pick b{color:var(--surface)!important}
+#view-operating .ring{width:12px;height:12px;border-radius:50%;border:2px solid var(--push);display:inline-block}
+#view-operating .tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);font-size:12.5px;padding:6px 9px;border-radius:6px;max-width:260px;line-height:1.35}
+#view-operating .panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;min-width:0;max-height:660px;overflow:auto;font-size:12px}
+#view-operating .panel h2{font-size:18px;margin:0 0 2px;text-wrap:balance}
+#view-operating .panel .sub{font-size:11.5px;color:var(--muted);margin:0 0 12px}
+#view-operating dl{display:grid;grid-template-columns:auto 1fr;gap:5px 12px;margin:0;font-size:12px}
+#view-operating dt{color:var(--muted)}
+#view-operating dd{margin:0;min-width:0;word-break:break-word}
+#view-operating .panel a{color:var(--link);font-size:11.5px;word-break:break-all}
+#view-operating .list{display:grid}
+#view-operating .item{border-top:1px solid var(--line);padding:9px 0;display:grid;gap:2px;cursor:pointer;text-align:left;background:none;border-left:0;border-right:0;border-bottom:0;color:var(--ink);font:inherit}
+#view-operating .item:hover{background:var(--bg)}
+#view-operating .item b{font-weight:600;font-size:12.5px}
+#view-operating .item span{font-family:var(--f-data);font-size:11px;color:var(--muted)}
+#view-operating .badge{display:inline-flex;align-items:center;gap:6px;font:500 10px var(--f-data);text-transform:uppercase;letter-spacing:.04em;padding:2px 7px;border-radius:4px;border:1px solid var(--line);color:var(--muted)}
+#view-operating .badge.push{border-color:var(--push);color:var(--push)}
+#view-operating .ledger{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;min-width:0}
+#view-operating .ledger h2{font-size:18px;margin:0 0 10px}
+#view-operating .tblnote{margin:10px 0 0;font-size:12.5px;color:var(--muted);max-width:92ch;line-height:1.5}
+#view-operating .tblnote b{color:var(--ink);font-weight:600}
+#view-operating .tbl{overflow-x:auto}
+#view-operating table{border-collapse:collapse;width:100%;font-size:13.5px}
+#view-operating th,#view-operating td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+#view-operating th{font-weight:600;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+#view-operating th .sortbtn{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:2px;font:inherit;color:inherit;text-transform:inherit;letter-spacing:inherit}
+#view-operating th .sortbtn:hover{color:var(--ink)}
+#view-operating th .sortbtn:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:2px}
+#view-operating th[aria-sort="ascending"],#view-operating th[aria-sort="descending"]{color:var(--ink)}
+#view-operating th .arr{font-size:9px}
+#view-operating th.n .sortbtn{justify-content:flex-end;width:100%}
+#view-operating td.n,#view-operating th.n{text-align:right}
+#view-operating td.n{font-family:var(--f-data);font-variant-numeric:tabular-nums}
+#view-operating tr.row{cursor:pointer}
+#view-operating td a{color:var(--link)}
+#view-operating tr.row:hover td{background:var(--bg)}
+#view-operating footer{font-size:12.5px;color:var(--muted);max-width:92ch;display:grid;gap:8px}
+#view-operating footer p{margin:0}
+#view-operating footer a{color:var(--link)}
+#view-operating footer{border-top:4px solid var(--ink);padding-top:18px;margin-top:8px;max-width:none;padding-right:max(0px,calc(100% - 92ch))}
+#view-operating .stchip[hidden]{display:none}
+#view-operating .stchip{font-size:12.5px}
+@media (max-width:900px){#view-operating .stage{grid-template-columns:minmax(0,1fr)}}
+@media (min-width:901px){#view-operating .stage.fitstage{align-items:stretch}}
+@media (min-width:901px){#view-operating .panel.fitpanel{height:0;min-height:100%;max-height:none}}
+.sitenav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--navbg);color:var(--navfg)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:21;background:var(--navbg)}
+.sitenav .in{max-width:1240px;margin:0 auto;padding-block:10px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;align-items:center;gap:8px 22px;flex-wrap:wrap}
+.brand{font:800 16px var(--f-body);letter-spacing:-.01em;margin-right:auto;color:var(--navfg);text-decoration:none}
+.tabs{display:flex;gap:6px;flex-wrap:wrap}
+.tabs a{color:var(--navfg);text-decoration:none;font:600 14px var(--f-body);padding:7px 12px;border-radius:999px;opacity:.75;border:1px solid transparent}
+.tabs a:hover{opacity:1;border-color:rgba(255,255,255,.25)}
+.tabs a.how{border-color:color-mix(in srgb,var(--navfg) 35%,transparent);font-weight:500}
+.tabs a[aria-current="page"]{opacity:1;background:var(--navfg);color:var(--navbg)}
+.tabs a:focus-visible{outline:2px solid var(--navfg);outline-offset:2px}
+.view[hidden]{display:none!important}
+</style>
+<nav class="sitenav" aria-label="Site"><div class="in">
+  <a class="brand" href="#operating">U.S. Data Center Atlas</a>
+  <div class="tabs"><a href="#operating" data-view="operating">Operating data centers</a><a href="#restrictions" data-view="restrictions">Local restrictions</a><a href="#backlash" data-view="backlash">Backlash next door</a><a href="#howto" data-view="howto" class="how">How Claude built this site</a></div>
+</div></nav>
+<section class="view" id="view-operating"><div class="wrap">
+  <header>
+    <div class="eyebrow">Operating facilities &middot; Source: <a href="https://www.fractracker.org/data-centers/" target="_blank" rel="noopener">FracTracker Alliance</a></div>
+    <h1>Where operating data centers are located</h1>
+    <p class="lede">Each dot is an operating data center tracked by FracTracker. Orange dots are sites where FracTracker reports community pushback; blue dots have none reported. Bigger dots are larger facilities, and a dashed outline means the exact location is less certain. Scroll or use the buttons to zoom into clusters, and click a dot for its details.</p>
+    <div class="facts" id="o-facts"></div>
+  </header>
+
+  <div class="controls">
+    <button type="button" class="chip stchip" id="o-f-state" hidden title="Clear the state filter"></button>
+    <label class="ctl" for="o-f-q">Search <input type="search" id="o-f-q" placeholder="Name, operator, city"></label>
+    <label class="ctl" for="o-f-push"><input type="checkbox" id="o-f-push"> Only sites with community pushback</label>
+  </div>
+
+  <div class="stage fitstage">
+    <div class="mapbox" id="o-mapbox">
+      <svg id="o-map" viewBox="0 0 975 610" role="img" aria-label="Symbol map of operating U.S. data centers"></svg>
+      <div class="zoombtns"><button id="o-zin" aria-label="Zoom in">+</button><button id="o-zout" aria-label="Zoom out">&minus;</button><button id="o-zreset" aria-label="Reset zoom">&#8634;</button></div>
+      <div class="tip" id="o-tip" hidden></div>
+      <div class="legend" id="o-legend"></div>
+    </div>
+    <aside class="panel fitpanel" id="o-panel" aria-live="polite"></aside>
+  </div>
+
+  <section class="ledger">
+    <h2>By state</h2>
+    <div class="tbl"><table id="o-ledger"><thead><tr><th>State</th><th class="n">Facilities</th><th class="n">Hyperscale or mega</th><th class="n">With reported MW</th><th class="n">Reported MW</th><th>Top operator</th></tr></thead><tbody></tbody></table></div>
+    <p class="tblnote"><b>With reported MW</b> counts the facilities in each state that have a capacity figure in FracTracker&rsquo;s data. <b>Reported MW</b> adds up the capacity of just those facilities. Sites with no capacity listed, or listed only as a range such as &ldquo;150&ndash;400&rdquo;, are left out, so Reported MW is a minimum. For example, Virginia has 180 operating data centers, but only 12 have a reported capacity, and those 12 total 943 MW.</p>
+  </section>
+
+  <footer id="o-foot"></footer>
+</div>
+
+</section>
+<section class="view" id="view-restrictions" hidden><div class="wrap">
+  <header>
+    <div class="eyebrow">Local government action &middot; passed or enacted &middot; Source: <a href="https://www.datacenterpolicy.com/" target="_blank" rel="noopener" style="color:inherit">Data Center Policy Database</a></div>
+    <h1>Counties with local data center moratoria, bans and zoning rules</h1>
+    <p class="lede">Each shaded county has at least one city, town, township or county government that passed a data center moratorium, ban, or zoning/siting rule. Click a county to see what was passed and where it came from.</p>
+    <div class="facts" id="m-facts"></div>
+  </header>
+
+  <div class="controls" role="group" aria-label="Filters">
+    <button class="chip" id="m-f-mor" aria-pressed="true" data-type="Moratorium"><span class="sw mor"></span>Moratorium <span class="count" id="m-c-mor"></span></button>
+    <button class="chip" id="m-f-ban" aria-pressed="true" data-type="Ban"><span class="sw ban"></span>Ban <span class="count" id="m-c-ban"></span></button>
+    <button class="chip" id="m-f-zone" aria-pressed="true" data-type="Zoning & siting rules"><span class="sw zone"></span>Zoning &amp; siting rules <span class="count" id="m-c-zone"></span></button>
+    <label class="ctl" for="m-f-active"><input type="checkbox" id="m-f-active"> Hide moratoria that have expired</label>
+    <button type="button" class="chip stchip" id="m-f-state" hidden title="Clear the state filter"></button>
+  </div>
+
+  <div class="stage fitstage">
+    <div class="mapbox" id="m-mapbox">
+      <svg id="m-map" viewBox="0 0 975 610" role="img" aria-label="Map of U.S. counties with local data center restrictions"></svg>
+      <div class="tip" id="m-tip" hidden></div>
+      <div class="legend" id="m-rlegend">
+        <span data-lr="ban" tabindex="0"><i class="sw ban"></i>Ban</span>
+        <span data-lr="mor" tabindex="0"><i class="sw mor"></i>Moratorium in effect</span>
+        <span data-lr="exp" tabindex="0"><i class="sw exp"></i>Moratorium expired</span>
+        <span data-lr="zone" tabindex="0"><i class="sw zone"></i>Zoning &amp; siting rules only</span>
+      </div>
+      <div class="player tl">
+        <button class="playbtn" id="m-tl-play" aria-label="Play timeline">&#9654;</button>
+        <input type="range" id="m-tl-slider" min="0" value="0" aria-label="Show restrictions passed through this month">
+        <span class="when" id="m-tl-when"></span>
+      </div>
+      <p class="tlstatus" id="m-tl-status"></p>
+    </div>
+    <aside class="panel fitpanel" id="m-panel" aria-live="polite"></aside>
+  </div>
+
+  <section class="ledger trend">
+    <div class="trend-head">
+      <h2>Local actions passed per year</h2>
+      <a class="dw-link" href="https://www.datawrapper.de/_/NBhpu/" target="_blank" rel="noopener">Open interactive chart</a>
+    </div>
+    <figure class="dw embed">
+      <iframe title="Local actions passed per year" aria-label="Interactive line chart of local data center policies passed per year" id="datawrapper-chart-NBhpu" src="https://datawrapper.dwcdn.net/NBhpu/" scrolling="no" frameborder="0" style="width:0;min-width:100%!important;border:none;" height="460" data-external="1"></iframe><script>!function(){"use strict";window.addEventListener("message",(function(a){if(void 0!==a.data["datawrapper-height"]){var e=document.querySelectorAll("iframe");for(var t in a.data["datawrapper-height"])for(var r=0;r<e.length;r++)if(e[r].contentWindow===a.source){var i=a.data["datawrapper-height"][t]+"px";e[r].style.height=i}}}))}();</script>
+    </figure>
+    <p class="sub">Chart made with Datawrapper. It shows all states and policy types; the map filters above don't change it.</p>
+  </section>
+
+  <section class="ledger trend">
+    <div class="trend-head">
+      <h2>Local actions by state and type</h2>
+      <a class="dw-link" href="https://public.flourish.studio/visualisation/31003026/" target="_blank" rel="noopener">Open interactive treemap in Flourish</a>
+    </div>
+    <figure class="dw embed">
+      <div class="flourish-embed flourish-hierarchy" data-src="visualisation/31003026"><script src="https://public.flourish.studio/resources/embed.js"></script><noscript><img src="https://public.flourish.studio/visualisation/31003026/thumbnail" width="100%" alt="hierarchy visualization"></noscript></div>
+    </figure>
+    <p class="sub">Interactive Flourish treemap: hover or tap a box for its count. It shows all 469 passed or enacted local policies; the map filters above don't change it.</p>
+  </section>
+
+  <section class="ledger">
+    <h2>By state</h2>
+    <div class="tbl"><table id="m-ledger"><thead><tr><th>State</th><th class="n">Counties</th><th class="n">Policies</th><th class="n">Moratoria</th><th class="n">Bans</th><th class="n">Zoning</th><th data-num title="Sort by share of policies that are moratoria">Mix</th></tr></thead><tbody></tbody></table></div>
+  </section>
+
+  <footer id="m-foot"></footer>
+</div>
+
+</section>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/dist/topojson-client.min.js"></script>
+
+<script>
+(async function(){
+const TODAY="2026-11-22";
+const [topo, pols] = await Promise.all([fetch("counties.json").then(r=>r.json()), fetch("policies.json").then(r=>r.json())]);
+const counties = topojson.feature(topo, topo.objects.counties).features;
+const statesMesh = topojson.mesh(topo, topo.objects.states, (a,b)=>a!==b);
+const nation = topojson.mesh(topo, topo.objects.states, (a,b)=>a===b);
+const stateNames = {}; topo.objects.states.geometries.forEach(g=>stateNames[g.id]=g.properties.name);
+const cname = {}; counties.forEach(f=>cname[f.id]=f.properties.name);
+const path = d3.geoPath();
+const svg = d3.select("#m-map");
+const cls = {"Moratorium":"mor","Ban":"ban","Zoning & siting rules":"zone"};
+const css = n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+const state = {types:new Set(Object.keys(cls)), activeOnly:false, st:"", sel:null, until:null};
+const asOf=()=>state.until||TODAY;
+const isExp=p=>!!p.end&&p.end<asOf();
+const stSel = document.getElementById("m-f-state");
+const stName=s=>s;
+function showSt(){ stSel.hidden=!state.st; if(state.st) stSel.innerHTML=`State: <b>${esc(stName(state.st))}</b> &times;`; }
+
+const countyPaths = svg.append("g").selectAll("path").data(counties).join("path").attr("d",path).attr("class","county empty");
+svg.append("path").attr("class","states").attr("d",path(statesMesh));
+svg.append("path").attr("class","states").attr("d",path(nation)).style("stroke","var(--muted)").style("stroke-width",".6");
+
+function visible(){
+  return pols.filter(p=>state.types.has(p.type) && (!state.until || (p.date && p.date<=state.until)) && (!state.activeOnly || !isExp(p)) && (!state.st || p.state===state.st));
+}
+function byCounty(list){
+  const m=new Map(); list.forEach(p=>p.fips.forEach(f=>{if(!m.has(f))m.set(f,[]);m.get(f).push(p)})); return m;
+}
+function catFor(list){
+  if(list.some(p=>p.type==="Ban")) return "ban";
+  const mor=list.filter(p=>p.type==="Moratorium");
+  if(mor.length) return mor.some(p=>!isExp(p)) ? "mor" : "exp";
+  return "zone";
+}
+let lrKey=null;
+function lrHL(){
+  countyPaths.attr("fill-opacity",d=>!lrKey||!M.has(d.id)||catFor(M.get(d.id))===lrKey?1:.12);
+  document.querySelectorAll("#m-rlegend [data-lr]").forEach(el=>el.classList.toggle("on",el.dataset.lr===lrKey));
+}
+function colorFor(list){
+  if(list.some(p=>p.type==="Ban")) return css("--ban");
+  const mor=list.filter(p=>p.type==="Moratorium");
+  if(mor.length) return mor.some(p=>!isExp(p)) ? css("--mor") : css("--expired");
+  return css("--zone");
+}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmt=d=>d?new Date(d+"T00:00:00").toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}):"";
+
+function polHTML(p){
+  const exp = p.type==="Moratorium" ? (isExp(p)?`<span class="tag exp">Expired ${fmt(p.end)}</span>`:(p.end?`<span class="tag exp">Until ${fmt(p.end)}</span>`:"")) : "";
+  return `<div class="pol"><div class="top"><span class="tag ${cls[p.type]}">${esc(p.type)}</span>${exp}</div>
+    <div class="place">${esc(p.locality)}, ${esc(p.state)}</div>
+    <div class="meta">${esc(p.name)} &middot;${esc(p.status)} ${fmt(p.date)}</div>
+    ${p.desc?`<p>${esc(p.desc)}${p.desc.length>=400?"…":""}</p>`:""}
+    ${p.url?`<a href="${esc(p.url)}" target="_blank" rel="noopener">Source</a>`:""}</div>`;
+}
+function renderPanel(m){
+  const panel=document.getElementById("m-panel");
+  if(state.sel && m.has(state.sel)){
+    const list=m.get(state.sel).slice().sort((a,b)=>b.date.localeCompare(a.date));
+    const st=stateNames[state.sel.slice(0,2)];
+    panel.innerHTML=`<h2>${esc(cname[state.sel])}${/city$/i.test(cname[state.sel])?"":" County"}, ${esc(st)}</h2><p class="sub">${list.length} polic${list.length>1?"ies":"y"} passed here</p>`+list.map(polHTML).join("");
+  } else {
+    const recent=visible().slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8);
+    panel.innerHTML=`<h2>Most recent actions</h2><p class="sub">Click a shaded county for its full list.</p>`+(recent.length?recent.map(polHTML).join(""):`<p class="empty-note">Nothing matches these filters.</p>`);
+  }
+}
+function renderFacts(list,m){
+  const statesN=new Set(list.map(p=>p.state)).size;
+  const activeMor=list.filter(p=>p.type==="Moratorium"&&!isExp(p)).length;
+  document.getElementById("m-facts").innerHTML=[[m.size,"counties"],[list.length,"local policies"],[statesN,"states"],[activeMor,"moratoria still in effect"]].map(([n,l])=>`<div class="fact"><b>${n}</b><span>${l}</span></div>`).join("");
+}
+function renderLedger(list){
+  const g=d3.rollups(list,v=>({n:v.length,c:new Set(v.flatMap(p=>p.fips)).size,mor:v.filter(p=>p.type==="Moratorium").length,ban:v.filter(p=>p.type==="Ban").length,zone:v.filter(p=>p.type==="Zoning & siting rules").length}),p=>p.state).sort((a,b)=>b[1].c-a[1].c||b[1].n-a[1].n);
+  const max=d3.max(g,d=>d[1].n)||1;
+  document.querySelector("#m-ledger tbody").innerHTML=g.map(([s,d])=>`<tr class="row" data-state="${esc(s)}" tabindex="0"><td>${esc(s)}</td><td class="n">${d.c}</td><td class="n">${d.n}</td><td class="n">${d.mor}</td><td class="n">${d.ban}</td><td class="n">${d.zone}</td><td data-sort="${(d.mor/d.n).toFixed(4)}"><div class="bar" style="width:${Math.max(12,d.n/max*100)}%"><i style="width:${d.mor/d.n*100}%;background:var(--mor)"></i><i style="width:${d.ban/d.n*100}%;background:var(--ban)"></i><i style="width:${d.zone/d.n*100}%;background:var(--zone)"></i></div></td></tr>`).join("");
+  document.querySelectorAll("#m-ledger tr.row").forEach(tr=>{const go=()=>{stSel.value=tr.dataset.state;state.st=tr.dataset.state;state.sel=null;render();document.getElementById("m-mapbox").scrollIntoView({behavior:"smooth",block:"start"})};tr.onclick=go;tr.onkeydown=e=>{if(e.key==="Enter")go()}});
+  sortLedger();
+}
+// sortable table headers: click a header to sort, click again to reverse
+function makeSortable(table,defaultCol,defaultDir){
+  const ths=[...table.tHead.rows[0].cells]; let col=defaultCol, dir=defaultDir;
+  ths.forEach((th,i)=>{ const lab=th.innerHTML; th.innerHTML=`<button type="button" class="sortbtn">${lab}<span class="arr" aria-hidden="true"></span></button>`;
+    th.querySelector("button").onclick=()=>{ if(col===i) dir=-dir; else { col=i; dir=th.classList.contains("n")||th.dataset.num!=null?-1:1; } apply(); }; });
+  const key=td=>{ const v=td.dataset.sort??td.textContent.trim(); const n=parseFloat(String(v).replace(/[,%]/g,"")); return isNaN(n)?(v==="–"||v===""?null:String(v).toLowerCase()):n; };
+  function apply(){
+    const tb=table.tBodies[0], rows=[...tb.rows];
+    rows.sort((a,b)=>{ const x=key(a.cells[col]), y=key(b.cells[col]); if(x===null&&y===null) return 0; if(x===null) return 1; if(y===null) return -1;
+      return (typeof x==="number"&&typeof y==="number"?x-y:String(x).localeCompare(String(y)))*dir; });
+    rows.forEach(r=>tb.appendChild(r));
+    ths.forEach((th,i)=>{ th.setAttribute("aria-sort",i===col?(dir>0?"ascending":"descending"):"none"); th.querySelector(".arr").textContent=i===col?(dir>0?" ▲":" ▼"):""; });
+  }
+  return apply;
+}
+const sortLedger=makeSortable(document.getElementById("m-ledger"),1,-1);
+
+function renderTrend(list){
+  const el=d3.select("#trend"); el.selectAll("*").remove();
+  const W=900,H=300,m={t:28,r:110,b:34,l:48};
+  const dated=list.filter(p=>/^\d{4}/.test(p.date));
+  const years=d3.range(2019,2027);
+  const series=[
+    {key:"All local actions",col:css("--ink"),f:()=>true,w:2.6},
+    {key:"Moratorium",col:css("--mor"),f:p=>p.type==="Moratorium",w:2},
+    {key:"Zoning & siting rules",col:css("--zone"),f:p=>p.type==="Zoning & siting rules",w:2},
+    {key:"Ban",col:css("--ban"),f:p=>p.type==="Ban",w:2}
+  ].filter(s=>s.key==="All local actions"||state.types.has(s.key));
+  series.forEach(s=>s.vals=years.map(y=>({y,n:dated.filter(p=>s.f(p)&&+p.date.slice(0,4)===y).length})));
+  const log=document.getElementById("m-f-log").checked;
+  const max=d3.max(series[0].vals,d=>d.n)||1;
+  const x=d3.scalePoint(years,[m.l,W-m.r]).padding(.2);
+  const y=log?d3.scaleSymlog().constant(1).domain([0,max]).range([H-m.b,m.t]):d3.scaleLinear().domain([0,max]).nice().range([H-m.b,m.t]);
+  const ticks=log?[0,1,5,10,50,100,250,500].filter(v=>v<=max*1.05):y.ticks(5);
+  el.append("g").attr("class","grid").selectAll("line").data(ticks).join("line").attr("x1",m.l).attr("x2",W-m.r).attr("y1",y).attr("y2",y);
+  el.append("g").attr("class","axis").attr("transform",`translate(${m.l},0)`).call(d3.axisLeft(y).tickValues(ticks).tickFormat(d3.format("d")).tickSize(0).tickPadding(8)).call(g=>g.select(".domain").remove());
+  el.append("g").attr("class","axis").attr("transform",`translate(0,${H-m.b})`).call(d3.axisBottom(x).tickSize(0).tickPadding(10).tickFormat(d=>d===2026?"2026*":d));
+  const line=d3.line().x(d=>x(d.y)).y(d=>y(d.n));
+  series.slice().reverse().forEach(s=>{
+    const full=s.vals.slice(0,-1), last=s.vals.slice(-2);
+    el.append("path").attr("d",line(full)).attr("fill","none").attr("stroke",s.col).attr("stroke-width",s.w).attr("stroke-linejoin","round");
+    el.append("path").attr("d",line(last)).attr("fill","none").attr("stroke",s.col).attr("stroke-width",s.w).attr("stroke-dasharray","5 4");
+    el.append("g").selectAll("circle").data(s.vals).join("circle").attr("cx",d=>x(d.y)).attr("cy",d=>y(d.n)).attr("r",s.w+1.2)
+      .attr("fill",d=>d.y===2026?css("--surface"):s.col).attr("stroke",s.col).attr("stroke-width",1.6)
+      .append("title").text(d=>`${s.key}, ${d.y}${d.y===2026?" (through Nov 22)":""}: ${d.n}`);
+  });
+  // end labels, nudged apart
+  const ends=series.map(s=>({s,yy:y(s.vals.at(-1).n)})).sort((a,b)=>a.yy-b.yy);
+  for(let i=1;i<ends.length;i++) if(ends[i].yy-ends[i-1].yy<14) ends[i].yy=ends[i-1].yy+14;
+  ends.forEach(e=>el.append("text").attr("class","lbl").attr("x",x(2026)+10).attr("y",e.yy+4).attr("fill",e.s.col).text(`${e.s.vals.at(-1).n} ${e.s.key==="All local actions"?"total":""}`.trim()));
+  // YoY % change on the total line
+  const tv=series[0].vals;
+  tv.forEach((d,i)=>{ if(!i)return; const p=tv[i-1].n; if(!d.n&&!p)return;
+    const t=p?`${d.n>=p?"+":"−"}${Math.abs(Math.round((d.n-p)/p*100))}%`:"new";
+    el.append("text").attr("class","yoy").attr("text-anchor","middle").attr("x",x(d.y)).attr("y",y(d.n)-12).text(t); });
+  const n25=tv.find(d=>d.y===2025).n, n26=tv.find(d=>d.y===2026).n;
+  document.getElementById("m-trend-sub").textContent=`Labels show the change in total from the year before. 2026 runs through Nov 22. ${n25?`So far 2026 has ${(n26/n25).toFixed(1)}× as many local actions as all of 2025.`:""}`;
+  document.getElementById("m-trend-legend").innerHTML=series.map(s=>`<span><i class="ln" style="background:${s.col}"></i>${esc(s.key)}</span>`).join("")+`<span>Dashed segment and open dot: 2026 is a partial year</span>`;
+}
+function renderTreemap(){
+  const el=d3.select("#treemap"); el.selectAll("*").remove();
+  const order=["Moratorium","Zoning & siting rules","Ban"];
+  const g=d3.rollups(pols,v=>v.length,p=>p.state,p=>p.type);
+  const root=d3.hierarchy({children:g.map(([s,ts])=>({name:s,children:ts.map(([t,n])=>({name:t,value:n})).sort((a,b)=>order.indexOf(a.name)-order.indexOf(b.name))}))})
+    .sum(d=>d.value||0).sort((a,b)=>b.value-a.value);
+  d3.treemap().size([900,520]).paddingInner(1).paddingOuter(0).round(true).tile(d3.treemapSquarify.ratio(1.2))(root);
+  const col={"Moratorium":css("--mor"),"Zoning & siting rules":css("--zone"),"Ban":css("--ban")};
+  el.append("g").selectAll("rect").data(root.leaves()).join("rect").attr("class","cell")
+    .attr("x",d=>d.x0).attr("y",d=>d.y0).attr("width",d=>Math.max(0,d.x1-d.x0)).attr("height",d=>Math.max(0,d.y1-d.y0)).attr("fill",d=>col[d.data.name])
+    .append("title").text(d=>`${d.parent.data.name}: ${d.value} ${d.data.name.toLowerCase()}${d.data.name==="Ban"&&d.value>1?"s":""} (of ${d.parent.value} local policies)`);
+  el.append("g").selectAll("rect").data(root.children).join("rect").attr("class","st").attr("x",d=>d.x0).attr("y",d=>d.y0).attr("width",d=>d.x1-d.x0).attr("height",d=>d.y1-d.y0);
+  const lab=el.append("g").selectAll("g").data(root.children.filter(d=>d.x1-d.x0>34&&d.y1-d.y0>26)).join("g");
+  lab.append("text").attr("class","sname").attr("x",d=>d.x0+5).attr("y",d=>d.y0+15).text(d=>{const w=d.x1-d.x0; const n=d.data.name; return w>n.length*7.2+10?n:(abbr[n]||n.slice(0,2))});
+  lab.filter(d=>d.y1-d.y0>40).append("text").attr("class","snum").attr("x",d=>d.x0+5).attr("y",d=>d.y0+29).text(d=>d.value);
+}
+const abbr={"Alabama":"AL","Alaska":"AK","Arizona":"AZ","Arkansas":"AR","California":"CA","Colorado":"CO","Connecticut":"CT","Florida":"FL","Georgia":"GA","Idaho":"ID","Illinois":"IL","Indiana":"IN","Iowa":"IA","Kansas":"KS","Kentucky":"KY","Louisiana":"LA","Maine":"ME","Maryland":"MD","Massachusetts":"MA","Michigan":"MI","Minnesota":"MN","Mississippi":"MS","Missouri":"MO","Montana":"MT","Nebraska":"NE","Nevada":"NV","New Hampshire":"NH","New Jersey":"NJ","New Mexico":"NM","New York":"NY","North Carolina":"NC","North Dakota":"ND","Ohio":"OH","Oklahoma":"OK","Oregon":"OR","Pennsylvania":"PA","Rhode Island":"RI","South Carolina":"SC","South Dakota":"SD","Tennessee":"TN","Texas":"TX","Utah":"UT","Vermont":"VT","Virginia":"VA","Washington":"WA","Wisconsin":"WI"};
+let M=new Map();
+function render(){
+  showSt();
+  const list=visible(); M=byCounty(list);
+  countyPaths.attr("class",d=>"county "+(M.has(d.id)?"hit":"empty")+(d.id===state.sel?" sel":"")).attr("fill",d=>M.has(d.id)?colorFor(M.get(d.id)):null);
+  countyPaths.filter(d=>d.id===state.sel).raise();
+  lrHL();
+  renderFacts(list,M); renderPanel(M); renderLedger(list);
+  const all=pols.filter(p=>(!state.until||(p.date&&p.date<=state.until))&&(!state.activeOnly||!isExp(p))&&(!state.st||p.state===state.st));
+  document.getElementById("m-c-mor").textContent=all.filter(p=>p.type==="Moratorium").length;
+  document.getElementById("m-c-ban").textContent=all.filter(p=>p.type==="Ban").length;
+  document.getElementById("m-c-zone").textContent=all.filter(p=>p.type==="Zoning & siting rules").length;
+}
+const tip=document.getElementById("m-tip"), box=document.getElementById("m-mapbox");
+countyPaths.on("mousemove",(e,d)=>{
+  if(!M.has(d.id)){tip.hidden=true;return}
+  const l=M.get(d.id), r=box.getBoundingClientRect();
+  const kinds=[...new Set(l.map(p=>p.type))].join(", ");
+  tip.innerHTML=`<b>${esc(cname[d.id])}, ${esc(stateNames[d.id.slice(0,2)])}</b><br>${l.length} polic${l.length>1?"ies":"y"} &middot;${esc(kinds)}`;
+  tip.hidden=false;
+  let x=e.clientX-r.left+12, y=e.clientY-r.top+12; if(x>r.width-250)x-=260;
+  tip.style.left=x+"px"; tip.style.top=y+"px";
+}).on("mouseleave",()=>tip.hidden=true)
+  .on("click",(e,d)=>{ if(!M.has(d.id))return; state.sel = state.sel===d.id?null:d.id; render(); if(innerWidth<900)document.getElementById("m-panel").scrollIntoView({behavior:"smooth",block:"nearest"}); });
+
+document.querySelectorAll(".chip").forEach(b=>b.onclick=()=>{const t=b.dataset.type; const on=b.getAttribute("aria-pressed")==="true"; b.setAttribute("aria-pressed",String(!on)); on?state.types.delete(t):state.types.add(t); render();});
+document.getElementById("m-f-active").onchange=e=>{state.activeOnly=e.target.checked;render()};
+stSel.onclick=()=>{state.st="";state.sel=null;render();};
+matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change",render);
+new MutationObserver(render).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+
+/* timeline */
+const TL=(()=>{const out=["pre"];let y=2025,m=1;while(y<2026||(y===2026&&m<=11)){out.push(`${y}-${String(m).padStart(2,"0")}`);m++;if(m>12){m=1;y++}}out.push("all");return out})();
+const tlSl=document.getElementById("m-tl-slider"), tlBtn=document.getElementById("m-tl-play"); tlSl.max=TL.length-1; tlSl.value=TL.length-1;
+const tlEnd=k=>k==="pre"?"2024-12-31":k==="all"?null:k+"-31";
+function tlLabel(k){ return k==="pre"?"Before 2025":k==="all"?"Through Nov 2026":"Through "+new Date(+k.slice(0,4),+k.slice(5,7)-1,1).toLocaleDateString("en-US",{month:"short",year:"numeric"}); }
+function tlFrame(i){ const k=TL[i]; state.until=tlEnd(k); document.getElementById("m-tl-when").textContent=tlLabel(k);
+  const v=visible(); document.getElementById("m-tl-status").innerHTML=`<b>${v.length}</b> local actions in <b>${new Set(v.flatMap(p=>p.fips)).size}</b> counties`+(k!=="all"&&k!=="pre"?` &middot; <b>${v.filter(p=>p.date&&p.date.slice(0,7)===k).length}</b> passed this month`:"");
+  render(); }
+let tlTimer=null; const reduceM=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const tlStop=()=>{clearInterval(tlTimer);tlTimer=null;tlBtn.innerHTML="&#9654;";tlBtn.setAttribute("aria-label","Play timeline")};
+tlBtn.onclick=()=>{ if(tlTimer){tlStop();return} if(+tlSl.value>=TL.length-1) tlSl.value=0; tlFrame(+tlSl.value); tlBtn.innerHTML="&#10074;&#10074;"; tlBtn.setAttribute("aria-label","Pause timeline");
+  tlTimer=setInterval(()=>{ if(+tlSl.value>=TL.length-1){tlStop();return} tlSl.value=+tlSl.value+1; tlFrame(+tlSl.value); }, reduceM?300:700); };
+tlSl.oninput=()=>{tlStop();tlFrame(+tlSl.value)};
+const unmapped=pols.filter(p=>!p.fips.length);
+document.getElementById("m-foot").innerHTML=`<p style="margin:0 0 8px">Data source: <a href="https://www.datacenterpolicy.com/" target="_blank" rel="noopener">The Data Center Policy Database</a> (UVA Environmental Institute and Digital Infrastructure initiative). Suggested citation: Bridges, Lauren, Grace Gould, Catarina Coelho Herrera, Isabella Scoresone, and Jack Hauger. 2026. <i>The Data Center Policy Database</i>. June 1. <a href="https://doi.org/10.17613/PVSTG-4A775" target="_blank" rel="noopener">https://doi.org/10.17613/PVSTG-4A775</a>. Export downloaded Nov 2026 (records dated through Nov 17, 2026). The database summarizes public policy records and does not guarantee accuracy or completeness. <b>Last updated: November 23, 2026.</b></p>Map notes: ${pols.length} local policies with status Passed or Signed/Enacted. Town and township actions are shown on the county that contains them; a county is colored by its strongest action (ban, then moratorium, then zoning). "Zoning &amp; siting rules" covers zoning, land-use, setback, noise and water ordinances and can include rules that set where data centers are allowed, not only limits. Moratoria count as expired when their listed end date is before ${fmt(TODAY)}. Corrections to the source data: the Laurens County moratorium (passed Sep 14, 2026) is listed under Alabama but is in Laurens County, South Carolina, per its own source and <a href="https://www.foxcarolina.com/2026/09/14/laurens-county-council-votes-approve-one-year-data-center-pause/" target="_blank" rel="noopener">FOX Carolina</a>; misspelled county names (Dubeque, Nicolett, Mongtomery, Winsdor) were matched to Dubuque, Nicollet, Montgomery and Windsor.${unmapped.length?` Not mapped: ${unmapped.map(p=>esc(p.locality+", "+p.state)).join("; ")} (no county by that name in that state).`:""}`;
+document.querySelectorAll("#m-rlegend [data-lr]").forEach(el=>{ const on=()=>{lrKey=el.dataset.lr;lrHL()}, off=()=>{lrKey=null;lrHL()};
+  el.addEventListener("mouseenter",on); el.addEventListener("focus",on); el.addEventListener("mouseleave",off); el.addEventListener("blur",off); });
+tlFrame(TL.length-1);
+})();
+</script>
+
+<script>
+(async function(){
+const [us, raw] = await Promise.all([fetch("states-albers-10m.json").then(r=>r.json()), fetch("facilities.json").then(r=>r.json())]);
+const proj = d3.geoAlbersUsa().scale(1300).translate([487.5,305]);
+const SIZES = ["Mega campus (>1,000 MW)","Hyperscale (100-999 MW)","Large (51-99 MW)","Medium (11-50 MW)","Small (0-10 MW)","Unknown"];
+const SHORT = {"Mega campus (>1,000 MW)":"Mega campus (1,000+ MW)","Hyperscale (100-999 MW)":"Hyperscale (100–999 MW)","Large (51-99 MW)":"Large (51–99 MW)","Medium (11-50 MW)":"Medium (11–50 MW)","Small (0-10 MW)":"Small (up to 10 MW)","Unknown":"Size not reported"};
+const TOK = {"Mega campus (>1,000 MW)":"--s5","Hyperscale (100-999 MW)":"--s4","Large (51-99 MW)":"--s3","Medium (11-50 MW)":"--s2","Small (0-10 MW)":"--s1","Unknown":"--s0"};
+const RAD = {"Mega campus (>1,000 MW)":9,"Hyperscale (100-999 MW)":6.5,"Large (51-99 MW)":5,"Medium (11-50 MW)":4,"Small (0-10 MW)":3.2,"Unknown":3};
+const css = n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const esc = s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const fmtN = d3.format(",");
+const STN = {AL:"Alabama",AK:"Alaska",AZ:"Arizona",AR:"Arkansas",CA:"California",CO:"Colorado",CT:"Connecticut",DE:"Delaware",DC:"District of Columbia",FL:"Florida",GA:"Georgia",HI:"Hawaii",ID:"Idaho",IL:"Illinois",IN:"Indiana",IA:"Iowa",KS:"Kansas",KY:"Kentucky",LA:"Louisiana",ME:"Maine",MD:"Maryland",MA:"Massachusetts",MI:"Michigan",MN:"Minnesota",MS:"Mississippi",MO:"Missouri",MT:"Montana",NE:"Nebraska",NV:"Nevada",NH:"New Hampshire",NJ:"New Jersey",NM:"New Mexico",NY:"New York",NC:"North Carolina",ND:"North Dakota",OH:"Ohio",OK:"Oklahoma",OR:"Oregon",PA:"Pennsylvania",RI:"Rhode Island",SC:"South Carolina",SD:"South Dakota",TN:"Tennessee",TX:"Texas",UT:"Utah",VT:"Vermont",VA:"Virginia",WA:"Washington",WV:"West Virginia",WI:"Wisconsin",WY:"Wyoming"};
+
+const data = raw.map((d,i)=>{ const p=proj([d.lon,d.lat]); return {...d, id:i, sz:SIZES.includes(d.sz)?d.sz:"Unknown", x:p?p[0]:null, y:p?p[1]:null}; }).filter(d=>d.x!=null);
+const dropped = raw.length - data.length;
+
+const state = {sizes:new Set(SIZES), st:"", q:"", push:false, sel:null, lk:null};
+document.getElementById("o-legend").innerHTML = `<span data-lk="push" tabindex="0"><i class="dot" style="width:12px;height:12px;background:var(--pushfill)"></i><b style="font-weight:600;color:var(--ink)">Community pushback reported</b></span><span data-lk="nopush" tabindex="0"><i class="dot" style="width:12px;height:12px;background:var(--base)"></i>No pushback reported</span><span style="width:100%;height:0"></span>`+SIZES.map((s,i)=>`<span data-lk="sz${i}" tabindex="0"><i class="dot" style="width:${RAD[s]*2}px;height:${RAD[s]*2}px;background:var(--base)"></i>${SHORT[s]}</span>`).join("")+`<span data-lk="approx" tabindex="0"><i class="ring" style="border:1.5px dashed var(--ink)"></i>Approximate location (medium or low confidence)</span>`;
+const LK={push:d=>d.pb==="Yes",nopush:d=>d.pb!=="Yes",approx:d=>d.lc!=="High"}; SIZES.forEach((s,i)=>LK["sz"+i]=d=>d.sz===s);
+const LKNAME={push:"Community pushback reported",nopush:"No pushback reported",approx:"Approximate location"}; SIZES.forEach((s,i)=>LKNAME["sz"+i]=SHORT[s]);
+let legKey=null;
+function legHL(){ const f=legKey&&LK[legKey];
+  dotsG.selectAll("circle").attr("opacity",d=>!f||f(d)?1:.08);
+  if(f) dotsG.selectAll("circle").filter(f).raise();
+  document.querySelectorAll("#o-legend [data-lk]").forEach(el=>{ el.classList.toggle("on",el.dataset.lk===legKey); el.classList.toggle("pick",el.dataset.lk===state.lk); el.setAttribute("aria-pressed",String(el.dataset.lk===state.lk)); }); }
+function pickLegend(k){ state.lk=state.lk===k?null:k; state.sel=null; legKey=null; render(); }
+document.querySelectorAll("#o-legend [data-lk]").forEach(el=>{ const on=()=>{legKey=el.dataset.lk;legHL()}, off=()=>{legKey=null;legHL()};
+  el.setAttribute("role","button"); el.title="Click to filter the map, list and table; click again to clear";
+  el.addEventListener("mouseenter",on); el.addEventListener("focus",on); el.addEventListener("mouseleave",off); el.addEventListener("blur",off);
+  el.addEventListener("click",()=>pickLegend(el.dataset.lk)); el.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); pickLegend(el.dataset.lk); } }); });
+const stSel=document.getElementById("o-f-state");
+const stName=s=>STN[s]||s;
+function showSt(){ stSel.hidden=!state.st; if(state.st) stSel.innerHTML=`State: <b>${esc(stName(state.st))}</b> &times;`; }
+
+// map
+const svg=d3.select("#o-map"), g=svg.append("g");
+g.append("path").attr("class","land").attr("d",d3.geoPath()(topojson.feature(us,us.objects.nation)));
+const borders=g.append("path").attr("class","borders").attr("d",d3.geoPath()(topojson.mesh(us,us.objects.states,(a,b)=>a!==b)));
+const dotsG=g.append("g");
+let K=1, visibleList=[], delaunay=null;
+const zoom=d3.zoom().scaleExtent([1,24]).translateExtent([[0,0],[975,610]]).on("zoom",e=>{ g.attr("transform",e.transform); K=e.transform.k; restyle(); });
+svg.call(zoom).on("dblclick.zoom",null);
+document.getElementById("o-zin").onclick=()=>svg.transition().duration(300).call(zoom.scaleBy,2);
+document.getElementById("o-zout").onclick=()=>svg.transition().duration(300).call(zoom.scaleBy,.5);
+document.getElementById("o-zreset").onclick=()=>svg.transition().duration(400).call(zoom.transform,d3.zoomIdentity);
+
+function restyle(){
+  const f=1/Math.sqrt(K);
+  dotsG.selectAll("circle").attr("r",d=>RAD[d.sz]*f*(d.id===state.sel?1.5:1)).attr("stroke-width",d=>(d.pb==="Yes"?.9:.6)*f*(d.id===state.sel?1.8:1));
+  borders.attr("stroke-width",1.1/K);
+}
+function match(d){
+  if(!state.sizes.has(d.sz)) return false;
+  if(state.lk && !LK[state.lk](d)) return false;
+  if(state.st && d.s!==state.st) return false;
+  if(state.push && d.pb!=="Yes") return false;
+  if(state.q){ const q=state.q.toLowerCase(); if(![d.n,d.op,d.t,d.c,d.co].some(v=>(v||"").toLowerCase().includes(q))) return false; }
+  return true;
+}
+// Operator homepages. Parcel-owner LLCs are linked only where the parent company is clear from the name.
+const OPLINK=[
+ [/amazon|\bdc 12 14 de\b/i,"https://aws.amazon.com/"],[/microsoft/i,"https://www.microsoft.com/"],[/\bqts\b/i,"https://qtsdatacenters.com/"],
+ [/equinix/i,"https://www.equinix.com/"],[/lumen|level 3 communications/i,"https://www.lumen.com/"],[/^meta$/i,"https://about.meta.com/"],
+ [/stack infrastructure/i,"https://www.stackinfra.com/"],[/digital real|digital loudoun|digital sterling/i,"https://www.digitalrealty.com/"],
+ [/cyrusone/i,"https://www.cyrusone.com/"],[/^google$/i,"https://datacenters.google/"],[/databank/i,"https://www.databank.com/"],
+ [/flexential/i,"https://www.flexential.com/"],[/h5 data centers/i,"https://h5datacenters.com/"],[/edgeconnex/i,"https://www.edgeconnex.com/"],
+ [/aligned data centers/i,"https://aligneddc.com/"],[/tierpoint/i,"https://www.tierpoint.com/"],[/coresite/i,"https://www.coresite.com/"],
+ [/365 data centers/i,"https://www.365datacenters.com/"],[/windstream/i,"https://www.windstream.com/"],[/expedient/i,"https://expedient.com/"],
+ [/cogent/i,"https://www.cogentco.com/"],[/vantage data centers/i,"https://vantage-dc.com/"],[/core scientific/i,"https://corescientific.com/"],
+ [/^t5$/i,"https://t5datacenters.com/"],[/northrop grumman/i,"https://www.northropgrumman.com/"],[/american tower/i,"https://www.americantower.com/"],
+ [/hivelocity/i,"https://www.hivelocity.net/"],[/^at&t$/i,"https://www.att.com/"],[/dc blox/i,"https://www.dcblox.com/"],
+ [/pricewaterhouse/i,"https://www.pwc.com/"],[/^switch/i,"https://www.switch.com/"],[/cleanspark/i,"https://www.cleanspark.com/"],
+ [/verizon/i,"https://www.verizon.com/"],[/stream data centers/i,"https://www.streamdatacenters.com/"],[/bitdeer/i,"https://www.bitdeer.com/"],
+ [/tensorwave/i,"https://tensorwave.com/"],[/netrality/i,"https://netrality.com/"],[/comcast/i,"https://corporate.comcast.com/"],
+ [/^xai$/i,"https://x.ai/"],[/data foundry/i,"https://www.datafoundry.com/"],[/^oracle$/i,"https://www.oracle.com/"],[/^iren$/i,"https://iren.com/"],
+ [/fluidstack/i,"https://www.fluidstack.io/"],[/\bmara\b|marathon digital/i,"https://www.mara.com/"],[/element critical/i,"https://www.elementcritical.com/"],
+ [/yondr/i,"https://www.yondrgroup.com/"],[/\bntt\b|ragingwire/i,"https://services.global.ntt/"],[/visa usa/i,"https://usa.visa.com/"],
+ [/\bses americom/i,"https://www.ses.com/"],[/iron mountain/i,"https://www.ironmountain.com/"],[/compass datacenters/i,"https://www.compassdatacenters.com/"],
+ [/\bcopt\b/i,"https://www.copt.com/"],[/bank of america/i,"https://www.bankofamerica.com/"],[/verisign/i,"https://www.verisign.com/"],
+ [/highwoods/i,"https://www.highwoods.com/"],[/colocrossing/i,"https://www.colocrossing.com/"],[/contegix/i,"https://www.contegix.com/"],
+ [/far north digital/i,"https://www.fn-digital.com/"],[/centersquare/i,"https://centersquaredc.com/"],[/^edgecore$/i,"https://edgecore.com/"],[/dataverge/i,"https://dataverge.com/"],[/the vanguard group/i,"https://corporate.vanguard.com/"]
+];
+const opURL=op=>{ for(const [re,u] of OPLINK) if(re.test(op||"")) return u; return null; };
+const opLink=op=>{ const u=opURL(op); return u?`<a href="${u}" target="_blank" rel="noopener">${esc(op)}</a>`:esc(op); };
+function facHTML(d){
+  const row=(k,v)=>v?`<dt>${k}</dt><dd>${v}</dd>`:"";
+  return `<h2>${esc(d.n||"Unnamed facility")}</h2><p class="sub">${esc([d.c, d.co?d.co+" County":"", STN[d.s]||d.s].filter(Boolean).join(", "))}</p>
+  <p style="margin:0 0 10px;display:flex;gap:6px;flex-wrap:wrap"><span class="badge"><i class="dot" style="width:10px;height:10px;background:var(${d.pb==="Yes"?"--pushfill":"--base"})"></i>${esc(SHORT[d.sz])}</span>${d.pb==="Yes"?`<span class="badge push">Community pushback${d.rs?": "+esc(d.rs):""}</span>`:""}</p>
+  <dl>${row("Operator",d.op?opLink(d.op):"")}${row("Tenant",esc(d.t))}${row("Capacity",d.mwr?esc(d.mwr)+" MW":"")}${row("Purpose",esc(d.p))}${row("Address",esc(d.a))}${row("Power",esc(d.pw))}${row("Cooling",esc([d.cl,d.ct].filter(Boolean).join(", ")))}${row("Building size",d.sq?esc(d.sq)+" sq ft":"")}${row("Site",d.ac?esc(d.ac)+" acres":"")}${row("Coordinates",`${d.lat}, ${d.lon}`)}${row("Location confidence",esc(d.lc))}${row("Record updated",esc(d.up))}</dl>
+  ${(d.cg&&d.cg.length)||d.adv?`<p class="sub" style="margin:12px 0 4px;color:var(--ink);font-weight:600;display:flex;align-items:center;gap:6px"><i class="dot" style="width:10px;height:10px;background:var(--pushfill)"></i>Community pushback</p>`+(d.adv?`<p style="margin:0 0 6px;font-size:12px">${esc(d.adv)}</p>`:"")+(d.cg||[]).map(([lab,u])=>`<div><span class="badge" style="margin-right:6px">${esc(lab)}</span><a href="${esc(u)}" target="_blank" rel="noopener">${esc(u.replace(/^https?:\/\/(www\.)?/,"").slice(0,60))}</a></div>`).join(""):""}
+  ${d.src.length?`<p class="sub" style="margin:12px 0 4px">Sources</p>`+d.src.map(u=>`<div><a href="${esc(u)}" target="_blank" rel="noopener">${esc(u.replace(/^https?:\/\/(www\.)?/,"").slice(0,70))}</a></div>`).join(""):""}
+  <p style="margin:12px 0 0"><button class="chip" id="o-back" style="font-size:12px">Back to list</button></p>`;
+}
+function renderPanel(){
+  const panel=document.getElementById("o-panel");
+  const d=data.find(x=>x.id===state.sel);
+  if(d && match(d)){ panel.innerHTML=facHTML(d); document.getElementById("o-back").onclick=()=>{state.sel=null;render()}; return; }
+  const top=visibleList.slice().sort((a,b)=>SIZES.indexOf(a.sz)-SIZES.indexOf(b.sz)||(b.mw||0)-(a.mw||0)).slice(0,25);
+  panel.innerHTML=`<h2>Largest facilities shown</h2>${state.lk?`<p class="sub" style="margin:0 0 6px;display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="badge" style="color:var(--ink)">Filter: ${esc(LKNAME[state.lk])}</span><button class="chip" id="o-lkclear" style="font-size:11px;padding:2px 9px">Clear</button></p>`:""}<p class="sub">${visibleList.length?`Top ${top.length} of ${fmtN(visibleList.length)} by size. Click one, or a dot on the map.`:"Nothing matches these filters."}</p><div class="list">${top.map(d=>`<button class="item" data-id="${d.id}"><b>${esc(d.n||"Unnamed facility")}</b><span>${esc(d.op||"Operator not listed")} &middot; ${esc(d.c)}, ${esc(d.s)} &middot; ${d.mwr?esc(d.mwr)+" MW":esc(SHORT[d.sz])}</span></button>`).join("")}</div>`;
+  panel.querySelectorAll(".item").forEach(b=>b.onclick=()=>select(+b.dataset.id,true));
+  const lc=document.getElementById("o-lkclear"); if(lc) lc.onclick=()=>pickLegend(state.lk);
+}
+function select(id,fly){
+  state.sel=id; render();
+  const d=data.find(x=>x.id===id);
+  if(fly&&d){ const k=Math.max(K,6); svg.transition().duration(600).call(zoom.transform,d3.zoomIdentity.translate(487.5-d.x*k,305-d.y*k).scale(k)); }
+  if(innerWidth<900) document.getElementById("o-panel").scrollIntoView({behavior:"smooth",block:"nearest"});
+}
+function renderFacts(){
+  const v=visibleList;
+  const big=v.filter(d=>/Hyperscale|Mega/.test(d.sz)).length;
+  const ops=d3.rollups(v.filter(d=>d.op),x=>x.length,d=>d.op).sort((a,b)=>b[1]-a[1]);
+  document.getElementById("o-facts").innerHTML=[[fmtN(v.length),"operating data centers"],[new Set(v.map(d=>d.s)).size,"states"],[big,"hyperscale or mega campuses"],[ops[0]?esc(ops[0][0]):"–",`top operator${ops[0]?` (${ops[0][1]} sites)`:""}`]].map(([n,l])=>`<div class="fact"><b>${n}</b><span>${l}</span></div>`).join("");
+}
+function renderLedger(){
+  const rows=d3.rollups(visibleList,v=>{const ops=d3.rollups(v.filter(d=>d.op),x=>x.length,d=>d.op).sort((a,b)=>b[1]-a[1]);return {n:v.length,big:v.filter(d=>/Hyperscale|Mega/.test(d.sz)).length,mwn:v.filter(d=>d.mw).length,mw:d3.sum(v,d=>d.mw||0),op:ops[0]?ops[0]:null}},d=>d.s).sort((a,b)=>b[1].n-a[1].n);
+  document.querySelector("#o-ledger tbody").innerHTML=rows.map(([s,r])=>`<tr class="row" tabindex="0" data-s="${esc(s)}"><td>${esc(STN[s]||s)}</td><td class="n">${r.n}</td><td class="n">${r.big}</td><td class="n">${r.mwn}</td><td class="n">${r.mw?fmtN(Math.round(r.mw)):"–"}</td><td>${r.op?`${opLink(r.op[0])} (${r.op[1]})`:"–"}</td></tr>`).join("");
+  document.querySelectorAll("#o-ledger tr.row").forEach(tr=>{const go=()=>{stSel.value=tr.dataset.s;state.st=tr.dataset.s;state.sel=null;render();zoomToState();document.getElementById("o-mapbox").scrollIntoView({behavior:"smooth",block:"start"})};tr.onclick=e=>{if(e.target.closest('a'))return;go()};tr.onkeydown=e=>{if(e.key==="Enter")go()}});
+  sortLedger();
+}
+// sortable table headers: click a header to sort, click again to reverse
+function makeSortable(table,defaultCol,defaultDir){
+  const ths=[...table.tHead.rows[0].cells]; let col=defaultCol, dir=defaultDir;
+  ths.forEach((th,i)=>{ const lab=th.innerHTML; th.innerHTML=`<button type="button" class="sortbtn">${lab}<span class="arr" aria-hidden="true"></span></button>`;
+    th.querySelector("button").onclick=()=>{ if(col===i) dir=-dir; else { col=i; dir=th.classList.contains("n")||th.dataset.num!=null?-1:1; } apply(); }; });
+  const key=td=>{ const v=td.dataset.sort??td.textContent.trim(); const n=parseFloat(String(v).replace(/[,%]/g,"")); return isNaN(n)?(v==="–"||v===""?null:String(v).toLowerCase()):n; };
+  function apply(){
+    const tb=table.tBodies[0], rows=[...tb.rows];
+    rows.sort((a,b)=>{ const x=key(a.cells[col]), y=key(b.cells[col]); if(x===null&&y===null) return 0; if(x===null) return 1; if(y===null) return -1;
+      return (typeof x==="number"&&typeof y==="number"?x-y:String(x).localeCompare(String(y)))*dir; });
+    rows.forEach(r=>tb.appendChild(r));
+    ths.forEach((th,i)=>{ th.setAttribute("aria-sort",i===col?(dir>0?"ascending":"descending"):"none"); th.querySelector(".arr").textContent=i===col?(dir>0?" ▲":" ▼"):""; });
+  }
+  return apply;
+}
+const sortLedger=makeSortable(document.getElementById("o-ledger"),1,-1);
+
+function zoomToState(){
+  if(!state.st){ svg.transition().duration(400).call(zoom.transform,d3.zoomIdentity); return; }
+  const pts=data.filter(d=>d.s===state.st); if(!pts.length) return;
+  const [x0,x1]=d3.extent(pts,d=>d.x),[y0,y1]=d3.extent(pts,d=>d.y);
+  const k=Math.min(12,.8/Math.max((x1-x0+20)/975,(y1-y0+20)/610));
+  svg.transition().duration(600).call(zoom.transform,d3.zoomIdentity.translate(487.5-(x0+x1)/2*k,305-(y0+y1)/2*k).scale(k));
+}
+function render(){
+  showSt();
+  visibleList=data.filter(match);
+  const sorted=visibleList.slice().sort((a,b)=>(a.pb==="Yes")-(b.pb==="Yes")||SIZES.indexOf(b.sz)-SIZES.indexOf(a.sz)); // pushback on top, then big over small
+  dotsG.selectAll("circle").data(sorted,d=>d.id).join("circle")
+    .attr("class",d=>"fac"+(d.pb==="Yes"?" push":"")+(d.lc!=="High"?" approx":"")+(d.id===state.sel?" sel":""))
+    .attr("cx",d=>d.x).attr("cy",d=>d.y).attr("fill",d=>css(d.pb==="Yes"?"--pushfill":"--base")).attr("fill-opacity",d=>d.pb==="Yes"?.95:.75);
+  dotsG.selectAll("circle").filter(d=>d.id===state.sel).raise();
+  restyle(); legHL();
+  delaunay=d3.Delaunay.from(visibleList,d=>d.x,d=>d.y);
+  renderFacts(); renderPanel(); renderLedger();
+}
+// hover / click via nearest point
+const tip=document.getElementById("o-tip"), box=document.getElementById("o-mapbox");
+function nearest(e){
+  if(!visibleList.length) return null;
+  const t=d3.zoomTransform(svg.node()); const [mx,my]=d3.pointer(e,svg.node());
+  const vb=svg.node().viewBox.baseVal, r=svg.node().getBoundingClientRect(), s=vb.width/r.width;
+  const [x,y]=t.invert([mx,my]); const i=delaunay.find(x,y); const d=visibleList[i];
+  const dist=Math.hypot(d.x-x,d.y-y)*t.k/s; return dist<14?d:null;
+}
+svg.on("mousemove",e=>{
+  const d=nearest(e); if(!d){tip.hidden=true;svg.style("cursor","grab");return}
+  svg.style("cursor","pointer");
+  const r=box.getBoundingClientRect();
+  tip.innerHTML=`<b>${esc(d.n||"Unnamed facility")}</b><br>${esc(d.op||"Operator not listed")} &middot; ${esc(d.c)}, ${esc(d.s)}<br>${d.mwr?esc(d.mwr)+" MW":esc(SHORT[d.sz])}`;
+  tip.hidden=false; let x=e.clientX-r.left+12,y=e.clientY-r.top+12; if(x>r.width-270)x-=280; tip.style.left=x+"px"; tip.style.top=y+"px";
+}).on("mouseleave",()=>tip.hidden=true).on("click",e=>{const d=nearest(e); if(d) select(d.id,false);});
+
+stSel.onclick=()=>{state.st="";state.sel=null;render();zoomToState();};
+document.getElementById("o-f-q").oninput=e=>{state.q=e.target.value.trim();render()};
+document.getElementById("o-f-push").onchange=e=>{state.push=e.target.checked;render()};
+matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change",render);
+new MutationObserver(render).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+
+const latest=d3.max(raw,d=>d.up?new Date(d.up):null);
+document.getElementById("o-foot").innerHTML=`<p>Data source: <a href="https://www.fractracker.org/data-centers/" target="_blank" rel="noopener">FracTracker Alliance, Data Centers Identified by FracTracker Alliance</a>. Data provided by FracTracker Alliance (2026). Accessed via https://www.fractracker.org/data-centers/. FracTracker provides the data as is and notes that its list of existing data centers is still being filled in, so this map undercounts operating facilities. <b>Last updated: November 23, 2026.</b></p>
+<p>Map notes: all rows from the "FracTracker Data Centers" sheet with status Operating (${fmtN(raw.length)} facilities, of which ${raw.filter(d=>d.lc==="High").length} have high location confidence, ${raw.filter(d=>d.lc==="Medium").length} medium and ${raw.filter(d=>d.lc==="Low").length} low; latest record update ${latest?latest.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}):"n/a"}). Dot size and color follow the sheet's size class; ${raw.length-raw.filter(d=>d.sz&&d.sz!=="Unknown").length} facilities have no size reported. Reported MW totals use only rows with a single number and skip ranges such as "150-400".${dropped?` ${dropped} facilities fall outside the map projection and are not drawn.`:""}</p>`;
+render();
+})();
+</script>
+
+<style>
+#view-backlash{--b0:#6a1fb0;--b1:#3f88c5;--b2:#2a9d8f;--b3:#e0a800;--prop:#ff7a00;--halo:#3b4440;--nopre:#9aa3a0;--lbl:#1d2421}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #view-backlash{--b0:#b57dff;--b1:#6fb2ec;--b2:#4fc1b2;--b3:#ffcc33;--prop:#ff9a2e;--halo:#c9d1cc;--nopre:#6d7672;--lbl:#e7ebe7}}
+:root[data-theme="dark"] #view-backlash{--b0:#b57dff;--b1:#6fb2ec;--b2:#4fc1b2;--b3:#ffcc33;--prop:#ff9a2e;--halo:#c9d1cc;--nopre:#6d7672;--lbl:#e7ebe7}
+#view-backlash .dot{border-radius:50%;display:inline-block;flex:none}
+#view-backlash .card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;min-width:0;display:grid;gap:10px}
+#view-backlash .card h2{font-size:19px;margin:0;text-wrap:balance}
+#view-backlash .card .sub{font-size:13.5px;color:var(--muted);margin:0;max-width:78ch}
+#view-backlash .duo{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:16px;align-items:start}
+#view-backlash .pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:900px){#view-backlash .duo,#view-backlash .pair{grid-template-columns:minmax(0,1fr)}}
+#view-backlash .player{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+#view-backlash .play{width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--ink);color:var(--surface);font:600 14px var(--f-body);cursor:pointer;display:grid;place-items:center}
+#view-backlash input[type=range]{flex:1;min-width:160px;accent-color:var(--b0)}
+#view-backlash .when{font:500 13px var(--f-data);color:var(--ink);min-width:12ch}
+#view-backlash .status{font-size:13px;color:var(--muted);margin:0}
+#view-backlash .status b{color:var(--ink);font-family:var(--f-data);font-weight:500}
+#view-backlash .player.thin{gap:10px;flex-wrap:nowrap;padding-top:6px;border-top:1px solid var(--line)}
+#view-backlash .player.thin .play{width:22px;height:22px;flex:none;background:none;color:var(--ink);font-size:9px;padding:0}
+#view-backlash .player.thin .play:hover{background:var(--bg)}
+#view-backlash .player.thin input[type=range]{min-width:80px;height:14px;margin:0;-webkit-appearance:none;appearance:none;background:none}
+#view-backlash .player.thin input[type=range]::-webkit-slider-runnable-track{height:2px;background:var(--line);border-radius:1px}
+#view-backlash .player.thin input[type=range]::-moz-range-track{height:2px;background:var(--line)}
+#view-backlash .player.thin input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:10px;height:10px;border-radius:50%;background:var(--ink);margin-top:-4px;border:0}
+#view-backlash .player.thin input[type=range]::-moz-range-thumb{width:10px;height:10px;border-radius:50%;background:var(--ink);border:0}
+#view-backlash .player.thin .when{font:400 11.5px var(--f-data);color:var(--muted);min-width:0;white-space:nowrap}
+#view-backlash .status.thin{font-size:12px;margin-top:-4px}
+#view-backlash .player.thin.top{border-top:0;padding-top:0}
+#view-backlash .mapwrap{position:relative;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface)}
+#view-backlash .land{fill:var(--land)} #view-backlash .stl{fill:none;stroke:var(--stateline);stroke-width:1}
+#view-backlash .halo{fill:var(--halo);opacity:.09}
+#view-backlash .hublbl{font:600 11px var(--f-body);fill:var(--lbl);paint-order:stroke;stroke:var(--surface);stroke-width:3px;pointer-events:none}
+#view-backlash .rd{stroke:var(--surface);stroke-width:.6}
+#view-backlash .pulse{fill:none;stroke-width:1.5;pointer-events:none}
+#view-backlash .pd{fill:none;stroke:var(--prop);stroke-width:1.1}
+#view-backlash .link{stroke:var(--prop);stroke-width:.9;opacity:.6}
+#view-backlash .key{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12.5px;color:var(--muted);align-items:center}
+#view-backlash .key span{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+#view-backlash .key .diamond{width:8px;height:8px;border:1.5px solid var(--prop);transform:rotate(45deg);display:inline-block;flex:none;margin:0 2px}
+#view-backlash .ch text{font:11.5px var(--f-data);fill:var(--muted)}
+#view-backlash .ch .v{fill:var(--ink);font-weight:500}
+#view-backlash .ch .ax{stroke:var(--line)}
+#view-backlash .ch .col{transition:opacity .2s}
+#view-backlash .sc text{font:11px var(--f-data);fill:var(--muted)}
+#view-backlash .sc .slbl{font:600 10.5px var(--f-body);fill:var(--ink);paint-order:stroke;stroke:var(--surface);stroke-width:3px}
+#view-backlash .sc .grid line{stroke:var(--line)}
+#view-backlash .sc .note{paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round}
+#view-backlash .sc .rho{font:600 13px var(--f-body);fill:var(--ink)}
+#view-backlash .tip2{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);font-size:12px;padding:6px 9px;border-radius:6px;max-width:250px;line-height:1.35}
+#view-backlash .fp text{font:13px var(--f-data);fill:var(--muted)}
+#view-backlash .fp .grp{font:600 13.5px var(--f-body);fill:var(--ink)}
+#view-backlash .fp .lab{font:14px var(--f-body);fill:var(--ink)}
+#view-backlash .fp .val{fill:var(--ink)}
+#view-backlash .fp .ref{stroke:var(--ink);stroke-dasharray:3 3;opacity:.6}
+#view-backlash .fp .gl{stroke:var(--line)}
+#view-backlash .fpwrap{grid-template-columns:minmax(0,2fr) minmax(0,1fr);align-items:center}
+#view-backlash .eqbox{display:grid;gap:10px;padding:14px 16px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
+#view-backlash .eqhead{font:600 12px var(--f-data);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+#view-backlash .eq{font:500 15px var(--f-data);color:var(--ink);display:grid;gap:4px;overflow-x:auto;white-space:nowrap}
+#view-backlash .eq sub,#view-backlash .eqdefs sub{font-size:.72em}
+#view-backlash .eqdefs{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:6px 16px;margin:0;font-size:13px;line-height:1.45}
+#view-backlash .eqdefs dt{font:500 13px var(--f-data);color:var(--ink);white-space:nowrap}
+#view-backlash .eqdefs dd{margin:0;color:var(--ink)}
+@media (max-width:640px){#view-backlash .eqdefs{grid-template-columns:minmax(0,1fr)} #view-backlash .eqdefs dd{margin-bottom:6px}}
+#view-backlash .fpnotes{margin:0;padding:0 0 0 16px;border-left:1px solid var(--line);list-style:none;display:grid;gap:8px}
+#view-backlash .fpnotes li{font-size:13px;line-height:1.45;color:var(--ink)}
+@media (max-width:900px){#view-backlash .fpwrap{grid-template-columns:minmax(0,1fr)} #view-backlash .fpnotes{border-left:0;padding-left:0}}
+#view-backlash .splitB{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:20px;align-items:start}
+#view-backlash .mapcol{display:grid;gap:10px;min-width:0}
+#view-backlash .explain{display:grid;gap:10px;font-size:13.5px;line-height:1.5}
+#view-backlash .explain p{margin:0}
+#view-backlash .explain ul{margin:0;padding-left:18px;display:grid;gap:7px}
+@media (max-width:900px){#view-backlash .splitB{grid-template-columns:minmax(0,1fr)}}
+#view-backlash .rd.far{stroke:var(--ink);stroke-width:1.6}
+#view-backlash .outrow{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;padding-top:14px;border-top:1px solid var(--line);font-size:13.5px;line-height:1.5}
+#view-backlash .outrow p{margin:0}
+@media (max-width:900px){#view-backlash .outrow{grid-template-columns:minmax(0,1fr)}}
+#view-backlash .hubhead{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:900px){#view-backlash .hubhead{grid-template-columns:minmax(0,1fr)}}
+#view-backlash .hubbars .hb{cursor:pointer}
+#view-backlash .hubbars .hb text.nm{fill:var(--ink);font:12px var(--f-body)}
+#view-backlash .hubbars .hb:hover rect.bg,#view-backlash .hubbars .hb.on rect.bg{fill:var(--bg)}
+#view-backlash .halo.hl{fill:var(--prop);opacity:.38}
+#view-backlash .halo.dim{opacity:.008}
+#view-backlash .halo.hl{fill:var(--prop);opacity:.5}
+#view-backlash .hublbl.hl{font-size:13px;fill:var(--prop)}
+#view-backlash .sidecharts{display:grid;gap:4px;min-width:0}
+#view-backlash .sidecharts .status{margin:0}
+#view-backlash #b-cols .seg{cursor:pointer;transition:opacity .15s}
+#view-backlash .key [data-k]{cursor:pointer;border-radius:4px;padding:2px 4px;margin:-2px -4px;transition:opacity .15s}
+#view-backlash .key [data-k]:hover,#view-backlash .key [data-k]:focus-visible{background:var(--bg)}
+#view-backlash .key .dimk{opacity:.45}
+#view-backlash .outrow .caveat{font-size:13px;color:var(--muted);padding:10px 12px;border:1px dashed var(--line);border-radius:8px}
+#view-backlash .outrow .caveat a{color:var(--link)}
+#view-backlash .take{display:grid;gap:8px;margin:0;padding:0;list-style:none}
+#view-backlash .take li{font-size:14px;max-width:85ch;padding-left:14px;border-left:3px solid var(--b0)}
+#view-backlash .method p{font-size:13px;color:var(--muted);margin:0;max-width:90ch}
+</style>
+<section class="view" id="view-backlash" hidden>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Distance and timing analysis &middot; local restrictions vs. data centers</div>
+    <h1>Backlash next door</h1>
+    <p class="lede">The fight over data centers started in the towns that already host them. In 2026 it broke out of those hubs: most new restrictions now come from places 50 or more miles from any operating data center, and they usually follow a proposal landing nearby.</p>
+    <div class="facts" id="b-facts"></div>
+  </header>
+
+  <section class="card">
+    <h2>The movement started next door and is fanning out</h2>
+    <p class="sub">Each shaded circle is the area within 25 miles of an operating data center. A <b>hub</b> is a group of operating data centers chained together so that every site is within 25 miles of at least one other site in the group. A <b>big hub</b> is one with 12 or more operating sites. Eight qualify, shown in the chart.</p>
+    <div class="player thin top">
+      <button class="play" id="b-playA" aria-label="Play animation">&#9654;</button>
+      <input type="range" id="b-sliderA" min="0" value="0" aria-label="Month">
+      <span class="when" id="b-whenA"></span>
+    </div>
+    <p class="status thin top" id="b-statusA"></p>
+    <div class="duo">
+      <div class="mapcol">
+        <div class="mapwrap" id="b-wrapA"><svg id="b-mapA" viewBox="0 0 975 610" role="img" aria-label="Animated map of local restrictions spreading out from data center hubs"></svg><div class="tip2" id="b-tipA" hidden></div></div>
+        <div class="key" id="b-keyA"></div>
+      </div>
+      <div class="sidecharts">
+        <p class="status" style="font-size:12px;font-weight:600;color:var(--ink)">Big hubs: operating data centers</p>
+        <svg class="ch hubbars" id="b-hubs" viewBox="0 0 380 150" role="img" aria-label="Bar chart of operating data centers in the eight big hubs"></svg>
+        <p class="status" style="font-size:12px;font-weight:600;color:var(--ink);margin-top:6px">Restrictions passed per quarter</p>
+        <svg class="ch" id="b-cols" viewBox="0 0 380 240" role="img" aria-label="Column chart of restrictions per quarter by distance band"></svg>
+        <p class="status" style="font-size:12px">Restrictions passed each quarter, stacked by distance to the nearest operating data center. Numbers on top are quarterly totals.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Proposals come first, then restrictions</h2>
+    <p class="sub">Orange diamonds are proposed data center projects, shown from the month FracTracker first logged them. Restrictions follow. When a restriction comes after a proposal within 25 miles, an orange line connects them.</p>
+    <div class="splitB">
+      <div class="explain">
+        <p>Local restrictions are mostly reactions to specific projects. A developer files for a rezoning or buys farmland, neighbors organize, and within months the town or county pauses or limits data centers. The project nearby, not the data centers already running in the region, is what tips a community into action.</p>
+        <ul>
+          <li><b>Proposals come first.</b> 60% of restrictions since mid-2024 followed a project logged within 25 miles, compared with 48% for random towns on the same dates.</li>
+          <li><b>The lag is short.</b> The typical gap between a nearby proposal being logged and a restriction passing is about 7 months.</li>
+          <li><b>Proposals cluster around hubs.</b> 61% of proposed sites are within 25 miles of an operating data center (median 17 miles), and states with more data centers get more proposals (r = 0.76). That overlap is why existing hubs <i>look</i> like they drive backlash.</li>
+          <li><b>The spillover is the flashpoint.</b> New campuses push past the hub&rsquo;s edge into farmland and small towns, and that ring, 25 to 50 miles from a hub, is the one distance band where restrictions clearly beat chance.</li>
+        </ul>
+      </div>
+      <div class="mapcol">
+      <div class="mapwrap" id="b-wrapB"><svg id="b-mapB" viewBox="0 0 975 610" role="img" aria-label="Time-lapse map of proposed projects followed by local restrictions"></svg><div class="tip2" id="b-tipB" hidden></div></div>
+      <div class="key">
+        <span data-k="prop" tabindex="0"><i class="diamond" aria-hidden="true"></i>Proposed project</span>
+        <span data-k="pre" tabindex="0"><i class="dot" style="width:10px;height:10px;background:var(--b0)"></i>Restriction after a nearby proposal</span>
+        <span data-k="nopre" tabindex="0"><i class="dot" style="width:10px;height:10px;background:var(--nopre)"></i>Restriction with no earlier proposal within 25 mi</span>
+        <span data-k="link" tabindex="0"><i style="width:16px;height:2px;background:var(--prop);display:inline-block"></i>Proposal it followed</span>
+        <span data-k="far" tabindex="0"><i class="dot" style="width:11px;height:11px;background:var(--nopre);box-shadow:0 0 0 2px var(--ink)"></i>Far from any operating or proposed site</span>
+      </div>
+      <div class="player thin">
+        <button class="play" id="b-playB" aria-label="Play time-lapse">&#9654;</button>
+        <input type="range" id="b-sliderB" min="0" value="0" aria-label="Month">
+        <span class="when" id="b-whenB"></span>
+      </div>
+      <p class="status thin" id="b-statusB"></p>
+      </div>
+    </div>
+    <div class="outrow">
+      <p><b>Outliers.</b> 26 restrictions are 100+ miles from any operating data center <i>and</i> 50+ miles from any proposal, outlined in black on the map. Kansas has 8 of them, around Wichita and the Flint Hills; others include Anchorage, Nye County (NV), Grand County (UT), northern Wisconsin, the Carolina coast and Escondido (CA).</p>
+      <p>With no project nearby, these look less like local reactions and more like contagion: towns acting preemptively as the nationwide backlash against AI and its energy and water demands spreads through news, state politics and organizing networks. Some may also reflect proposals that were never made public.</p>
+      <p class="caveat" style="grid-column:1/-1"><b>Caveat:</b> some outliers may be caused by incomplete or inaccurate data rather than real distance. <a href="https://www.fractracker.org/data-centers/" target="_blank" rel="noopener">FracTracker Alliance</a>&rsquo;s list is still being built: it shows no operating data centers in Florida, Kansas or Utah and only one in Michigan, so restrictions there can look farther from data centers than they are. Proposals that were logged late, placed at the wrong location, or never logged would have the same effect.</p>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>By state: proposals track restrictions more closely than existing hubs</h2>
+    <p class="sub">Each dot is a state. Both charts share the same vertical axis: local restrictions passed. Both axes use a log scale (each gridline is roughly 3&times; the one before) so small states aren&rsquo;t squeezed into a corner by Virginia. The dashed line shows the overall trend. The <b>match score</b> in each chart says how closely the states line up: 1 would mean the state with more data centers (or proposals) always has more restrictions, 0 would mean no relationship at all.</p>
+    <div class="pair">
+      <div style="position:relative" id="b-scw1"><div class="tip2" id="b-sctip1" hidden></div><svg class="sc" id="b-sc1" viewBox="0 0 440 380" role="img" aria-label="Scatter of operating data centers vs restrictions by state"></svg></div>
+      <div style="position:relative" id="b-scw2"><div class="tip2" id="b-sctip2" hidden></div><svg class="sc" id="b-sc2" viewBox="0 0 440 380" role="img" aria-label="Scatter of proposed projects vs restrictions by state"></svg></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Holding the other constant, only proposals predict restrictions</h2>
+    <p class="sub">We compared all 50 states to see what best predicts how many local restrictions a state has: how many data centers it already runs, or how many new ones are being proposed. Each square shows how much restrictions go up when that number doubles. The line through it is the likely range. A square right of the dotted line means more restrictions; one sitting on the line means no effect. <b>Explains</b> is the share of the differences between states that each one accounts for. Proposals and operating data centers overlap: together they explain 41%, of which 27% could be credited to either, and on top of that proposals add 13% while operating data centers add under 1%.</p>
+    <div class="eqbox">
+      <div class="eqhead">The main model</div>
+      <div class="eq" role="math" aria-label="Restrictions follow a negative binomial distribution with mean mu and dispersion alpha; log of mu equals beta zero plus beta one times log base 2 of one plus operating data centers plus beta two times log base 2 of one plus proposed projects">
+        <div>Restrictions<sub>s</sub> ~ NegativeBinomial(&mu;<sub>s</sub>, &alpha;)</div>
+        <div>log(&mu;<sub>s</sub>) = &beta;<sub>0</sub> + &beta;<sub>1</sub>&middot;log<sub>2</sub>(1 + Operating<sub>s</sub>) + &beta;<sub>2</sub>&middot;log<sub>2</sub>(1 + Proposed<sub>s</sub>)</div>
+      </div>
+      <dl class="eqdefs">
+        <dt>s</dt><dd>One of the 50 states. Each state is one data point.</dd>
+        <dt>Restrictions<sub>s</sub></dt><dd>Local moratoria, bans and zoning rules the state&rsquo;s counties and towns have passed (Data Center Policy Database).</dd>
+        <dt>&mu;<sub>s</sub></dt><dd>The number of restrictions the model expects for that state.</dd>
+        <dt>Operating<sub>s</sub>, Proposed<sub>s</sub></dt><dd>FracTracker&rsquo;s counts of operating data centers and proposed projects. Adding 1 lets states with zero stay in; log<sub>2</sub> makes one step equal a doubling.</dd>
+        <dt>&beta;<sub>0</sub> = 0.31</dt><dd>Starting level: a state with no operating or proposed sites is expected to have about 1.4 restrictions (e<sup>0.31</sup>).</dd>
+        <dt>&beta;<sub>1</sub> = &minus;0.01</dt><dd>Effect of operating data centers, with proposals held fixed. e<sup>&minus;0.01</sup> = 0.99, so &minus;1% per doubling; range &minus;18% to +20% (p = 0.92). This is the blue square in the main model.</dd>
+        <dt>&beta;<sub>2</sub> = 0.49</dt><dd>Effect of proposed projects, with operating sites held fixed. e<sup>0.49</sup> = 1.63, so +63% per doubling; range +30% to +103% (p &lt; 0.001). This is the orange square.</dd>
+        <dt>&alpha; = 0.60</dt><dd>Spread: the variance is &mu; + &alpha;&mu;&sup2;, so states can differ more than pure chance would allow. At &alpha; = 0 this would be a plain Poisson count model.</dd>
+      </dl>
+    </div>
+    <div class="duo fpwrap">
+      <div class="tbl"><svg class="fp" id="b-forest" viewBox="0 0 870 250" role="img" aria-label="Forest plot of regression estimates"></svg></div>
+      <ul class="fpnotes">
+        <li><b>Looked at alone,</b> both seem to matter, because states with many data centers also get many new proposals.</li>
+        <li><b>Compared side by side,</b> only proposals still count. States with the same number of proposals have about the same number of restrictions, however many data centers they already have.</li>
+        <li><b>Example:</b> Michigan and North Carolina each have 25 proposals and about 31 restrictions, even though North Carolina has seven times as many operating data centers.</li>
+        <li><b>Why:</b> a moratorium can only stop what isn&rsquo;t built yet, so towns react to the next project.</li>
+        <li><b>Hubs still matter indirectly:</b> they attract the proposals that spark the backlash.</li>
+      </ul>
+    </div>
+    <p class="status" style="font-size:12.5px">Model: restrictions ~ log<sub>2</sub>(1 + operating) + log<sub>2</sub>(1 + proposed), negative binomial (the counts vary far more than a Poisson model allows: a Poisson fit leaves about 6 times the expected variance; fitted &alpha; = 0.60). In the combined model, proposed p &lt; 0.001 and operating p = 0.92; alone, operating p = 0.004 and proposed p &lt; 0.001. Ranges are 95% confidence intervals. Operating and proposed counts are correlated (r = 0.76) but not enough to destabilize the model (VIF 2.4). An OLS check on log(1 + restrictions) gives the same picture (proposed p = 0.004, operating p = 0.64, R² = 0.41).</p>
+  </section>
+
+  <section class="card">
+    <h2>What this shows</h2>
+    <ul class="take" id="b-take"></ul>
+  </section>
+
+  <section class="card method">
+    <h2>How this was measured</h2>
+    <p>Restrictions: 469 passed or enacted local policies from the Data Center Policy Database, collapsed to 432 places and placed at the town that passed them (196) or the county center (236). Data centers: 536 operating sites and 1,197 proposed, approved, suspended, expanding or cancelled projects from FracTracker Alliance. Distances are straight-line miles. Hub zones are 25-mile circles around operating sites; hub names come from grouping sites that are within 25 miles of each other. A proposal's date is when FracTracker first logged it (tracking began in April 2024), which can lag the public announcement, so "proposal first" is a conservative test. The random-town baseline uses 3,000 U.S. places with 1,000+ residents given the same dates as the restrictions. FracTracker lists no operating sites in Florida, Kansas or Utah and one in Michigan, so distances there are overstated. These are associations, not proof of cause.</p>
+  </section>
+
+  <footer id="b-foot"></footer>
+</div>
+</section>
+<script>
+(async function(){
+const [D, us] = await Promise.all([fetch("backlash2.json").then(r=>r.json()), fetch("states-albers-10m.json").then(r=>r.json())]);
+const host=document.getElementById("view-backlash");
+const css=n=>getComputedStyle(host).getPropertyValue(n).trim();
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const pct=v=>Math.round(v*100)+"%";
+const BANDS=["Under 25 mi","25–50 mi","50–100 mi","100+ mi"], BT=["--b0","--b1","--b2","--b3"];
+const proj=d3.geoAlbersUsa().scale(1300).translate([487.5,305]);
+const P=d=>proj([d.lon,d.lat]);
+const MI_PX=1300/3958.8; // px per mile at this scale
+const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+const fmtM=k=>{const [y,m]=k.split("-");return new Date(+y,+m-1,1).toLocaleDateString("en-US",{month:"short",year:"numeric"})};
+const monthsBetween=(a,b)=>{const out=[];let [y,m]=a.split("-").map(Number);const [Y,M]=b.split("-").map(Number);while(y<Y||(y===Y&&m<=M)){out.push(`${y}-${String(m).padStart(2,"0")}`);m++;if(m>12){m=1;y++}}return out};
+const R=D.rest.filter(r=>P(r));
+const s=D.stats;
+const q26=D.quarters.filter(q=>q.q.startsWith("2026")&&q.q!=="2026 Q4"), pre=D.quarters[0];
+document.getElementById("b-facts").innerHTML=[
+ ["24 → 52 mi","median distance from a restriction to the nearest operating data center, before 2025 vs. 2026"],
+ [pct(s.pre),`of restrictions since mid-2024 came after a proposal within 25 mi (random towns: ${pct(s.nullpre)})`],
+ [Math.round(s.lag/30)+" months","median gap between a nearby proposal being logged and the restriction"],
+ [s.rho_pr.toFixed(2)+" vs "+s.rho_op.toFixed(2),"how closely states\u2019 restrictions match their proposals vs. their operating data centers (1 = perfect match)"]
+].map(([n,l])=>`<div class="fact"><b>${n}</b><span>${l}</span></div>`).join("");
+
+function base(svg){
+  svg.append("path").attr("class","land").attr("d",d3.geoPath()(topojson.feature(us,us.objects.nation)));
+  svg.append("path").attr("class","stl").attr("d",d3.geoPath()(topojson.mesh(us,us.objects.states,(a,b)=>a!==b)));
+}
+function tipper(wrapId,tipId){
+  const w=document.getElementById(wrapId),t=document.getElementById(tipId);
+  return {show(e,html){const r=w.getBoundingClientRect();t.innerHTML=html;t.hidden=false;let x=e.clientX-r.left+12;if(x>r.width-260)x-=270;t.style.left=x+"px";t.style.top=(e.clientY-r.top+12)+"px"},hide(){t.hidden=true}};
+}
+function player(btnId,sliderId,n,onFrame){
+  const btn=document.getElementById(btnId),sl=document.getElementById(sliderId);
+  sl.max=n-1; sl.value=n-1; let timer=null;
+  const stop=()=>{clearInterval(timer);timer=null;btn.innerHTML="&#9654;";btn.setAttribute("aria-label","Play")};
+  btn.onclick=()=>{ if(timer){stop();return}
+    if(+sl.value>=n-1) sl.value=0;
+    onFrame(+sl.value,true); btn.innerHTML="&#10074;&#10074;"; btn.setAttribute("aria-label","Pause");
+    timer=setInterval(()=>{ if(+sl.value>=n-1){stop();return} sl.value=+sl.value+1; onFrame(+sl.value,true); }, reduce?250:650);
+  };
+  sl.oninput=()=>{stop();onFrame(+sl.value,false)};
+  onFrame(n-1,false);
+}
+
+/* ---------- Map A: fanning out ---------- */
+const framesA=["pre"].concat(monthsBetween("2025-01","2026-11"));
+const endOf=k=>k==="pre"?"2024-12-31":k+"-31";
+const svgA=d3.select("#b-mapA"); base(svgA);
+const gH=svgA.append("g"), gR=svgA.append("g"), gP=svgA.append("g"), gL=svgA.append("g");
+const tA=tipper("b-wrapA","b-tipA");
+function drawHubs(){
+  gH.selectAll("circle").data(D.op.filter(P)).join("circle").attr("class","halo").attr("r",25*MI_PX).attr("cx",d=>P(d)[0]).attr("cy",d=>P(d)[1]);
+  gL.selectAll("text").data(D.hubs.filter(h=>P(h)).slice(0,8)).join("text").attr("class","hublbl")
+    .attr("x",d=>P(d)[0]+(d.label.startsWith("New York")?12:d.label.startsWith("Northern")?14:10)).attr("y",d=>P(d)[1]+(d.label==="Richmond"?14:d.label.startsWith("Philadelphia")?4:d.label.startsWith("New York")?-16:-8)).attr("text-anchor",d=>d.label.startsWith("New York")?"end":"start")
+    .text(d=>`${d.label.replace(/, [A-Z]{2}$/,"")} (${d.n})`);
+}
+const inQ=(d,q)=>{ if(q.q==="Before 2025") return !d.d||d.d<"2025-01-01"; const [y,Q]=q.q.split(" Q"); const m=+d.d.slice(5,7); return d.d.slice(0,4)===y && Math.ceil(m/3)===+Q; };
+function frameA(i,anim){
+  const k=framesA[i], end=endOf(k), start=k==="pre"?"0000":k+"-01";
+  const shown=R.filter(r=>!r.d||r.d<=end);
+  gR.selectAll("circle").data(shown,d=>d.loc+d.st).join(
+     en=>en.append("circle").attr("class","rd").attr("cx",d=>P(d)[0]).attr("cy",d=>P(d)[1]).attr("r",anim&&!reduce?0:4).attr("fill",d=>css(BT[d.band]))
+        .call(e=>e.on("mousemove",(ev,d)=>tA.show(ev,`<b>${esc(d.loc)}, ${esc(d.st)}</b><br>${esc(d.t)}${d.d?" &middot; "+esc(d.d):""}<br>${Math.round(d.dop)} mi from nearest operating site (${esc(d.nop)})`)).on("mouseleave",tA.hide))
+        .call(e=>anim&&!reduce?e.transition().duration(400).attr("r",4):e),
+     up=>up.attr("r",4), ex=>ex.remove());
+  gP.selectAll("*").remove();
+  if(anim&&!reduce){ const fresh=shown.filter(r=>r.d&&r.d>=start&&r.d<=end);
+    gP.selectAll("circle").data(fresh).join("circle").attr("class","pulse").attr("cx",d=>P(d)[0]).attr("cy",d=>P(d)[1]).attr("r",4).attr("stroke",d=>css(BT[d.band])).attr("opacity",.9)
+      .transition().duration(600).attr("r",16).attr("opacity",0).remove(); }
+  const med=d3.median(shown.filter(r=>r.d&&r.d>=(k==="pre"?"0000":k.slice(0,4)+"-01-01")&&r.d<=end),r=>r.dop);
+  document.getElementById("b-whenA").textContent=k==="pre"?"Before 2025":"Through "+fmtM(k);
+  const far=shown.filter(r=>r.band>=2).length;
+  document.getElementById("b-statusA").innerHTML=`<b>${shown.length}</b> restrictions so far &middot; <b>${pct(shown.filter(r=>r.band===0).length/shown.length)}</b> within 25 mi of a hub &middot; <b>${far}</b> are 50+ mi away`+(med?` &middot; median this year: <b>${Math.round(med)} mi</b>`:"");
+  const cur=k==="pre"?"Before 2025":`${k.slice(0,4)} Q${Math.ceil(+k.slice(5,7)/3)}`;
+  colsHighlight(cur, i===framesA.length-1, end, anim);
+}
+
+/* hub bar chart, linked to map A */
+function hubBars(){
+  const svg=d3.select("#b-hubs"); svg.selectAll("*").remove();
+  const H8=D.hubs.slice(0,8).map((h,i)=>({...h,i,name:h.label.replace(/, [A-Z]{2}$/,"")}));
+  const W=380,Hh=150,m={t:4,r:40,b:4,l:150};
+  const y=d3.scaleBand(H8.map(d=>d.i),[m.t,Hh-m.b]).padding(.22), x=d3.scaleLinear([0,d3.max(H8,d=>d.n)],[m.l,W-m.r]);
+  const g=svg.selectAll("g.hb").data(H8).join("g").attr("class","hb").attr("tabindex",0).attr("transform",d=>`translate(0,${y(d.i)})`);
+  g.append("rect").attr("class","bg").attr("x",0).attr("y",-y.step()*y.paddingInner()/2).attr("width",W).attr("height",y.step()).attr("fill","transparent");
+  g.append("text").attr("class","nm").attr("x",m.l-8).attr("y",y.bandwidth()/2+4).attr("text-anchor","end").text(d=>d.name);
+  g.append("rect").attr("x",m.l).attr("y",y.bandwidth()/2-3.5).attr("height",7).attr("width",d=>x(d.n)-m.l).attr("rx",2).attr("fill",css("--halo")).attr("fill-opacity",.55);
+  g.append("text").attr("class","v").attr("x",d=>x(d.n)+5).attr("y",y.bandwidth()/2+4).text(d=>d.n);
+  const on=d=>{ g.classed("on",e=>e.i===d.i); g.selectAll("rect:not(.bg)").attr("fill",e=>css(e.i===d.i?"--prop":"--halo")).attr("fill-opacity",e=>e.i===d.i?.9:.55);
+    gH.selectAll("circle").classed("hl",e=>e.h===d.i).classed("dim",e=>e.h!==d.i); gL.selectAll("text").classed("hl",e=>e===D.hubs[d.i]).attr("opacity",e=>e===D.hubs[d.i]?1:.15); gH.selectAll("circle.hl").raise(); gR.selectAll("circle").attr("opacity",.03); gP.selectAll("*").attr("opacity",0); };
+  const off=()=>{ g.classed("on",false); g.selectAll("rect:not(.bg)").attr("fill",css("--halo")).attr("fill-opacity",.55); gH.selectAll("circle").classed("hl",false).classed("dim",false); gL.selectAll("text").classed("hl",false).attr("opacity",null); gR.selectAll("circle").attr("opacity",1); };
+  g.on("mouseenter",(e,d)=>on(d)).on("mouseleave",off).on("focus",(e,d)=>on(d)).on("blur",off);
+  svg.attr("aria-label","Big hubs by operating data centers: "+H8.map(d=>`${d.name} ${d.n}`).join(", "));
+}
+
+/* column segment -> map highlight */
+function segOn(e,d){
+  d3.selectAll("#b-cols .seg").attr("opacity",s=>s===d?1:.35);
+  let n=0;
+  gR.selectAll("circle").each(function(r){ const hit=r.band===d.i&&inQ(r,d.q); if(hit) n++;
+    d3.select(this).attr("opacity",hit?1:.08).attr("r",hit?6:4).attr("stroke",hit?css("--ink"):null).attr("stroke-width",hit?1.2:null); });
+  gR.selectAll("circle").filter(r=>r.band===d.i&&inQ(r,d.q)).raise();
+  const w=document.getElementById("b-wrapA"), t=document.getElementById("b-tipA"), r=w.getBoundingClientRect();
+  t.innerHTML=`<b>${d.q.q}</b><br>${d.v} of ${d.tot} restrictions ${BANDS[d.i].toLowerCase()} from an operating site${n<d.v?`<br>${n} shown at the current map date`:""}`;
+  t.hidden=false; t.style.left="12px"; t.style.top="12px";
+}
+function segOff(){
+  d3.selectAll("#b-cols .seg").attr("opacity",1);
+  gR.selectAll("circle").attr("opacity",1).attr("r",4).attr("stroke",null).attr("stroke-width",null);
+  document.getElementById("b-tipA").hidden=true;
+}
+/* columns */
+const Q=D.quarters.filter(q=>q.q!=="2026 Q4");
+let colsHighlight=()=>{};
+function drawCols(){
+  const svg=d3.select("#b-cols"); svg.selectAll("*").remove();
+  const W=380,H=240,m={t:20,r:6,b:42,l:34};
+  const maxT=d3.max(Q,q=>q.b.reduce((a,c)=>a+c,0));
+  const x=d3.scaleBand(Q.map(q=>q.q),[m.l,W-m.r]).padding(.5), y=d3.scaleLinear([0,Math.ceil(maxT*1.1/20)*20],[H-m.b,m.t]);
+  y.ticks(6).forEach(v=>{svg.append("line").attr("class","ax").attr("x1",m.l).attr("x2",W-m.r).attr("y1",y(v)).attr("y2",y(v));svg.append("text").attr("x",m.l-4).attr("y",y(v)+4).attr("text-anchor","end").text(v)});
+  const cols=svg.selectAll("g.col").data(Q).join("g").attr("class","col").attr("data-q",d=>d.q);
+  cols.each(function(q){ const tot=q.b.reduce((a,c)=>a+c,0); let acc=0; const g=d3.select(this);
+    q.b.forEach((v,i)=>{ const h=v; g.append("rect").attr("class","seg").attr("tabindex",v?0:null).datum({q,i,v,tot}).attr("x",x(q.q)).attr("width",x.bandwidth()).attr("y",y(acc+h)).attr("height",Math.max(0,y(acc)-y(acc+h))).attr("fill",css(BT[i]))
+      .on("mouseenter focus",(e,d)=>segOn(e,d)).on("mouseleave blur",segOff); acc+=h; });
+    g.append("text").attr("class","v").attr("x",x(q.q)+x.bandwidth()/2).attr("y",y(tot)-5).attr("text-anchor","middle").text(tot);
+    g.append("text").attr("x",x(q.q)+x.bandwidth()/2).attr("y",H-m.b+14).attr("text-anchor","middle").text(q.q==="Before 2025"?"<2025":"Q"+q.q.slice(-1));
+  });
+  svg.append("text").attr("x",(x("2025 Q1")+x("2025 Q4")+x.bandwidth())/2).attr("y",H-12).attr("text-anchor","middle").text("2025");
+  svg.append("text").attr("x",(x("2026 Q1")+x("2026 Q3")+x.bandwidth())/2).attr("y",H-12).attr("text-anchor","middle").text("2026");
+  const qi=k=>Q.findIndex(q=>q.q===k);
+  colsHighlight=(cur,all,end,anim)=>{
+    const ci=qi(cur);
+    svg.selectAll("g.col").each(function(q){ const j=qi(q.q), g=d3.select(this);
+      const vals=all||j<ci||(j===ci&&q.q==="Before 2025")?q.b:j>ci?q.b.map(()=>0)
+        :q.b.map((_,i)=>D.rest.filter(r=>r.band===i&&r.d&&r.d<=end&&inQ(r,q)).length);
+      let acc=0; const tot=vals.reduce((a,c)=>a+c,0);
+      g.selectAll("rect.seg").each(function(d,i){ const v=vals[i], y0=acc; acc+=v; d.v=v; d.tot=tot;
+        const sel=d3.select(this).attr("tabindex",v?0:null); (anim&&!reduce?sel.transition().duration(450):sel).attr("y",y(y0+v)).attr("height",Math.max(0,y(y0)-y(y0+v))); });
+      const t=g.select("text.v").text(tot||""); (anim&&!reduce?t.transition().duration(450):t).attr("y",y(tot)-5);
+      g.attr("opacity",all||j===ci?1:j<ci?.6:1);
+    });
+  };
+}
+document.getElementById("b-keyA").innerHTML=BANDS.map((b,i)=>`<span data-k="b${i}" tabindex="0"><i class="dot" style="width:10px;height:10px;background:var(${BT[i]})"></i>${b} from an operating site</span>`).join("")+`<span data-k="zone" tabindex="0"><i class="dot" style="width:12px;height:12px;background:var(--halo);opacity:.35"></i>25-mile zone around an operating site</span>`;
+
+/* ---------- Map B: proposals then restrictions ---------- */
+const framesB=monthsBetween("2024-04","2026-11");
+const PR=D.pr.filter(p=>p.d&&P(p));
+const svgB=d3.select("#b-mapB"); base(svgB);
+const gLk=svgB.append("g"), gPr=svgB.append("g"), gRb=svgB.append("g");
+const tB=tipper("b-wrapB","b-tipB");
+const RB=R.filter(r=>r.d&&r.d>="2024-04-01");
+function frameB(i,anim){
+  const k=framesB[i], end=k+"-31";
+  const ps=PR.filter(p=>p.d<=end), rs=RB.filter(r=>r.d<=end);
+  gPr.selectAll("rect").data(ps,d=>d.n+d.lat).join(
+    en=>en.append("rect").attr("class","pd").attr("width",5).attr("height",5).attr("transform",d=>{const p=P(d);return `translate(${p[0]-2.5},${p[1]-2.5}) rotate(45 2.5 2.5)`}).attr("opacity",anim&&!reduce?0:.75)
+      .call(e=>e.on("mousemove",(ev,d)=>tB.show(ev,`<b>${esc(d.n||"Proposed project")}</b><br>${esc(d.s)} &middot; ${esc(d.status)}<br>First logged ${esc(d.d)}`)).on("mouseleave",tB.hide))
+      .call(e=>anim&&!reduce?e.transition().duration(400).attr("opacity",.75):e),
+    up=>up.attr("opacity",.75), ex=>ex.remove());
+  const linked=rs.filter(r=>r.pre&&r.pla!=null&&proj([r.plo,r.pla]));
+  gLk.selectAll("line").data(linked,d=>d.loc+d.st).join(
+    en=>en.append("line").attr("class","link").attr("x1",d=>proj([d.plo,d.pla])[0]).attr("y1",d=>proj([d.plo,d.pla])[1]).attr("x2",d=>anim&&!reduce?proj([d.plo,d.pla])[0]:P(d)[0]).attr("y2",d=>anim&&!reduce?proj([d.plo,d.pla])[1]:P(d)[1])
+      .call(e=>anim&&!reduce?e.transition().duration(500).attr("x2",d=>P(d)[0]).attr("y2",d=>P(d)[1]):e),
+    up=>up, ex=>ex.remove());
+  gRb.selectAll("circle").data(rs,d=>d.loc+d.st).join(
+    en=>en.append("circle").attr("class",d=>"rd"+(d.dop>=100&&d.dpr>=50?" far":"")).attr("cx",d=>P(d)[0]).attr("cy",d=>P(d)[1]).attr("r",anim&&!reduce?0:4).attr("fill",d=>css(d.pre?"--b0":"--nopre"))
+      .call(e=>e.on("mousemove",(ev,d)=>tB.show(ev,`<b>${esc(d.loc)}, ${esc(d.st)}</b><br>${esc(d.t)} &middot; ${esc(d.d)}<br>${d.pre?`${Math.round(d.lag/30)} months after <i>${esc(d.pn)}</i> was logged nearby`:"No proposal logged within 25 mi beforehand"}`)).on("mouseleave",tB.hide))
+      .call(e=>anim&&!reduce?e.transition().delay(300).duration(400).attr("r",4):e),
+    up=>up.attr("r",4), ex=>ex.remove());
+  document.getElementById("b-whenB").textContent="Through "+fmtM(k);
+  const npre=rs.filter(r=>r.pre).length;
+  document.getElementById("b-statusB").innerHTML=`<b>${ps.length}</b> proposals logged &middot; <b>${rs.length}</b> restrictions passed`+(rs.length?` &middot; <b>${pct(npre/rs.length)}</b> came after a nearby proposal`:"");
+}
+
+
+
+/* legend hover -> map highlight */
+function legendHover(keyEl,on,off){
+  keyEl.querySelectorAll("[data-k]").forEach(sp=>{
+    const k=sp.dataset.k, enter=()=>{ keyEl.querySelectorAll("[data-k]").forEach(o=>o.classList.toggle("dimk",o!==sp)); on(k); }, leave=()=>{ keyEl.querySelectorAll("[data-k]").forEach(o=>o.classList.remove("dimk")); off(); };
+    sp.addEventListener("mouseenter",enter); sp.addEventListener("focus",enter); sp.addEventListener("mouseleave",leave); sp.addEventListener("blur",leave);
+  });
+}
+legendHover(document.getElementById("b-keyA"),k=>{
+  if(k==="zone"){ gH.selectAll("circle").attr("opacity",null).classed("hl",true); gR.selectAll("circle").attr("opacity",.15); return; }
+  const b=+k.slice(1);
+  gR.selectAll("circle").attr("opacity",r=>r.band===b?1:.08).attr("r",r=>r.band===b?5.5:4);
+  gR.selectAll("circle").filter(r=>r.band===b).raise();
+},()=>{ gH.selectAll("circle").classed("hl",false); gR.selectAll("circle").attr("opacity",1).attr("r",4); });
+const keyB=document.getElementById("b-wrapB").closest(".mapcol").querySelector(".key");
+legendHover(keyB,k=>{
+  const isR=r=>k==="pre"?r.pre:k==="nopre"?!r.pre:k==="far"?(r.dop>=100&&r.dpr>=50):false;
+  gPr.selectAll("rect").attr("opacity",k==="prop"||k==="link"?.95:.08).attr("stroke-width",k==="prop"?1.8:null);
+  gLk.selectAll("line").attr("opacity",k==="link"?1:k==="pre"?.6:.05).attr("stroke-width",k==="link"?1.8:null);
+  gRb.selectAll("circle").attr("opacity",r=>isR(r)?1:(k==="link"&&r.pre?1:.08)).attr("r",r=>isR(r)?5.5:4);
+  gRb.selectAll("circle").filter(isR).raise();
+},()=>{ gPr.selectAll("rect").attr("opacity",.75).attr("stroke-width",null); gLk.selectAll("line").attr("opacity",null).attr("stroke-width",null); gRb.selectAll("circle").attr("opacity",1).attr("r",4); });
+/* ---------- Forest plot ---------- */
+const FP=[
+ {g:"Each predictor alone"},
+ {k:"Operating data centers",e:1.28,lo:1.084,hi:1.511,p:"p = 0.004",c:"--b1",ex:"28%"},
+ {k:"Proposed projects",e:1.616,lo:1.348,hi:1.937,p:"p < 0.001",c:"--prop",ex:"41%"},
+ {g:"Both together (main model)",ex:"41% combined"},
+ {k:"Operating data centers",e:0.99,lo:0.82,hi:1.195,p:"p = 0.92",c:"--b1",main:1,ex:"adds <1%"},
+ {k:"Proposed projects",e:1.627,lo:1.305,hi:2.029,p:"p < 0.001",c:"--prop",main:1,ex:"adds 13%"}
+];
+function forest(){
+  const svg=d3.select("#b-forest"); svg.selectAll("*").remove();
+  const W=870,H=250,m={t:30,r:310,b:34,l:190}, rowH=(H-m.t-m.b)/FP.length;
+  const x=d3.scaleLog([0.7,2.5],[m.l,W-m.r]);
+  [0.75,1,1.5,2].forEach(v=>{svg.append("line").attr("class",v===1?"ref":"gl").attr("x1",x(v)).attr("x2",x(v)).attr("y1",m.t-8).attr("y2",H-m.b);
+    svg.append("text").attr("x",x(v)).attr("y",H-m.b+16).attr("text-anchor","middle").text(v===1?"1":"×"+v)});
+  svg.append("text").attr("x",x(1)-6).attr("y",m.t-14).attr("text-anchor","end").text("← fewer");
+  svg.append("text").attr("x",x(1)+6).attr("y",m.t-14).attr("text-anchor","start").text("more restrictions →");
+  svg.append("text").attr("x",W-m.r+16).attr("y",m.t-14).text("Per doubling");
+  svg.append("text").attr("x",W-m.r+205).attr("y",m.t-14).text("Explains");
+  FP.forEach((r,i)=>{ const yy=m.t+rowH*(i+.5);
+    const EX=W-m.r+205;
+    if(r.g){ svg.append("text").attr("class","grp").attr("x",8).attr("y",yy+4).text(r.g);
+      if(r.ex) svg.append("text").attr("x",EX).attr("y",yy+4).text(r.ex);
+      return; }
+    if(r.ex) svg.append("text").attr("class","val").attr("x",EX).attr("y",yy+4).attr("font-weight",r.main?600:400).text(r.ex);
+    svg.append("text").attr("class","lab").attr("x",22).attr("y",yy+4).attr("font-weight",r.main?600:400).text(r.k);
+    svg.append("line").attr("x1",x(r.lo)).attr("x2",x(r.hi)).attr("y1",yy).attr("y2",yy).attr("stroke",css(r.c)).attr("stroke-width",r.main?3:2);
+    svg.append("rect").attr("x",x(r.e)-(r.main?6:5)).attr("data-p",r.p).attr("y",yy-(r.main?6:5)).attr("width",r.main?12:10).attr("height",r.main?12:10).attr("fill",css(r.c));
+    const pc=v=>(v>=1?"+":"−")+Math.abs(Math.round((v-1)*100))+"%";
+    svg.append("text").attr("class","val").attr("x",W-m.r+16).attr("y",yy+4).attr("font-weight",r.main?600:400).text(`${pc(r.e)}  (${pc(r.lo)} to ${pc(r.hi)})`);
+  });
+}
+/* ---------- Scatter ---------- */
+const SCN={AL:"Alabama",AK:"Alaska",AZ:"Arizona",AR:"Arkansas",CA:"California",CO:"Colorado",CT:"Connecticut",DE:"Delaware",DC:"District of Columbia",FL:"Florida",GA:"Georgia",HI:"Hawaii",ID:"Idaho",IL:"Illinois",IN:"Indiana",IA:"Iowa",KS:"Kansas",KY:"Kentucky",LA:"Louisiana",ME:"Maine",MD:"Maryland",MA:"Massachusetts",MI:"Michigan",MN:"Minnesota",MS:"Mississippi",MO:"Missouri",MT:"Montana",NE:"Nebraska",NV:"Nevada",NH:"New Hampshire",NJ:"New Jersey",NM:"New Mexico",NY:"New York",NC:"North Carolina",ND:"North Dakota",OH:"Ohio",OK:"Oklahoma",OR:"Oregon",PA:"Pennsylvania",RI:"Rhode Island",SC:"South Carolina",SD:"South Dakota",TN:"Tennessee",TX:"Texas",UT:"Utah",VT:"Vermont",VA:"Virginia",WA:"Washington",WV:"West Virginia",WI:"Wisconsin",WY:"Wyoming"};
+function scatter(id,key,label,rho,p){
+  const svg=d3.select("#"+id); svg.selectAll("*").remove();
+  const W=440,H=380,m={t:16,r:14,b:44,l:46};
+  const st=D.states;
+  const xmax=key==="op"?300:400;
+  const x=d3.scaleSymlog().constant(1).domain([0,xmax]).range([m.l,W-m.r]);
+  const y=d3.scaleSymlog().constant(1).domain([0,40]).range([H-m.b,m.t]);
+  const xt=[0,1,3,10,30,100,300], yt=[0,1,3,10,30];
+  const g=svg.append("g").attr("class","grid");
+  xt.forEach(v=>{g.append("line").attr("x1",x(v)).attr("x2",x(v)).attr("y1",m.t).attr("y2",H-m.b);svg.append("text").attr("x",x(v)).attr("y",H-m.b+14).attr("text-anchor","middle").text(v)});
+  yt.forEach(v=>{g.append("line").attr("x1",m.l).attr("x2",W-m.r).attr("y1",y(v)).attr("y2",y(v));svg.append("text").attr("x",m.l-6).attr("y",y(v)+4).attr("text-anchor","end").text(v)});
+  svg.append("text").attr("x",(m.l+W-m.r)/2).attr("y",H-8).attr("text-anchor","middle").text(label);
+  svg.append("text").attr("transform",`translate(12,${(m.t+H-m.b)/2}) rotate(-90)`).attr("text-anchor","middle").text("Local restrictions");
+  const hl=new Set(["VA","TX","MI","KS","NC","WI","GA","OH","IL","TN","FL","PA","WA"]);
+  // trend line: least squares on log(1+x) vs log(1+restrictions), drawn back on the original scale
+  const lx=st.map(d=>Math.log1p(d[key])), ly=st.map(d=>Math.log1p(d.r)), mx=d3.mean(lx), my=d3.mean(ly);
+  const bb=d3.sum(lx,(v,i)=>(v-mx)*(ly[i]-my))/d3.sum(lx,v=>(v-mx)**2), aa=my-bb*mx;
+  const r2=1-d3.sum(lx,(v,i)=>(ly[i]-(aa+bb*v))**2)/d3.sum(ly,v=>(v-my)**2);
+  const xs=d3.range(0,1.0001,.02).map(t=>Math.expm1(t*Math.log1p(xmax)));
+  svg.append("path").attr("d",d3.line()(xs.map(v=>[x(v),y(Math.min(40,Math.expm1(aa+bb*Math.log1p(v))))]))).attr("fill","none").attr("stroke",css("--ink")).attr("stroke-width",1.6).attr("stroke-dasharray","5 4").attr("opacity",.7);
+  svg.append("text").attr("class","note").attr("x",W-m.r-6).attr("y",H-m.b-38).attr("text-anchor","end").text(`trend explains ${Math.round(r2*100)}% of the differences`);
+  const dots=svg.append("g").selectAll("circle").data(st).join("circle").attr("cx",d=>x(d[key])).attr("cy",d=>y(d.r)).attr("r",4.5)
+    .attr("fill",d=>css(key==="op"?"--b1":"--prop")).attr("fill-opacity",.8).attr("stroke",css("--surface")).attr("stroke-width",.8).attr("tabindex",0).style("cursor","pointer")
+    .attr("aria-label",d=>`${SCN[d.s]||d.s}: ${d.op} operating, ${d.pr} proposed, ${d.r} restrictions`);
+  // label placement: try right, left, above, below each dot; keep a label only where it clears every dot, earlier label and the notes box
+  const pts=st.map(d=>({d,px:x(d[key]),py:y(d.r)}));
+  const boxes=pts.map(q=>({x0:q.px-4.5,x1:q.px+4.5,y0:q.py-4.5,y1:q.py+4.5,own:q.d}));
+  boxes.push({x0:W-m.r-270,x1:W-m.r,y0:H-m.b-50,y1:H-m.b});
+  const hit=(a,b)=>a.x0<b.x1+3&&a.x1>b.x0-3&&a.y0<b.y1+2&&a.y1>b.y0-2;
+  // dots that sit on top of each other share one label, e.g. "MI · NC"
+  const groups=[]; pts.forEach(q=>{ const g=groups.find(g=>Math.hypot(g.px-q.px,g.py-q.py)<3); if(g) g.m.push(q.d); else groups.push({px:q.px,py:q.py,m:[q.d]}); });
+  groups.forEach(g=>{ g.d={s:g.m.map(d=>d.s).sort().join(" \u00b7 "),r:d3.max(g.m,d=>d.r),[key]:d3.max(g.m,d=>d[key])}; g.members=new Set(g.m); g.hl=g.m.some(d=>hl.has(d.s)); });
+  const order=groups.filter(g=>g.m.length<=3).sort((a,b)=>(b.hl-a.hl)||(b.d.r+b.d[key])-(a.d.r+a.d[key]));
+  const placed=[];
+  order.forEach(q=>{ const w=q.d.s.replace(/ \u00b7 /g,"..").length*6.6+1, h=10;
+    const cands=[[q.px+7,q.py+4,"start"],[q.px-7,q.py+4,"end"],[q.px,q.py-8,"middle"],[q.px,q.py+15,"middle"]];
+    for(const [tx,ty,an] of cands){ const x0=an==="start"?tx:an==="end"?tx-w:tx-w/2, b={x0,x1:x0+w,y0:ty-h+1,y1:ty+1};
+      if(b.x0<m.l||b.x1>W-m.r||b.y0<m.t-4||b.y1>H-m.b) continue;
+      if(boxes.some(o=>!(o.own&&q.members.has(o.own))&&hit(b,o))) continue;
+      boxes.push(b); placed.push({d:q.d,tx,ty,an}); break; } });
+  svg.append("g").style("pointer-events","none").selectAll("text").data(placed).join("text").attr("class","slbl").attr("x",d=>d.tx).attr("y",d=>d.ty).attr("text-anchor",d=>d.an).text(d=>d.d.s);
+  const n=id.slice(-1), wrap=document.getElementById("b-scw"+n), tip=document.getElementById("b-sctip"+n);
+  const row=(lab,v,on)=>`<span style="${on?"font-weight:600":"opacity:.85"}">${v} ${lab}</span>`;
+  const show=(ev,d,el)=>{ dots.attr("fill-opacity",e=>e===d?1:.25).attr("stroke",e=>e===d?css("--ink"):css("--surface")).attr("stroke-width",e=>e===d?1.5:.8); d3.select(el).raise().attr("r",6.5);
+    tip.innerHTML=`<b>${esc(SCN[d.s]||d.s)}</b><br>${row("local restrictions",d.r,true)}<br>${row("operating data centers",d.op,key==="op")}<br>${row("proposed projects",d.pr,key==="pr")}`; tip.hidden=false;
+    const r=wrap.getBoundingClientRect(), b=el.getBoundingClientRect(); let lx=b.left-r.left+14, ly=b.top-r.top-8; if(lx>r.width-200) lx=b.left-r.left-200; tip.style.left=lx+"px"; tip.style.top=Math.max(0,ly)+"px"; };
+  const hide=()=>{ dots.attr("fill-opacity",.8).attr("stroke",css("--surface")).attr("stroke-width",.8).attr("r",4.5); tip.hidden=true; };
+  dots.on("mouseenter",function(ev,d){show(ev,d,this)}).on("focus",function(ev,d){show(ev,d,this)}).on("mouseleave blur",hide);
+  svg.append("text").attr("class","rho note").attr("x",W-m.r-6).attr("y",H-m.b-24).attr("text-anchor","end").text(`match score: ${rho.toFixed(2)} out of 1`);
+  svg.append("text").attr("class","note").attr("x",W-m.r-6).attr("y",H-m.b-10).attr("text-anchor","end").text(p<0.001?"very unlikely to be chance":p<0.05?"unlikely to be chance":"could be chance");
+}
+
+document.getElementById("b-take").innerHTML=[
+ `<b>Next door first.</b> Before 2025, half the restrictions (13 of 25) were within 25 miles of an operating data center: Northern Virginia counties writing zoning rules around Ashburn, Atlanta and Phoenix. Their median distance was 24 miles.`,
+ `<b>Then the fan-out.</b> In 2026 the count jumped to 344 through September, and the share inside a hub zone fell to about a quarter. 2026's median distance is 52 miles; ${q26.reduce((a,q)=>a+q.b[3],0)} of this year's restrictions are 100+ miles from any operating site.`,
+ `<b>Proposals light the fuse.</b> ${pct(s.pre)} of restrictions since mid-2024 came after FracTracker logged a project within 25 miles, compared with ${pct(s.nullpre)} for random towns on the same dates. The typical gap is about ${Math.round(s.lag/30)} months.`,
+ `<b>Across states, the pipeline matters, not the installed base.</b> States’ restriction counts match their proposal counts more closely (match score ${s.rho_pr.toFixed(2)} out of 1) than their operating data centers (${s.rho_op.toFixed(2)}). Comparing states side by side, each doubling of proposed projects goes with 63% more restrictions, while operating data centers add nothing once proposals are counted, and that holds even without Virginia and Texas. Michigan, Wisconsin, Kansas and Tennessee have few operating sites but many restrictions; Texas has 64 operating sites and only 4 restrictions.`,
+ `<b>Outliers.</b> About 40% of restrictions have no logged proposal nearby beforehand, including preemptive waves around Wichita, mid-Michigan and the Carolina coast. Some may instead reflect gaps in FracTracker Alliance&rsquo;s data: operating sites it hasn&rsquo;t listed yet, or proposals that were never public, logged late or mislocated.`
+].map(t=>`<li>${t}</li>`).join("");
+
+document.getElementById("b-foot").innerHTML=`<p style="margin:0">Data sources: local restrictions from <a href="https://www.datacenterpolicy.com/" target="_blank" rel="noopener">The Data Center Policy Database</a> (Bridges et al., 2026, <a href="https://doi.org/10.17613/PVSTG-4A775" target="_blank" rel="noopener">doi.org/10.17613/PVSTG-4A775</a>); operating and proposed data centers from <a href="https://www.fractracker.org/data-centers/" target="_blank" rel="noopener">FracTracker Alliance</a> (Data provided by FracTracker Alliance (2026). Accessed via https://www.fractracker.org/data-centers/); town locations from GeoNames (CC BY 4.0). <b>Last updated: November 23, 2026.</b></p>`;
+
+function all(){ forest(); drawHubs(); hubBars(); drawCols(); scatter("b-sc1","op","Operating data centers (FracTracker)",s.rho_op,s.p_op); scatter("b-sc2","pr","Proposed projects (FracTracker)",s.rho_pr,s.p_pr);
+  frameA(+document.getElementById("b-sliderA").value||framesA.length-1,false); frameB(+document.getElementById("b-sliderB").value||framesB.length-1,false);
+  gR.selectAll("circle").attr("fill",d=>css(BT[d.band])); gRb.selectAll("circle").attr("fill",d=>css(d.pre?"--b0":"--nopre")); }
+drawHubs(); hubBars(); drawCols();
+player("b-playA","b-sliderA",framesA.length,frameA);
+player("b-playB","b-sliderB",framesB.length,frameB);
+scatter("b-sc1","op","Operating data centers (FracTracker)",s.rho_op,s.p_op);
+scatter("b-sc2","pr","Proposed projects (FracTracker)",s.rho_pr,s.p_pr);
+forest();
+matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change",all);
+new MutationObserver(all).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
+})();
+</script>
+
+<style>
+#view-howto .wrap{max-width:1240px;margin:0 auto;padding-block:28px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:22px}
+#view-howto header{display:grid;gap:10px}
+#view-howto .eyebrow{font-family:var(--f-data);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+#view-howto h1{font-weight:800;font-size:clamp(26px,4vw,40px);line-height:1.08;margin:0;text-wrap:balance;letter-spacing:-.01em}
+#view-howto .lede{margin:0;color:var(--muted);max-width:72ch}
+#view-howto .toc{display:flex;flex-wrap:wrap;gap:6px 8px;margin:4px 0 0;padding:0;list-style:none}
+#view-howto .toc a{display:inline-block;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:4px 11px;font:500 13px var(--f-body);text-decoration:none}
+#view-howto .toc a:hover{background:var(--bg)}
+#view-howto .card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:20px;min-width:0;display:grid;gap:12px;scroll-margin-top:70px}
+#view-howto .card h2{font-size:21px;margin:0;letter-spacing:-.005em;text-wrap:balance}
+#view-howto .card h3{font-size:15px;margin:6px 0 0}
+#view-howto .card p,#view-howto .card li{font-size:14.5px;line-height:1.55;max-width:80ch;margin:0}
+#view-howto .card ul,#view-howto .card ol{margin:0;padding-left:20px;display:grid;gap:7px}
+#view-howto .muted{color:var(--muted)}
+#view-howto a{color:var(--link)}
+#view-howto code{font:12.5px var(--f-data);background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:1px 5px}
+#view-howto .steps{counter-reset:st;list-style:none;padding:0;display:grid;gap:12px}
+#view-howto .steps>li{counter-increment:st;display:grid;grid-template-columns:30px minmax(0,1fr);gap:4px 12px;max-width:none}
+#view-howto .steps>li::before{content:counter(st);grid-row:span 2;width:26px;height:26px;border-radius:50%;background:var(--ink);color:var(--surface);font:600 13px var(--f-data);display:grid;place-items:center}
+#view-howto .steps b.t{font-size:15px}
+#view-howto .three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+#view-howto .pg{border:1px solid var(--line);border-radius:8px;padding:14px;display:grid;gap:8px;align-content:start}
+#view-howto .pg .n{font:500 12px var(--f-data);color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+#view-howto .pg h3{margin:0;font-size:16px}
+#view-howto .pg p{font-size:13.5px}
+#view-howto .arrowrow{display:flex;align-items:center;gap:8px;font:12.5px var(--f-data);color:var(--muted)}
+#view-howto .tbl{overflow-x:auto}
+#view-howto table{border-collapse:collapse;width:100%;font-size:13.5px}
+#view-howto th,#view-howto td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+#view-howto th{font-weight:600;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
+#view-howto td:first-child{font-weight:600;white-space:nowrap}
+/* flow diagram */
+#view-howto .flow{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:22px;position:relative}
+#view-howto .ph{position:relative;display:grid;gap:8px;align-content:start}
+#view-howto .ph:not(:last-child)::after{content:"";position:absolute;right:-17px;top:16px;width:12px;height:12px;border-top:2px solid var(--muted);border-right:2px solid var(--muted);transform:rotate(45deg)}
+#view-howto .ph .hd{border-radius:8px;padding:8px 10px;color:#fff;font:700 14px var(--f-body);display:flex;justify-content:space-between;align-items:baseline;gap:6px}
+#view-howto .ph .hd span{font:500 11px var(--f-data);opacity:.85}
+#view-howto .ph ol{list-style:none;padding:0;margin:0;display:grid;gap:6px}
+#view-howto .ph li{font-size:12.5px;line-height:1.4;border:1px solid var(--line);border-left:3px solid var(--c);border-radius:6px;padding:6px 8px;background:var(--surface);max-width:none}
+#view-howto .ph li i{font-style:normal;color:var(--muted);font-family:var(--f-data);font-size:11px;display:block;margin-bottom:1px}
+#view-howto .loop{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted);border:1px dashed var(--line);border-radius:8px;padding:8px 12px}
+#view-howto .loop b{color:var(--ink)}
+#view-howto .p1{--c:#5b6b8c} #view-howto .p2{--c:#2f78c6} #view-howto .p3{--c:#6a1fb0} #view-howto .p4{--c:#2a9d8f} #view-howto .p5{--c:#c77700}
+#view-howto .ph .hd{background:var(--c)}
+#view-howto .prompts{list-style:none;padding:0;margin:0;display:grid;gap:10px;counter-reset:pr}
+#view-howto .prompts li{counter-increment:pr;border:1px solid var(--line);border-radius:8px;padding:12px 14px 12px 50px;position:relative;max-width:none;background:var(--bg)}
+#view-howto .prompts li::before{content:counter(pr);position:absolute;left:14px;top:12px;width:24px;height:24px;border-radius:50%;border:1.5px solid var(--ink);font:600 12px var(--f-data);display:grid;place-items:center}
+#view-howto .prompts q{display:block;font:14px/1.5 var(--f-data);color:var(--ink);quotes:none}
+#view-howto .prompts .why{display:block;font-size:12.5px;color:var(--muted);margin-top:5px}
+#view-howto .tmpl{border:1px solid var(--line);border-radius:8px;background:var(--bg);padding:14px;display:grid;gap:8px}
+#view-howto .tmpl pre{margin:0;font:13px/1.55 var(--f-data);color:var(--ink);white-space:pre-wrap;overflow-wrap:anywhere}
+#view-howto .tmpl .why{font-size:12.5px;color:var(--muted)}
+#view-howto footer{font-size:12.5px;color:var(--muted);border-top:4px solid var(--ink);padding-top:18px}
+@media (max-width:980px){#view-howto .flow{grid-template-columns:minmax(0,1fr)} #view-howto .ph:not(:last-child)::after{right:auto;left:50%;top:auto;bottom:-16px;transform:rotate(135deg)} #view-howto .three{grid-template-columns:minmax(0,1fr)}}
+</style>
+<section class="view" id="view-howto" hidden>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Behind the Atlas</div>
+    <h1>How Claude built this site</h1>
+    <p class="lede">This site was built in one long conversation between its editor and Claude. The editor set the questions, picked the sources and made the editorial calls; Claude pulled the data, ran the analysis, wrote the code and drafted the text, then revised it prompt by prompt. This page explains where the data comes from, how the three pages fit together, how the numbers were calculated, what we worried about, and the prompts that got it built.</p>
+    <ul class="toc">
+      <li><a href="#howto" data-jump="h-data">1. Getting the data</a></li>
+      <li><a href="#howto" data-jump="h-story">2. The story in three pages</a></li>
+      <li><a href="#howto" data-jump="h-methods">3. Analysis and statistics</a></li>
+      <li><a href="#howto" data-jump="h-reliability">4. Reliability decisions</a></li>
+      <li><a href="#howto" data-jump="h-counting">5. Why counting is hard</a></li>
+      <li><a href="#howto" data-jump="h-flow">6. Process diagram</a></li>
+      <li><a href="#howto" data-jump="h-setup">7. Set up Claude</a></li>
+      <li><a href="#howto" data-jump="h-prompts">8. Key prompts</a></li>
+      <li><a href="#howto" data-jump="h-weekly">9. Weekly updates</a></li>
+    </ul>
+  </header>
+
+  <section class="card" id="h-data">
+    <h2>1. Where to get the data, step by step</h2>
+    <ol class="steps">
+      <li><b class="t">Data centers: FracTracker Alliance</b><span>Open FracTracker&rsquo;s <a href="https://www.fractracker.org/data-centers/" target="_blank" rel="noopener">data center tracker</a> and its public Google Sheet (tab &ldquo;FracTracker Data Centers&rdquo;). Each row is a facility with a status (Operating, Proposed, Approved, Cancelled and so on), coordinates, a location-confidence rating, operator, size class, megawatts, community pushback fields and source links. We used <b>536</b> rows with status Operating for page 1 and <b>1,197</b> proposed, approved, suspended, expanding or cancelled projects for page 3. Claude read the sheet through the Google Sheets connector.</span></li>
+      <li><b class="t">Local restrictions: The Data Center Policy Database</b><span>Download the export from <a href="https://www.datacenterpolicy.com/" target="_blank" rel="noopener">datacenterpolicy.com</a> (UVA Environmental Institute; Bridges et al., 2026, <a href="https://doi.org/10.17613/PVSTG-4A775" target="_blank" rel="noopener">doi.org/10.17613/PVSTG-4A775</a>). The editor saved it as <code>policies.csv</code>. We kept local policies with status Passed or Signed/Enacted: <b>469</b> actions in <b>338</b> counties, records dated through Nov 17, 2026.</span></li>
+      <li><b class="t">Maps: handled by Claude</b><span>You don&rsquo;t need to download anything for the map outlines. When you ask for a county or state map, Claude fetches the U.S. Census-based county and state boundaries from <a href="https://github.com/topojson/us-atlas" target="_blank" rel="noopener">us-atlas</a>, already projected so Alaska and Hawaii sit below the lower 48, and bundles them with the page.</span></li>
+      <li><b class="t">Town locations: handled by Claude</b><span>This also needs no download. When the analysis calls for town coordinates, Claude pulls a list of about 3,000 U.S. places with 1,000+ residents from GeoNames (CC BY 4.0) on its own. It uses them to place town-level restrictions on the map and to build the &ldquo;random town&rdquo; baseline that tests whether restrictions really follow proposals.</span></li>
+      <li><b class="t">Charts made elsewhere</b><span>The year-over-year line chart was built in <a href="https://www.datawrapper.de/_/NBhpu/" target="_blank" rel="noopener">Datawrapper</a> and the state-by-type treemap in Flourish. On the Claude-hosted version of the Atlas they appear as static images linked to the live charts, because a Claude artifact can&rsquo;t load outside embeds. To get the interactive versions, prompt Claude to build a GitHub Pages version of the site, for example: <q>Make a GitHub Pages version of the Atlas that uses the Datawrapper and Flourish embed codes instead of the screenshots, and push it to my repository.</q> GitHub Pages allows embed code, so the charts render live there, with hover, tooltips and their own updates.</span></li>
+    </ol>
+  </section>
+
+  <section class="card" id="h-story">
+    <h2>2. The narrative sequence across the three pages</h2>
+    <p>The pages run from &ldquo;what exists&rdquo; to &ldquo;who is pushing back&rdquo; to &ldquo;how the two are connected.&rdquo; Each page answers one question and sets up the next.</p>
+    <div class="three">
+      <div class="pg"><span class="n">Page 1</span><h3>Operating data centers</h3><p><b>Question:</b> where is the installed base? A symbol map of 536 operating sites, sized by capacity class, with orange dots where FracTracker reports community pushback. A state table ranks where they cluster: Northern Virginia, Atlanta, Dallas&ndash;Fort Worth.</p><p class="muted">Sets up: the industry is concentrated in a few hubs.</p></div>
+      <div class="pg"><span class="n">Page 2</span><h3>Local restrictions</h3><p><b>Question:</b> where are communities saying no? A county map of 469 moratoria, bans and zoning rules, a timeline that plays month by month, a year-over-year chart and a treemap by state and type.</p><p class="muted">Sets up: the restrictions are spreading fast, and many are far from the hubs on page 1.</p></div>
+      <div class="pg"><span class="n">Page 3</span><h3>Backlash next door</h3><p><b>Question:</b> what sparks a restriction? Restrictions started near hubs, then fanned out. Most came after a proposal nearby. Across states, proposals predict restrictions; existing data centers add nothing once proposals are counted.</p><p class="muted">Payoff: towns react to the next project, not the last one.</p></div>
+    </div>
+  </section>
+
+  <section class="card" id="h-methods">
+    <h2>3. Data analysis and statistical methods</h2>
+    <h3>Cleaning and joining</h3>
+    <ul>
+      <li>Each policy was attached to county FIPS codes. Town and township actions are shown on the county that contains them; a county is colored by its strongest action (ban, then moratorium, then zoning).</li>
+      <li>A moratorium counts as expired once its listed end date has passed. On the timeline, &ldquo;expired&rdquo; is judged against the date being shown, not today.</li>
+      <li>For distance work, the 469 policies were collapsed to 432 places and placed at the town that passed them (196) or at the county center (236).</li>
+    </ul>
+    <h3>Distance and hubs (page 3)</h3>
+    <ul>
+      <li>Straight-line (haversine) miles from each restriction to the nearest operating data center, grouped into four bands: under 25, 25&ndash;50, 50&ndash;100 and 100+ miles.</li>
+      <li><b>Hubs</b> are built by single-linkage clustering: operating sites are chained together when each is within 25 miles of another site in the group. A <b>big hub</b> has 12 or more sites; eight qualify.</li>
+      <li><b>&ldquo;Proposal first&rdquo;</b>: a restriction counts as following a proposal if FracTracker logged a project within 25 miles before the restriction&rsquo;s date. Result: 60% of restrictions since mid-2024, with a median gap of about 7 months.</li>
+      <li><b>Random-town baseline:</b> the same test run on random GeoNames towns given the same dates gives 48%. The gap between 60% and 48% is the signal; the 48% is how often it would happen by geography alone.</li>
+    </ul>
+    <h3>Comparing states</h3>
+    <ul>
+      <li><b>Match score</b> is a Spearman rank correlation across the 50 states: 0.54 for operating data centers vs. restrictions, 0.67 for proposals vs. restrictions. Both are very unlikely to be chance.</li>
+      <li><b>Trend lines</b> on the scatter plots are least-squares fits of log(1 + restrictions) on log(1 + count). The &ldquo;explains&rdquo; figure is that fit&rsquo;s R&sup2;.</li>
+      <li><b>Main model:</b> a negative binomial regression of each state&rsquo;s restriction count on log<sub>2</sub>(1 + operating) and log<sub>2</sub>(1 + proposed), so each coefficient reads as the change per doubling. Negative binomial instead of Poisson because the counts vary about six times more than Poisson allows (fitted &alpha; = 0.60). Holding the other constant, proposals: +63% restrictions per doubling (p &lt; 0.001); operating: &minus;1% (p = 0.92).</li>
+      <li><b>Checks:</b> the two predictors are correlated (r = 0.76) but not enough to destabilize the model (variance inflation factor 2.4). An ordinary least-squares version on log counts tells the same story. Dropping Virginia and Texas, the two biggest outliers, does not change the result.</li>
+      <li><b>What it can&rsquo;t say:</b> these are associations among 50 states, not proof of cause.</li>
+    </ul>
+  </section>
+
+  <section class="card" id="h-reliability">
+    <h2>4. Concerns and decisions about reliability, accuracy and completeness</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>Concern</th><th>What we found</th><th>What we decided</th></tr></thead>
+      <tbody>
+        <tr><td>Undercounted operating sites</td><td>FracTracker says its list of existing data centers is still being filled in. It lists no operating sites in Florida, Kansas or Utah and one in Michigan.</td><td>Say so in every footer. On page 3, flag that distances in those states are overstated and that some &ldquo;outliers&rdquo; may be data gaps.</td></tr>
+        <tr><td>Approximate locations</td><td>Many sites have medium or low location confidence.</td><td>Show all of them, but draw low-confidence sites with a dashed outline instead of dropping them.</td></tr>
+        <tr><td>Capacity is patchy</td><td>Most sites have no megawatt figure; some give a range such as &ldquo;150&ndash;400&rdquo;.</td><td>Sum only single numbers, label the total &ldquo;Reported MW&rdquo;, show how many sites it covers, and explain it under the table.</td></tr>
+        <tr><td>Dates that aren&rsquo;t what they seem</td><td>FracTracker has no opening dates for operating sites; its &ldquo;date created&rdquo; is when a row was added, and 148 of the operating rows arrived in its first load in April 2024.</td><td>A timeline was built for page 1, then removed because it would have implied when sites opened. On page 3, proposal dates are treated as &ldquo;first logged,&rdquo; which makes the proposal-first test conservative.</td></tr>
+        <tr><td>Errors in the source</td><td>The Laurens County moratorium was filed under Alabama but is in South Carolina, per its own source.</td><td>Correct it, and name the correction in the footer.</td></tr>
+        <tr><td>Broad categories</td><td>&ldquo;Zoning &amp; siting rules&rdquo; mixes limits with rules that simply say where data centers may go.</td><td>Keep the source&rsquo;s category, explain it, and color it apart from bans and moratoria.</td></tr>
+        <tr><td>Snapshot data</td><td>Both trackers change weekly.</td><td>Every page carries a &ldquo;Last updated&rdquo; date and the export date. The build script stamps today&rsquo;s date on every page each time the site is rebuilt, and refuses to build if a page is missing its date.</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="card" id="h-counting">
+    <h2>5. Why counting, measuring and defining data centers is hard</h2>
+    <ul>
+      <li><b>What counts as a data center?</b> The same word covers a telecom closet, a colocation building, a cloud campus, a crypto-mining warehouse and a multi-gigawatt AI campus. Lists differ mostly in where they draw that line.</li>
+      <li><b>One project, many names.</b> Developers often file under shell LLCs and nondisclosure agreements, and a single campus can appear as several parcels, phases or buildings. Deduplicating is judgment, not arithmetic.</li>
+      <li><b>Which measure of size?</b> Megawatts of power, square feet, acres and dollars all get reported, rarely together, and announced megawatts are often what a developer hopes to get from the utility, not what is built.</li>
+      <li><b>Status moves fast.</b> A project can be rumored, proposed, approved, paused, sued, cancelled and revived within a year. Any count is a snapshot, and trackers update at different speeds.</li>
+      <li><b>Policy is a moving target too.</b> Moratoria expire or get extended, zoning rules get rewritten, and state bills can preempt local action. A &ldquo;restriction&rdquo; today may be lifted next month.</li>
+      <li><b>The data is political.</b> Industry groups, utilities, advocates and local officials each have reasons to make the numbers look bigger or smaller. Trackers built by advocacy organizations may record pushback more carefully than quiet approvals. We used the sources as they are, named them on every page, and avoided claims that depend on precise totals.</li>
+    </ul>
+  </section>
+
+  <section class="card" id="h-flow">
+    <h2>6. From idea to finished site: the process</h2>
+    <p class="muted">Each box is a prompt or group of prompts from the conversation. Work moved left to right, but the last two stages looped many times.</p>
+    <div class="flow" role="img" aria-label="Flow diagram in five stages: Conceive, Design, Analyze, Iterate, Refine and polish">
+      <div class="ph p1"><div class="hd">Conceive <span>explore</span></div><ol>
+        <li><i>brainstorm</i>Dashboard ideas from the FracTracker sheet</li>
+        <li><i>scope</i>Narrow to proposals and 2026 cancellations</li>
+        <li><i>verify</i>Compare the Excel tracker with FracTracker</li>
+        <li><i>context</i>Court cases and docket alerts; moratoria vs. cancellations; top sponsors</li>
+      </ol></div>
+      <div class="ph p2"><div class="hd">Design <span>build</span></div><ol>
+        <li><i>map</i>County map of local restrictions</li>
+        <li><i>map</i>Symbol map of operating data centers</li>
+        <li><i>site</i>Combine into one site with tabs; order the pages</li>
+        <li><i>charts</i>Datawrapper trend line; Flourish treemap</li>
+      </ol></div>
+      <div class="ph p3"><div class="hd">Analyze <span>test</span></div><ol>
+        <li><i>method</i>Propose a geographic correlation method</li>
+        <li><i>page 3</i>Distance bands: &ldquo;Backlash next door&rdquo;</li>
+        <li><i>revamp</i>Fan-out map, column chart, proposals time-lapse, state scatter plots</li>
+        <li><i>model</i>Regression and forest plot</li>
+      </ol></div>
+      <div class="ph p4"><div class="hd">Iterate <span>fix</span></div><ol>
+        <li><i>accuracy</i>Fix Laurens County; cite sources; add last-updated</li>
+        <li><i>encoding</i>Distinct colors; pushback in orange; operator links</li>
+        <li><i>clarity</i>Plain-language labels; define &ldquo;big hub&rdquo;; FracTracker caveat</li>
+        <li><i>cut</i>Remove the page 1 timeline after finding its dates unreliable</li>
+      </ol></div>
+      <div class="ph p5"><div class="hd">Refine <span>polish</span></div><ol>
+        <li><i>motion</i>Timelines and play buttons, made thin and consistent</li>
+        <li><i>linking</i>Legend and chart hovers highlight the maps</li>
+        <li><i>tables</i>Sortable columns; notes; info boxes match map height</li>
+        <li><i>explain</i>State labels and pop-ups; model equation; this page</li>
+      </ol></div>
+    </div>
+    <div class="loop"><b>&#8634; Loop</b> Each change was checked in a browser screenshot, published, and reviewed by the editor, whose next prompt often reacted to what they saw.</div>
+  </section>
+
+  <section class="card" id="h-setup">
+    <h2>7. Setting up the Claude environment</h2>
+    <p>Before the first prompt, give Claude a home for the work, a folder for the data files, and access to the data sources. Menu names below are as of November 2026 and may change; Claude&rsquo;s <a href="https://support.claude.com/en/articles/9519177-how-can-i-create-and-manage-projects" target="_blank" rel="noopener">help center</a> has the current steps.</p>
+    <ol class="steps">
+      <li><b class="t">Install the Claude desktop app and sign in</b><span>Local folders and scheduled tasks need a paid plan (Pro, Max, Team or Enterprise). On Team and Enterprise, an admin may need to turn these features on.</span></li>
+      <li><b class="t">Create a Project</b><span>In Claude, open <b>Projects</b> (or go to claude.ai/projects) and click <b>+ New Project</b>. Name it, for example &ldquo;U.S. Data Centers Grassroots Campaigns&rdquo;, and add a one-line description of the goal. On a Team or Enterprise plan, choose whether it&rsquo;s private or shared with your organization.</span></li>
+      <li><b class="t">Add project instructions</b><span>In the project&rsquo;s knowledge area, click <b>Set project instructions</b> and add the standing rules, for example: &ldquo;Cite FracTracker Alliance and the Data Center Policy Database on every page. Use Datawrapper sharing links. Always include a &ldquo;Last updated&rdquo; date on every page, and change it to today&rsquo;s date whenever the page or its data changes.&rdquo; Every chat in the project follows these.</span></li>
+      <li><b class="t">Make a folder on your computer</b><span>Create a folder such as <code>Documents/Claude/data centers</code>. Download the export from <a href="https://www.datacenterpolicy.com/" target="_blank" rel="noopener">datacenterpolicy.com</a>, save it there as <code>policies.csv</code>, and put any of your own files (like a cancellations tracker in Excel) in the same folder.</span></li>
+      <li><b class="t">Give Claude the folder</b><span>Start a chat inside the project in the desktop app, open the <b>+</b> menu and choose <b>Add folder</b>, then pick the folder. Claude can now read <code>policies.csv</code> and save results back next to it. Nothing outside that folder is visible to Claude.</span></li>
+      <li><b class="t">Connect the data sources</b><span>In <b>Settings &rarr; Connectors</b>, connect Google Drive or Google Sheets so Claude can read FracTracker&rsquo;s public sheet, and GitHub so Claude can push the site to your repository when you ask. Optional: CourtListener for court cases, and Datawrapper for charts.</span></li>
+      <li><b class="t">Ask Claude to keep the build scripts in the folder</b><span>Have Claude save its data-prep and build scripts, the published page and its data files into the folder (for example a <code>site/</code> subfolder). That folder becomes your GitHub repository, and it is what the weekly update in section 9 reruns.</span></li>
+    </ol>
+  </section>
+
+  <section class="card" id="h-prompts">
+    <h2>8. Key prompts: the critical path</h2>
+    <p class="muted">The conversation had more than 70 prompts. These are the ones you would need to rebuild the core of this site, without the design polish. Wording is cleaned up from the originals.</p>
+    <ol class="prompts">
+      <li><q>Here is FracTracker&rsquo;s data center sheet. Brainstorm a dashboard tracking proposals, cancellations and community campaigns. Don&rsquo;t build yet.</q><span class="why">Sets the topic and the source, and gets options before committing.</span></li>
+      <li><q>Here is policies.csv from the Data Center Policy Database. Build a county map of local moratoria, bans and zoning rules, with the source cited.</q><span class="why">Creates page 2.</span></li>
+      <li><q>Build a symbol map of FracTracker sites with status Operating. Color the dots by community pushback.</q><span class="why">Creates page 1.</span></li>
+      <li><q>Combine the two maps into one website with tab navigation, operating data centers first.</q><span class="why">Turns two tools into one story.</span></li>
+      <li><q>Propose a method to test whether restrictions are geographically related to data centers.</q><span class="why">Asks for a plan before analysis.</span></li>
+      <li><q>Go with distance bands. Create a third page, &ldquo;Backlash next door,&rdquo; with findings and outliers.</q><span class="why">Creates page 3.</span></li>
+      <li><q>Run a multivariate regression of restrictions on operating and proposed sites by state, and show it as a forest plot.</q><span class="why">Separates the two effects.</span></li>
+      <li><q>Add a caveat that outliers could reflect incomplete or inaccurate FracTracker data.</q><span class="why">Keeps the claims honest.</span></li>
+      <li><q>Add a page explaining how this site was built: data, narrative, methods, reliability, and key prompts.</q><span class="why">This page.</span></li>
+    </ol>
+  </section>
+
+  <section class="card" id="h-weekly">
+    <h2>9. Keeping it current: a weekly scheduled task</h2>
+    <p>Both trackers change every week. A scheduled task can pull the new data, rerun the analysis, rebuild the pages and tell you what changed. You review the result, then ask Claude to push it to GitHub.</p>
+    <h3>How to set it up</h3>
+    <ol class="steps">
+      <li><b class="t">Open Scheduled tasks</b><span>In the desktop app, click <b>Scheduled</b> in the left sidebar, then <b>New task</b>. Choose <b>Set up manually</b> to paste the prompt below, or <b>Create with Claude</b> to describe it and let Claude draft it. You can also describe the task in any chat and ask Claude to schedule it. See Claude&rsquo;s <a href="https://support.claude.com/en/articles/13854387-schedule-recurring-tasks-in-claude-cowork" target="_blank" rel="noopener">help article on scheduled tasks</a>.</span></li>
+      <li><b class="t">Set frequency, folder and approvals</b><span>Choose <b>Weekly</b> and a quiet time, such as Monday at 7 a.m. Attach your data centers folder. Because the task reads and writes files on your computer, it runs there, so the computer needs to be on with the desktop app running. Choose whether runs ask before acting or approve automatically.</span></li>
+      <li><b class="t">Write the prompt so it stands on its own</b><span>Each run starts a fresh session with no memory of this conversation, so the prompt has to name every source, file, step and check. Use the template below.</span></li>
+      <li><b class="t">Plan for the one manual download</b><span>The Data Center Policy Database export is a download from its website. If Claude can&rsquo;t fetch it directly, save the new export into the folder as <code>policies.csv</code> before the task runs; the task uses whatever file is there and reports the export date it found.</span></li>
+      <li><b class="t">Review, then prompt the push</b><span>Read the task&rsquo;s <code>CHANGES.md</code> report and open the rebuilt site. With the GitHub connector installed, pushing is one prompt in the same project, for example: <q>Push the updated site/ folder to GitHub with the commit message &ldquo;Weekly data refresh&rdquo;.</q> Claude commits and pushes through the connector and tells you what it sent. The scheduled task itself never pushes, so nothing goes live until you&rsquo;ve looked.</span></li>
+    </ol>
+    <h3>Prompt template</h3>
+    <div class="tmpl"><pre>Weekly refresh of the U.S. Data Center Atlas. Work only inside the attached "data centers" folder.
+
+1. FracTracker: read the "FracTracker Data Centers" tab of the FracTracker Google Sheet (ID 1JJ6kcVo-NjlAYtznwHOki2DVl4WWV6lhy-eXhFCdKKU) through the Google Sheets connector. Save a dated copy to data/fractracker_YYYY-MM-DD.csv.
+2. Policy database: use policies.csv in the folder. Report the newest record date in it. If it is older than 14 days, say so at the top of your report and continue.
+3. Rebuild: run the build scripts in scripts/ in order (prepare the operating, restrictions and backlash data, then combine the site). Keep all existing corrections, including Laurens County in South Carolina.
+4. Check before saving: compare with last week's numbers (operating sites, proposals, local actions, counties, states). If any count drops by more than 10%, or a required column is missing, stop, don't overwrite site/, and explain what changed.
+5. Update every "Last updated" date to today, and the export dates in the footers.
+6. Save the rebuilt site/ folder, then republish the Atlas artifact at the same link.
+7. Write CHANGES.md: new and removed operating sites, new proposals, new local restrictions by state, any change in the page 3 statistics (60% / 48%, match scores, regression), and anything that needs a human look.
+
+Do not push to GitHub, delete files, or change files outside this folder.</pre><p class="why">Adapt the folder names to your own setup. The checks in step 4 matter most: a broken or half-loaded source should stop the run, not quietly shrink the map.</p></div>
+  </section>
+
+  <footer>Data sources: FracTracker Alliance (2026), accessed via <a href="https://www.fractracker.org/data-centers/" target="_blank" rel="noopener">fractracker.org/data-centers</a>; The Data Center Policy Database (Bridges et al., 2026); GeoNames (CC BY 4.0); us-atlas. Built with Claude. <b>Last updated: November 23, 2026.</b></footer>
+</div>
+</section>
+<script>
+document.querySelectorAll("#view-howto [data-jump]").forEach(a=>a.addEventListener("click",e=>{e.preventDefault();document.getElementById(a.dataset.jump).scrollIntoView({behavior:"smooth",block:"start"});}));
+</script>
+
+<script>
+(function(){
+  const views={operating:"view-operating",restrictions:"view-restrictions",backlash:"view-backlash",howto:"view-howto"};
+  function show(){
+    let k=(location.hash||"").slice(1); if(!views[k]) k="operating";
+    for(const [name,id] of Object.entries(views)) document.getElementById(id).hidden = name!==k;
+    document.querySelectorAll(".tabs a").forEach(a=>a.setAttribute("aria-current",a.dataset.view===k?"page":"false"));
+    window.scrollTo(0,0);
+  }
+  addEventListener("hashchange",show); show();
+})();
+</script>
