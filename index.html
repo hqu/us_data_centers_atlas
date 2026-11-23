@@ -335,7 +335,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 
 <script>
 (async function(){
-const TODAY="2026-11-22";
+const TODAY="2026-11-22"; // date of the last data refresh; set automatically from data_meta.json by the build
 const [topo, pols] = await Promise.all([fetch("counties.json").then(r=>r.json()), fetch("policies.json").then(r=>r.json())]);
 const counties = topojson.feature(topo, topo.objects.counties).features;
 const statesMesh = topojson.mesh(topo, topo.objects.states, (a,b)=>a!==b);
@@ -1578,7 +1578,7 @@ new MutationObserver(all).observe(document.documentElement,{attributes:true,attr
 2. Policy database: use policies.csv in the folder. Report the newest record date in it. If it is older than 14 days, say so at the top of your report and continue.
 3. Rebuild: run the build scripts in scripts/ in order (prepare the operating, restrictions and backlash data, then combine the site). Keep all existing corrections, including Laurens County in South Carolina.
 4. Check before saving: compare with last week's numbers (operating sites, proposals, local actions, counties, states). If any count drops by more than 10%, or a required column is missing, stop, don't overwrite site/, and explain what changed.
-5. Update every "Last updated" date to today. Set the "Last data refresh" date to today, and each source's "most recent record" date to the newest record in the data you just pulled.
+5. Update every "Last updated" date to today. Set the "Last data refresh" date in data_meta.json to today, along with the Data Center Policy Database's newest record date; the build carries both into the footers and uses the refresh date as the cutoff for expired moratoria.
 6. Save the rebuilt site/ folder, then republish the Atlas artifact at the same link.
 7. Write CHANGES.md: new and removed operating sites, new proposals, new local restrictions by state, any change in the page 3 statistics (60% / 48%, match scores, regression), and anything that needs a human look.
 
