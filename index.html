@@ -909,6 +909,16 @@ render();
   <section class="card">
     <h2>Holding the other constant, only proposals predict restrictions</h2>
     <p class="sub">We compared all 50 states to see what best predicts how many local restrictions a state has: how many data centers it already runs, or how many new ones are being proposed. Each square shows how much restrictions go up when that number doubles. The line through it is the likely range. A square right of the dotted line means more restrictions; one sitting on the line means no effect. <b>Explains</b> is the share of the differences between states that each one accounts for. Proposals and operating data centers overlap: together they explain 41%, of which 27% could be credited to either, and on top of that proposals add 13% while operating data centers add under 1%.</p>
+    <div class="duo fpwrap">
+      <div class="tbl"><svg class="fp" id="b-forest" viewBox="0 0 870 250" role="img" aria-label="Forest plot of regression estimates"></svg></div>
+      <ul class="fpnotes">
+        <li><b>Looked at alone,</b> both seem to matter, because states with many data centers also get many new proposals.</li>
+        <li><b>Compared side by side,</b> only proposals still count. States with the same number of proposals have about the same number of restrictions, however many data centers they already have.</li>
+        <li><b>Example:</b> Michigan and North Carolina each have 25 proposals and about 31 restrictions, even though North Carolina has seven times as many operating data centers.</li>
+        <li><b>Why:</b> a moratorium can only stop what isn&rsquo;t built yet, so towns react to the next project.</li>
+        <li><b>Hubs still matter indirectly:</b> they attract the proposals that spark the backlash.</li>
+      </ul>
+    </div>
     <div class="eqbox">
       <div class="eqhead">The main model</div>
       <div class="eq" role="math" aria-label="Restrictions follow a negative binomial distribution with mean mu and dispersion alpha; log of mu equals beta zero plus beta one times log base 2 of one plus operating data centers plus beta two times log base 2 of one plus proposed projects">
@@ -926,17 +936,6 @@ render();
         <dt>&alpha; = 0.60</dt><dd>Spread: the variance is &mu; + &alpha;&mu;&sup2;, so states can differ more than pure chance would allow. At &alpha; = 0 this would be a plain Poisson count model.</dd>
       </dl>
     </div>
-    <div class="duo fpwrap">
-      <div class="tbl"><svg class="fp" id="b-forest" viewBox="0 0 870 250" role="img" aria-label="Forest plot of regression estimates"></svg></div>
-      <ul class="fpnotes">
-        <li><b>Looked at alone,</b> both seem to matter, because states with many data centers also get many new proposals.</li>
-        <li><b>Compared side by side,</b> only proposals still count. States with the same number of proposals have about the same number of restrictions, however many data centers they already have.</li>
-        <li><b>Example:</b> Michigan and North Carolina each have 25 proposals and about 31 restrictions, even though North Carolina has seven times as many operating data centers.</li>
-        <li><b>Why:</b> a moratorium can only stop what isn&rsquo;t built yet, so towns react to the next project.</li>
-        <li><b>Hubs still matter indirectly:</b> they attract the proposals that spark the backlash.</li>
-      </ul>
-    </div>
-    <p class="status" style="font-size:12.5px">Model: restrictions ~ log<sub>2</sub>(1 + operating) + log<sub>2</sub>(1 + proposed), negative binomial (the counts vary far more than a Poisson model allows: a Poisson fit leaves about 6 times the expected variance; fitted &alpha; = 0.60). In the combined model, proposed p &lt; 0.001 and operating p = 0.92; alone, operating p = 0.004 and proposed p &lt; 0.001. Ranges are 95% confidence intervals. Operating and proposed counts are correlated (r = 0.76) but not enough to destabilize the model (VIF 2.4). An OLS check on log(1 + restrictions) gives the same picture (proposed p = 0.004, operating p = 0.64, R² = 0.41).</p>
   </section>
 
   <section class="card">
