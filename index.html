@@ -213,6 +213,13 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .tabs{display:flex;gap:6px;flex-wrap:wrap}
 .tabs a{color:var(--navfg);text-decoration:none;font:600 14px var(--f-body);padding:7px 12px;border-radius:999px;opacity:.75;border:1px solid transparent}
 .tabs a:hover{opacity:1;border-color:rgba(255,255,255,.25)}
+.tabs{align-items:center}
+.themebtn{width:34px;height:34px;flex:none;border-radius:50%;border:1px solid color-mix(in srgb,var(--navfg) 35%,transparent);background:none;color:var(--navfg);cursor:pointer;display:inline-grid;place-items:center;padding:0;margin-left:4px}
+.themebtn:hover{background:color-mix(in srgb,var(--navfg) 14%,transparent)}
+.themebtn:focus-visible{outline:2px solid var(--navfg);outline-offset:2px}
+.themebtn svg{width:17px;height:17px;display:block}
+.themebtn .i-sun{display:none}
+.themebtn.isdark .i-sun{display:block} .themebtn.isdark .i-moon{display:none}
 .tabs a.how{border-color:color-mix(in srgb,var(--navfg) 35%,transparent);font-weight:500}
 .tabs a[aria-current="page"]{opacity:1;background:var(--navfg);color:var(--navbg)}
 .tabs a:focus-visible{outline:2px solid var(--navfg);outline-offset:2px}
@@ -220,7 +227,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 </style>
 <nav class="sitenav" aria-label="Site"><div class="in">
   <a class="brand" href="#operating">U.S. Data Center Atlas</a>
-  <div class="tabs"><a href="#operating" data-view="operating">Operating data centers</a><a href="#restrictions" data-view="restrictions">Local restrictions</a><a href="#backlash" data-view="backlash">Backlash next door</a><a href="#howto" data-view="howto" class="how">How Claude built this site</a></div>
+  <div class="tabs"><a href="#operating" data-view="operating">Operating data centers</a><a href="#restrictions" data-view="restrictions">Local restrictions</a><a href="#backlash" data-view="backlash">Backlash next door</a><a href="#howto" data-view="howto" class="how">How Claude built this site</a><button type="button" class="themebtn" id="themebtn" aria-label="Switch to dark mode" title="Switch to dark mode"><svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" fill="currentColor"/></svg><svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></g></svg></button></div>
 </div></nav>
 <section class="view" id="view-operating"><div class="wrap">
   <header>
@@ -1596,5 +1603,13 @@ document.querySelectorAll("#view-howto [data-jump]").forEach(a=>a.addEventListen
     window.scrollTo(0,0);
   }
   addEventListener("hashchange",show); show();
+  // light/dark toggle: remembers the choice in this browser, otherwise follows the system setting
+  const root=document.documentElement, btn=document.getElementById("themebtn"), mq=matchMedia("(prefers-color-scheme: dark)");
+  let saved=null; try{ saved=localStorage.getItem("atlas-theme"); }catch(e){}
+  if(saved==="light"||saved==="dark") root.setAttribute("data-theme",saved);
+  const isDark=()=>root.getAttribute("data-theme")?root.getAttribute("data-theme")==="dark":mq.matches;
+  function sync(){ const d=isDark(); btn.classList.toggle("isdark",d); const l=d?"Switch to light mode":"Switch to dark mode"; btn.setAttribute("aria-label",l); btn.title=l; root.style.colorScheme=d?"dark":"light"; }
+  btn.addEventListener("click",()=>{ const next=isDark()?"light":"dark"; root.setAttribute("data-theme",next); try{ localStorage.setItem("atlas-theme",next); }catch(e){} sync(); });
+  mq.addEventListener?.("change",sync); sync();
 })();
 </script>
