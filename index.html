@@ -1299,7 +1299,9 @@ new MutationObserver(all).observe(document.documentElement,{attributes:true,attr
 #view-howto .loop b{color:var(--ink)}
 #view-howto .p1{--c:#5b6b8c} #view-howto .p2{--c:#2f78c6} #view-howto .p3{--c:#6a1fb0} #view-howto .p4{--c:#2a9d8f} #view-howto .p5{--c:#c77700}
 #view-howto .ph .hd{background:var(--c)}
-#view-howto .prompts{list-style:none;padding:0;margin:0;display:grid;gap:10px;counter-reset:pr}
+#view-howto #h-prompts{counter-reset:pr}
+#view-howto .prompts{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+#view-howto .tips{font-size:13.5px;line-height:1.5;border-left:3px solid var(--ink);padding:8px 12px;background:var(--bg);border-radius:0 6px 6px 0}
 #view-howto .prompts li{counter-increment:pr;border:1px solid var(--line);border-radius:8px;padding:12px 14px 12px 50px;position:relative;max-width:none;background:var(--bg)}
 #view-howto .prompts li::before{content:counter(pr);position:absolute;left:14px;top:12px;width:24px;height:24px;border-radius:50%;border:1.5px solid var(--ink);font:600 12px var(--f-data);display:grid;place-items:center}
 #view-howto .prompts q{display:block;font:14px/1.5 var(--f-data);color:var(--ink);quotes:none}
@@ -1318,13 +1320,13 @@ new MutationObserver(all).observe(document.documentElement,{attributes:true,attr
     <p class="lede">This site was built in one long conversation between its editor and Claude. The editor set the questions, picked the sources and made the editorial calls; Claude pulled the data, ran the analysis, wrote the code and drafted the text, then revised it prompt by prompt. This page explains where the data comes from, how the three pages fit together, how the numbers were calculated, what we worried about, and the prompts that got it built.</p>
     <ul class="toc">
       <li><a href="#howto" data-jump="h-data">1. Getting the data</a></li>
-      <li><a href="#howto" data-jump="h-story">2. The story in three pages</a></li>
-      <li><a href="#howto" data-jump="h-methods">3. Analysis and statistics</a></li>
-      <li><a href="#howto" data-jump="h-reliability">4. Reliability decisions</a></li>
-      <li><a href="#howto" data-jump="h-counting">5. Why counting is hard</a></li>
-      <li><a href="#howto" data-jump="h-flow">6. Process diagram</a></li>
-      <li><a href="#howto" data-jump="h-setup">7. Set up Claude</a></li>
-      <li><a href="#howto" data-jump="h-prompts">8. Key prompts</a></li>
+      <li><a href="#howto" data-jump="h-prompts">2. Key prompts</a></li>
+      <li><a href="#howto" data-jump="h-story">3. The story in three pages</a></li>
+      <li><a href="#howto" data-jump="h-methods">4. Analysis and statistics</a></li>
+      <li><a href="#howto" data-jump="h-reliability">5. Reliability decisions</a></li>
+      <li><a href="#howto" data-jump="h-counting">6. Why counting is hard</a></li>
+      <li><a href="#howto" data-jump="h-flow">7. Process diagram</a></li>
+      <li><a href="#howto" data-jump="h-setup">8. Set up Claude</a></li>
       <li><a href="#howto" data-jump="h-weekly">9. Weekly updates</a></li>
     </ul>
   </header>
@@ -1340,8 +1342,60 @@ new MutationObserver(all).observe(document.documentElement,{attributes:true,attr
     </ol>
   </section>
 
+  <section class="card" id="h-prompts">
+    <h2>2. Key prompts: the critical path</h2>
+    <p class="muted">These 27 prompts rebuild the core of this site in order, without the design polish. Run them one at a time and check each result before moving on. Do the setup in section 8 first.</p>
+    <div class="tips"><b>Tips that prevent most confusion:</b> Give one instruction per prompt. Name the exact sheet, file and columns. Say &ldquo;don&rsquo;t build yet&rdquo; when you want a plan. Ask to see corrections before they&rsquo;re made. After each change, look at the published page before the next prompt.</div>
+    <h3>A. Check the data before building</h3>
+    <p class="muted">Do these in a new chat inside your Project, after the setup in section 8.</p>
+    <ol class="prompts">
+      <li><q>Read the &#8220;FracTracker Data Centers&#8221; tab of Google Sheet 1JJ6kcVo-NjlAYtznwHOki2DVl4WWV6lhy-eXhFCdKKU. List its columns, count rows by status, and flag rows with missing coordinates or dates. Don&#8217;t build anything yet.</q><span class="why">Know what the data can and can&#8217;t do before designing around it.</span></li>
+      <li><q>Read policies.csv from my folder. Count policies by status, type and level (state or local), and show the date range. Keep only local policies with status Passed or Signed/Enacted.</q><span class="why">Sets the restriction dataset: 469 local actions.</span></li>
+      <li><q>Check each local policy&#8217;s state against its county and its source link. List any that don&#8217;t match, and show me the list before correcting anything.</q><span class="why">This is how the Laurens County error was caught. Ask to see corrections first.</span></li>
+      <li><q>Brainstorm three ways to tell the story of grassroots resistance to data centers with these two sources. For each, list the pages and charts. Don&#8217;t build yet.</q><span class="why">Options first, so you choose the story instead of accepting the first draft.</span></li>
+      <li><q>Plan a three-page site: operating data centers, local restrictions, and how the two are connected. Write one sentence saying what question each page answers.</q><span class="why">The outline every later prompt builds on.</span></li>
+    </ol>
+    <h3>B. Local restrictions map (page 2)</h3>
+    <ol class="prompts">
+      <li><q>Build a county map of the local policies. Color each county by its strongest action: ban, then moratorium, then zoning. Show expired moratoria in a lighter color, and use colors that are easy to tell apart.</q><span class="why">The core map. Naming the color rule avoids ambiguous counties.</span></li>
+      <li><q>When a county is clicked, list its policies in a side panel with the place, type, date passed and source link. Add a table of states below the map.</q><span class="why">Lets readers check each record against its source.</span></li>
+      <li><q>Add filters for each policy type, a &#8220;hide expired moratoria&#8221; checkbox, and summary numbers above the map that update with the filters.</q><span class="why">Keeps the headline numbers consistent with what the map shows.</span></li>
+      <li><q>Add a line chart of local actions passed per year, by type, and note that the current year is partial.</q><span class="why">Shows how fast restrictions are growing.</span></li>
+      <li><q>Cite The Data Center Policy Database in the footer with its suggested citation and DOI, and add a &#8220;Last updated&#8221; date.</q><span class="why">Every page needs a source and a date.</span></li>
+    </ol>
+    <h3>C. Operating data centers map (page 1)</h3>
+    <ol class="prompts">
+      <li><q>Build a symbol map of FracTracker sites with status Operating, all location-confidence levels. Size dots by size class, color them bright orange where community pushback is Yes, and give a dashed outline to sites whose location confidence isn&#8217;t High.</q><span class="why">Shows uncertainty instead of hiding it.</span></li>
+      <li><q>Add zoom buttons, a hover tooltip, and a side panel with a facility&#8217;s details and source links when a dot is clicked.</q><span class="why">Makes dense clusters like Northern Virginia readable.</span></li>
+      <li><q>Add a state table with facilities, hyperscale or mega campuses, sites with a reported MW figure, and total reported MW. Only add single MW values, skip ranges, and explain that under the table.</q><span class="why">Prevents a misleading capacity total.</span></li>
+      <li><q>Cite FracTracker Alliance in the footer, say that its list of operating sites is still incomplete, and add a &#8220;Last updated&#8221; date.</q><span class="why">States the main limitation up front.</span></li>
+    </ol>
+    <h3>D. Combine into one site</h3>
+    <ol class="prompts">
+      <li><q>Combine the two maps into one site with tab navigation, operating data centers first. Keep each page&#8217;s filters, colors and footer working independently.</q><span class="why">Turns two tools into one story.</span></li>
+      <li><q>Check the combined site at desktop and phone widths, in light and dark mode. Fix anything that overlaps, gets cut off or scrolls sideways.</q><span class="why">Catches layout problems before readers do.</span></li>
+      <li><q>Publish the site as an artifact and give me the link.</q><span class="why">A shareable version to review.</span></li>
+    </ol>
+    <h3>E. The analysis (page 3)</h3>
+    <ol class="prompts">
+      <li><q>Propose two or three methods to test whether local restrictions are geographically related to operating and proposed data centers. Explain the tradeoffs of each. Don&#8217;t run anything yet.</q><span class="why">A plan you can question before any numbers exist.</span></li>
+      <li><q>Use distance bands. For each restriction, compute the straight-line miles to the nearest operating data center and group them into under 25, 25&#8211;50, 50&#8211;100 and 100+ miles. Show how the mix changes by quarter.</q><span class="why">The &#8220;fanning out&#8221; finding.</span></li>
+      <li><q>Group operating sites into hubs by chaining together sites within 25 miles of each other. Call a hub &#8220;big&#8221; if it has 12 or more sites, and list the big hubs.</q><span class="why">A precise definition readers can check.</span></li>
+      <li><q>For restrictions since mid-2024, what share came after FracTracker logged a proposal within 25 miles? Compare it with random U.S. towns given the same dates, and report the median gap in months.</q><span class="why">The baseline shows whether 60% means anything.</span></li>
+      <li><q>For each state, count operating sites, proposals and restrictions. Make two scatter plots on log scales with trend lines, and report a rank correlation for each.</q><span class="why">Compares the installed base with the pipeline.</span></li>
+      <li><q>Run a negative binomial regression of each state&#8217;s restriction count on log2(1 + operating) and log2(1 + proposed). Show each effect per doubling with 95% intervals in a forest plot, and check whether it holds without Virginia and Texas.</q><span class="why">Separates the two effects and tests the outliers.</span></li>
+      <li><q>Build page 3, &#8220;Backlash next door,&#8221; from these results: an animated map, a quarterly column chart, the scatter plots, the forest plot, plain-language takeaways and a methods note. Add a caveat that outliers may reflect gaps in FracTracker&#8217;s data.</q><span class="why">Turns the analysis into a readable story.</span></li>
+    </ol>
+    <h3>F. Check and publish</h3>
+    <ol class="prompts">
+      <li><q>Check every number in the text against the data and list any that don&#8217;t match. Don&#8217;t fix anything until I&#8217;ve seen the list.</q><span class="why">The last accuracy pass.</span></li>
+      <li><q>Add a &#8220;How this was built&#8221; page covering the sources, methods, data limits and the prompts used.</q><span class="why">Makes the work transparent and repeatable.</span></li>
+      <li><q>Make a GitHub Pages version that uses the Datawrapper and Flourish embed codes instead of screenshots, and push it to my repository.</q><span class="why">Gets live, interactive charts on a public site.</span></li>
+    </ol>
+  </section>
+
   <section class="card" id="h-story">
-    <h2>2. The narrative sequence across the three pages</h2>
+    <h2>3. The narrative sequence across the three pages</h2>
     <p>The pages run from &ldquo;what exists&rdquo; to &ldquo;who is pushing back&rdquo; to &ldquo;how the two are connected.&rdquo; Each page answers one question and sets up the next.</p>
     <div class="three">
       <div class="pg"><span class="n">Page 1</span><h3>Operating data centers</h3><p><b>Question:</b> where is the installed base? A symbol map of 536 operating sites, sized by capacity class, with orange dots where FracTracker reports community pushback. A state table ranks where they cluster: Northern Virginia, Atlanta, Dallas&ndash;Fort Worth.</p><p class="muted">Sets up: the industry is concentrated in a few hubs.</p></div>
@@ -1351,7 +1405,7 @@ new MutationObserver(all).observe(document.documentElement,{attributes:true,attr
   </section>
 
   <section class="card" id="h-methods">
-    <h2>3. Data analysis and statistical methods</h2>
+    <h2>4. Data analysis and statistical methods</h2>
     <h3>Cleaning and joining</h3>
     <ul>
       <li>Each policy was attached to county FIPS codes. Town and township actions are shown on the county that contains them; a county is colored by its strongest action (ban, then moratorium, then zoning).</li>
@@ -1376,7 +1430,7 @@ new MutationObserver(all).observe(document.documentElement,{attributes:true,attr
   </section>
 
   <section class="card" id="h-reliability">
-    <h2>4. Concerns and decisions about reliability, accuracy and completeness</h2>
+    <h2>5. Concerns and decisions about reliability, accuracy and completeness</h2>
     <div class="tbl"><table>
       <thead><tr><th>Concern</th><th>What we found</th><th>What we decided</th></tr></thead>
       <tbody>
@@ -1392,7 +1446,7 @@ new MutationObserver(all).observe(document.documentElement,{attributes:true,attr
   </section>
 
   <section class="card" id="h-counting">
-    <h2>5. Why counting, measuring and defining data centers is hard</h2>
+    <h2>6. Why counting, measuring and defining data centers is hard</h2>
     <ul>
       <li><b>What counts as a data center?</b> The same word covers a telecom closet, a colocation building, a cloud campus, a crypto-mining warehouse and a multi-gigawatt AI campus. Lists differ mostly in where they draw that line.</li>
       <li><b>One project, many names.</b> Developers often file under shell LLCs and nondisclosure agreements, and a single campus can appear as several parcels, phases or buildings. Deduplicating is judgment, not arithmetic.</li>
@@ -1404,7 +1458,7 @@ new MutationObserver(all).observe(document.documentElement,{attributes:true,attr
   </section>
 
   <section class="card" id="h-flow">
-    <h2>6. From idea to finished site: the process</h2>
+    <h2>7. From idea to finished site: the process</h2>
     <p class="muted">Each box is a prompt or group of prompts from the conversation. Work moved left to right, but the last two stages looped many times.</p>
     <div class="flow" role="img" aria-label="Flow diagram in five stages: Conceive, Design, Analyze, Iterate, Refine and polish">
       <div class="ph p1"><div class="hd">Conceive <span>explore</span></div><ol>
@@ -1442,7 +1496,7 @@ new MutationObserver(all).observe(document.documentElement,{attributes:true,attr
   </section>
 
   <section class="card" id="h-setup">
-    <h2>7. Setting up the Claude environment</h2>
+    <h2>8. Setting up the Claude environment</h2>
     <p>Before the first prompt, give Claude a home for the work, a folder for the data files, and access to the data sources. Menu names below are as of November 2026 and may change; Claude&rsquo;s <a href="https://support.claude.com/en/articles/9519177-how-can-i-create-and-manage-projects" target="_blank" rel="noopener">help center</a> has the current steps.</p>
     <ol class="steps">
       <li><b class="t">Install the Claude desktop app and sign in</b><span>Local folders and scheduled tasks need a paid plan (Pro, Max, Team or Enterprise). On Team and Enterprise, an admin may need to turn these features on.</span></li>
@@ -1455,21 +1509,6 @@ new MutationObserver(all).observe(document.documentElement,{attributes:true,attr
     </ol>
   </section>
 
-  <section class="card" id="h-prompts">
-    <h2>8. Key prompts: the critical path</h2>
-    <p class="muted">The conversation had more than 70 prompts. These are the ones you would need to rebuild the core of this site, without the design polish. Wording is cleaned up from the originals.</p>
-    <ol class="prompts">
-      <li><q>Here is FracTracker&rsquo;s data center sheet. Brainstorm a dashboard tracking proposals, cancellations and community campaigns. Don&rsquo;t build yet.</q><span class="why">Sets the topic and the source, and gets options before committing.</span></li>
-      <li><q>Here is policies.csv from the Data Center Policy Database. Build a county map of local moratoria, bans and zoning rules, with the source cited.</q><span class="why">Creates page 2.</span></li>
-      <li><q>Build a symbol map of FracTracker sites with status Operating. Color the dots by community pushback.</q><span class="why">Creates page 1.</span></li>
-      <li><q>Combine the two maps into one website with tab navigation, operating data centers first.</q><span class="why">Turns two tools into one story.</span></li>
-      <li><q>Propose a method to test whether restrictions are geographically related to data centers.</q><span class="why">Asks for a plan before analysis.</span></li>
-      <li><q>Go with distance bands. Create a third page, &ldquo;Backlash next door,&rdquo; with findings and outliers.</q><span class="why">Creates page 3.</span></li>
-      <li><q>Run a multivariate regression of restrictions on operating and proposed sites by state, and show it as a forest plot.</q><span class="why">Separates the two effects.</span></li>
-      <li><q>Add a caveat that outliers could reflect incomplete or inaccurate FracTracker data.</q><span class="why">Keeps the claims honest.</span></li>
-      <li><q>Add a page explaining how this site was built: data, narrative, methods, reliability, and key prompts.</q><span class="why">This page.</span></li>
-    </ol>
-  </section>
 
   <section class="card" id="h-weekly">
     <h2>9. Keeping it current: a weekly scheduled task</h2>
