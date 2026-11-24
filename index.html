@@ -1355,13 +1355,13 @@ new MutationObserver(all).observe(document.documentElement,{attributes:true,attr
     <p class="lede">This site was built in one long conversation between its editor and Claude. The editor set the questions, picked the sources and made the editorial calls; Claude pulled the data, ran the analysis, wrote the code and drafted the text, then revised it prompt by prompt. This page explains where the data comes from, how the three pages fit together, how the numbers were calculated, what we worried about, and the prompts that got it built.</p>
     <ul class="toc">
       <li><a href="#howto" data-jump="h-data">1. Getting the data</a></li>
-      <li><a href="#howto" data-jump="h-prompts">2. Key prompts</a></li>
-      <li><a href="#howto" data-jump="h-story">3. The story in three pages</a></li>
-      <li><a href="#howto" data-jump="h-methods">4. Analysis and statistics</a></li>
-      <li><a href="#howto" data-jump="h-reliability">5. Reliability decisions</a></li>
-      <li><a href="#howto" data-jump="h-counting">6. Why counting is hard</a></li>
-      <li><a href="#howto" data-jump="h-flow">7. Process diagram</a></li>
-      <li><a href="#howto" data-jump="h-setup">8. Set up Claude</a></li>
+      <li><a href="#howto" data-jump="h-setup">2. Set up Claude</a></li>
+      <li><a href="#howto" data-jump="h-prompts">3. Key prompts</a></li>
+      <li><a href="#howto" data-jump="h-story">4. The story in three pages</a></li>
+      <li><a href="#howto" data-jump="h-methods">5. Analysis and statistics</a></li>
+      <li><a href="#howto" data-jump="h-reliability">6. Reliability decisions</a></li>
+      <li><a href="#howto" data-jump="h-counting">7. Why counting is hard</a></li>
+      <li><a href="#howto" data-jump="h-flow">8. Process diagram</a></li>
       <li><a href="#howto" data-jump="h-weekly">9. Weekly updates (optional)</a></li>
     </ul>
   </header>
@@ -1373,16 +1373,30 @@ new MutationObserver(all).observe(document.documentElement,{attributes:true,attr
       <li><b class="t">Local restrictions: The Data Center Policy Database</b><span>Download the export from <a href="https://www.datacenterpolicy.com/" target="_blank" rel="noopener">datacenterpolicy.com</a> (UVA Environmental Institute; Bridges et al., 2026, <a href="https://doi.org/10.17613/PVSTG-4A775" target="_blank" rel="noopener">doi.org/10.17613/PVSTG-4A775</a>). The editor saved it as <code>policies.csv</code>. We kept local policies with status Passed or Signed/Enacted: <b>469</b> actions in <b>338</b> counties, records dated through Nov 17, 2026.</span></li>
       <li><b class="t">Maps: handled by Claude</b><span>You don&rsquo;t need to download anything for the map outlines. When you ask for a county or state map, Claude fetches the U.S. Census-based county and state boundaries from <a href="https://github.com/topojson/us-atlas" target="_blank" rel="noopener">us-atlas</a>, already projected so Alaska and Hawaii sit below the lower 48, and bundles them with the page.</span></li>
       <li><b class="t">Town locations: handled by Claude</b><span>This also needs no download. When the analysis calls for town coordinates, Claude pulls a list of about 3,000 U.S. places with 1,000+ residents from GeoNames (CC BY 4.0) on its own. It uses them to place town-level restrictions on the map and to build the &ldquo;random town&rdquo; baseline that tests whether restrictions really follow proposals.</span></li>
-      <li><b class="t">Charts made elsewhere</b><span>The year-over-year line chart was built in <a href="https://www.datawrapper.de/_/NBhpu/" target="_blank" rel="noopener">Datawrapper</a> and the state-by-type treemap in <a href="https://public.flourish.studio/visualisation/31003026/" target="_blank" rel="noopener">Flourish</a>. Claude makes the CSV for each; you build the chart on the tool&rsquo;s website, save a PNG of it in your folder, and Claude places the image on the page, linked to the live chart. <b>That&rsquo;s all you need:</b> share the finished Claude artifact by its claude.ai link, with images of the two charts. <i>Optional:</i> Claude can make the Datawrapper chart for you through the Datawrapper connector (<a href="https://www.youtube.com/watch?v=MTvVdEUlFXU" target="_blank" rel="noopener">video tutorial</a>; prompts in section 2G). <i>Optional:</i> to show the charts as live, interactive embeds, publish a GitHub Pages version, because a Claude artifact can&rsquo;t load outside embeds (<a href="https://www.youtube.com/watch?v=PUfQ_af1rAY" target="_blank" rel="noopener">video tutorial</a>; prompts in section 2H).</span></li>
+      <li><b class="t">Charts made elsewhere</b><span>The year-over-year line chart was built in <a href="https://www.datawrapper.de/_/NBhpu/" target="_blank" rel="noopener">Datawrapper</a> and the state-by-type treemap in <a href="https://public.flourish.studio/visualisation/31003026/" target="_blank" rel="noopener">Flourish</a>. Claude makes the CSV for each; you build the chart on the tool&rsquo;s website, save a PNG of it in your folder, and Claude places the image on the page, linked to the live chart. <b>That&rsquo;s all you need:</b> share the finished Claude artifact by its claude.ai link, with images of the two charts. <i>Optional:</i> Claude can make the Datawrapper chart for you through the Datawrapper connector (<a href="https://www.youtube.com/watch?v=MTvVdEUlFXU" target="_blank" rel="noopener">video tutorial</a>; prompts in section 3G). <i>Optional:</i> to show the charts as live, interactive embeds, publish a GitHub Pages version, because a Claude artifact can&rsquo;t load outside embeds (<a href="https://www.youtube.com/watch?v=PUfQ_af1rAY" target="_blank" rel="noopener">video tutorial</a>; prompts in section 3H).</span></li>
+    </ol>
+  </section>
+
+  <section class="card" id="h-setup">
+    <h2>2. Setting up the Claude environment</h2>
+    <p>Before the first prompt, give Claude a home for the work, a folder for the data files, and access to the data sources. Menu names below are as of November 2026 and may change; Claude&rsquo;s <a href="https://support.claude.com/en/articles/9519177-how-can-i-create-and-manage-projects" target="_blank" rel="noopener">help center</a> has the current steps.</p>
+    <ol class="steps">
+      <li><b class="t">Install the Claude desktop app and sign in</b><span>Local folders and scheduled tasks need a paid plan (Pro, Max, Team or Enterprise). On Team and Enterprise, an admin may need to turn these features on.</span></li>
+      <li><b class="t">Create a Project</b><span>In Claude, open <b>Projects</b> (or go to claude.ai/projects) and click <b>+ New Project</b>. Name it, for example &ldquo;U.S. Data Centers Grassroots Campaigns&rdquo;, and add a one-line description of the goal. On a Team or Enterprise plan, choose whether it&rsquo;s private or shared with your organization.</span></li>
+      <li><b class="t">Add project instructions</b><span>In the project&rsquo;s knowledge area, click <b>Set project instructions</b> and add the standing rules, for example: &ldquo;Cite FracTracker Alliance and the Data Center Policy Database on every page. Use Datawrapper sharing links. Always include a &ldquo;Last updated&rdquo; date on every page, and change it to today&rsquo;s date whenever the page changes. Next to it, show the date the data was last refreshed and the most recent record date from each source.&rdquo; Every chat in the project follows these.</span></li>
+      <li><b class="t">Make a folder on your computer</b><span>Create a folder such as <code>Documents/Claude/data centers</code>. Download the export from <a href="https://www.datacenterpolicy.com/" target="_blank" rel="noopener">datacenterpolicy.com</a>, save it there as <code>policies.csv</code>, and put any of your own files (like a cancellations tracker in Excel) in the same folder.</span></li>
+      <li><b class="t">Give Claude the folder</b><span>Start a chat inside the project in the desktop app, open the <b>+</b> menu and choose <b>Add folder</b>, then pick the folder. Claude can now read <code>policies.csv</code> and save results back next to it. Nothing outside that folder is visible to Claude.</span></li>
+      <li><b class="t">Connect the data sources</b><span>In <b>Settings &rarr; Connectors</b>, connect Google Drive or Google Sheets so Claude can read FracTracker&rsquo;s public sheet. Optional: Datawrapper, so Claude can build charts (section 3G); GitHub, so Claude can publish a GitHub Pages version (section 3H); and CourtListener for court cases.</span></li>
+      <li><b class="t">Ask Claude to keep the build scripts in the folder</b><span>Have Claude save its data-prep and build scripts, the published page and its data files into the folder (for example a <code>site/</code> subfolder). It is what the weekly update in section 9 reruns, and, if you publish to GitHub (optional), what goes into your repository.</span></li>
     </ol>
   </section>
 
   <section class="card" id="h-prompts">
-    <h2>2. Key prompts: the critical path</h2>
-    <p class="muted">Prompts 1&ndash;29 (sections A&ndash;F) are required: they rebuild the core of this site in order, without the design polish, and end with a Claude artifact link you can share. Sections G and H are optional extras. Run the prompts one at a time and check each result before moving on. Do the setup in section 8 first.</p>
+    <h2>3. Key prompts: the critical path</h2>
+    <p class="muted">Prompts 1&ndash;29 (sections A&ndash;F) are required: they rebuild the core of this site in order, without the design polish, and end with a Claude artifact link you can share. Sections G and H are optional extras. Run the prompts one at a time and check each result before moving on. Do the setup in section 2 first.</p>
     <div class="tips"><b>Tips that prevent most confusion:</b> Give one instruction per prompt. Name the exact sheet, file and columns. Say &ldquo;don&rsquo;t build yet&rdquo; when you want a plan. Ask to see corrections before they&rsquo;re made. After each change, look at the published page before the next prompt.</div>
     <h3>A. Check the data before building</h3>
-    <p class="muted">Do these in a new chat inside your Project, after the setup in section 8.</p>
+    <p class="muted">Do these in a new chat inside your Project, after the setup in section 2.</p>
     <ol class="prompts">
       <li><q>Read the &#8220;FracTracker Data Centers&#8221; tab of Google Sheet 1JJ6kcVo-NjlAYtznwHOki2DVl4WWV6lhy-eXhFCdKKU. List its columns, count rows by status, and flag rows with missing coordinates or dates. Don&#8217;t build anything yet.</q><span class="why">Know what the data can and can&#8217;t do before designing around it.</span></li>
       <li><q>Read policies.csv from my folder. Count policies by status, type and level (state or local), and show the date range. Keep only local policies with status Passed or Signed/Enacted.</q><span class="why">Sets the restriction dataset: 469 local actions.</span></li>
@@ -1395,7 +1409,7 @@ new MutationObserver(all).observe(document.documentElement,{attributes:true,attr
       <li><q>Build a county map of the local policies. Color each county by its strongest action: ban, then moratorium, then zoning. Show expired moratoria in a lighter color, and use colors that are easy to tell apart.</q><span class="why">The core map. Naming the color rule avoids ambiguous counties.</span></li>
       <li><q>When a county is clicked, list its policies in a side panel with the place, type, date passed and source link. Add a table of states below the map.</q><span class="why">Lets readers check each record against its source.</span></li>
       <li><q>Add filters for each policy type, a &#8220;hide expired moratoria&#8221; checkbox, and summary numbers above the map that update with the filters.</q><span class="why">Keeps the headline numbers consistent with what the map shows.</span></li>
-      <li><q>Make a CSV of local actions passed per year, by type, ready for a Datawrapper line chart, and save it to my folder.</q><span class="why">You build the chart at datawrapper.de and download a PNG. (Optional: let Claude build it, section 2G.)</span></li>
+      <li><q>Make a CSV of local actions passed per year, by type, ready for a Datawrapper line chart, and save it to my folder.</q><span class="why">You build the chart at datawrapper.de and download a PNG. (Optional: let Claude build it, section 3G.)</span></li>
       <li><q>Make a CSV of local actions by state and type, ready for a Flourish treemap, and save it to my folder.</q><span class="why">You build the treemap at flourish.studio and take a screenshot.</span></li>
       <li><q>Add my two chart images from the folder, trend.png and treemap.png, below the map at their original size. Link each to its live chart: &lt;Datawrapper sharing link&gt; and &lt;Flourish link&gt;.</q><span class="why">Images show inside the Claude artifact; the links open the interactive versions.</span></li>
       <li><q>Cite The Data Center Policy Database in the footer with its suggested citation and DOI, and add a &#8220;Last updated&#8221; date.</q><span class="why">Every page needs a source and a date.</span></li>
@@ -1454,7 +1468,7 @@ new MutationObserver(all).observe(document.documentElement,{attributes:true,attr
   </section>
 
   <section class="card" id="h-story">
-    <h2>3. The narrative sequence across the three pages</h2>
+    <h2>4. The narrative sequence across the three pages</h2>
     <p>The pages run from &ldquo;what exists&rdquo; to &ldquo;who is pushing back&rdquo; to &ldquo;how the two are connected.&rdquo; Each page answers one question and sets up the next.</p>
     <div class="three">
       <div class="pg"><span class="n">Page 1</span><h3>Operating data centers</h3><p><b>Question:</b> where is the installed base? A symbol map of 536 operating sites, sized by capacity class, with orange dots where FracTracker reports community pushback. A state table ranks where they cluster: Northern Virginia, Atlanta, Dallas&ndash;Fort Worth.</p><p class="muted">Sets up: the industry is concentrated in a few hubs.</p></div>
@@ -1464,7 +1478,7 @@ new MutationObserver(all).observe(document.documentElement,{attributes:true,attr
   </section>
 
   <section class="card" id="h-methods">
-    <h2>4. Data analysis and statistical methods</h2>
+    <h2>5. Data analysis and statistical methods</h2>
     <h3>Cleaning and joining</h3>
     <ul>
       <li>Each policy was attached to county FIPS codes. Town and township actions are shown on the county that contains them; a county is colored by its strongest action (ban, then moratorium, then zoning).</li>
@@ -1489,7 +1503,7 @@ new MutationObserver(all).observe(document.documentElement,{attributes:true,attr
   </section>
 
   <section class="card" id="h-reliability">
-    <h2>5. Concerns and decisions about reliability, accuracy and completeness</h2>
+    <h2>6. Concerns and decisions about reliability, accuracy and completeness</h2>
     <div class="tbl"><table>
       <thead><tr><th>Concern</th><th>What we found</th><th>What we decided</th></tr></thead>
       <tbody>
@@ -1505,7 +1519,7 @@ new MutationObserver(all).observe(document.documentElement,{attributes:true,attr
   </section>
 
   <section class="card" id="h-counting">
-    <h2>6. Why counting, measuring and defining data centers is hard</h2>
+    <h2>7. Why counting, measuring and defining data centers is hard</h2>
     <ul>
       <li><b>What counts as a data center?</b> The same word covers a telecom closet, a colocation building, a cloud campus, a crypto-mining warehouse and a multi-gigawatt AI campus. Lists differ mostly in where they draw that line.</li>
       <li><b>One project, many names.</b> Developers often file under shell LLCs and nondisclosure agreements, and a single campus can appear as several parcels, phases or buildings. Deduplicating is judgment, not arithmetic.</li>
@@ -1517,7 +1531,7 @@ new MutationObserver(all).observe(document.documentElement,{attributes:true,attr
   </section>
 
   <section class="card" id="h-flow">
-    <h2>7. From idea to finished site: the process</h2>
+    <h2>8. From idea to finished site: the process</h2>
     <p class="muted">Each box is a prompt or group of prompts from the conversation. Work moved left to right, but the last two stages looped many times. Hover over or tap a box to see the prompt behind it.</p>
     <div class="flow" role="img" aria-label="Flow diagram in five stages: Conceive, Design, Analyze, Iterate, Refine and polish">
       <div class="ph p1"><div class="hd">Conceive <span>explore</span></div><ol>
@@ -1554,19 +1568,6 @@ new MutationObserver(all).observe(document.documentElement,{attributes:true,attr
     <div class="loop"><b>&#8634; Loop</b> Each change was checked in a browser screenshot, published, and reviewed by the editor, whose next prompt often reacted to what they saw.</div>
   </section>
 
-  <section class="card" id="h-setup">
-    <h2>8. Setting up the Claude environment</h2>
-    <p>Before the first prompt, give Claude a home for the work, a folder for the data files, and access to the data sources. Menu names below are as of November 2026 and may change; Claude&rsquo;s <a href="https://support.claude.com/en/articles/9519177-how-can-i-create-and-manage-projects" target="_blank" rel="noopener">help center</a> has the current steps.</p>
-    <ol class="steps">
-      <li><b class="t">Install the Claude desktop app and sign in</b><span>Local folders and scheduled tasks need a paid plan (Pro, Max, Team or Enterprise). On Team and Enterprise, an admin may need to turn these features on.</span></li>
-      <li><b class="t">Create a Project</b><span>In Claude, open <b>Projects</b> (or go to claude.ai/projects) and click <b>+ New Project</b>. Name it, for example &ldquo;U.S. Data Centers Grassroots Campaigns&rdquo;, and add a one-line description of the goal. On a Team or Enterprise plan, choose whether it&rsquo;s private or shared with your organization.</span></li>
-      <li><b class="t">Add project instructions</b><span>In the project&rsquo;s knowledge area, click <b>Set project instructions</b> and add the standing rules, for example: &ldquo;Cite FracTracker Alliance and the Data Center Policy Database on every page. Use Datawrapper sharing links. Always include a &ldquo;Last updated&rdquo; date on every page, and change it to today&rsquo;s date whenever the page changes. Next to it, show the date the data was last refreshed and the most recent record date from each source.&rdquo; Every chat in the project follows these.</span></li>
-      <li><b class="t">Make a folder on your computer</b><span>Create a folder such as <code>Documents/Claude/data centers</code>. Download the export from <a href="https://www.datacenterpolicy.com/" target="_blank" rel="noopener">datacenterpolicy.com</a>, save it there as <code>policies.csv</code>, and put any of your own files (like a cancellations tracker in Excel) in the same folder.</span></li>
-      <li><b class="t">Give Claude the folder</b><span>Start a chat inside the project in the desktop app, open the <b>+</b> menu and choose <b>Add folder</b>, then pick the folder. Claude can now read <code>policies.csv</code> and save results back next to it. Nothing outside that folder is visible to Claude.</span></li>
-      <li><b class="t">Connect the data sources</b><span>In <b>Settings &rarr; Connectors</b>, connect Google Drive or Google Sheets so Claude can read FracTracker&rsquo;s public sheet. Optional: Datawrapper, so Claude can build charts (section 2G); GitHub, so Claude can publish a GitHub Pages version (section 2H); and CourtListener for court cases.</span></li>
-      <li><b class="t">Ask Claude to keep the build scripts in the folder</b><span>Have Claude save its data-prep and build scripts, the published page and its data files into the folder (for example a <code>site/</code> subfolder). It is what the weekly update in section 9 reruns, and, if you publish to GitHub (optional), what goes into your repository.</span></li>
-    </ol>
-  </section>
 
 
   <section class="card optsec" id="h-weekly">
