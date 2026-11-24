@@ -1323,6 +1323,7 @@ new MutationObserver(all).observe(document.documentElement,{attributes:true,attr
 #view-howto .prompts .why{display:block;font-size:12.5px;color:var(--muted);margin-top:5px}
 #view-howto .tmpl{border:1px solid var(--line);border-radius:8px;background:var(--bg);padding:14px;display:grid;gap:8px}
 #view-howto .tmpl pre{margin:0;font:13px/1.55 var(--f-data);color:var(--ink);white-space:pre-wrap;overflow-wrap:anywhere}
+#view-howto .usedtask .eqhead{font:600 12px var(--f-data);text-transform:uppercase;letter-spacing:.06em;color:var(--optfg)}
 #view-howto .tmpl .why{font-size:12.5px;color:var(--muted)}
 #view-howto{--optbg:#d9dcd8;--optfg:#3b423e;--optline:#c4c8c3}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #view-howto{--optbg:#2a302d;--optfg:#c3cac5;--optline:#3a423e}}
@@ -1572,6 +1573,21 @@ new MutationObserver(all).observe(document.documentElement,{attributes:true,attr
     <span class="optlabel">Optional</span>
     <h2>9. Keeping it current: a weekly scheduled task</h2>
     <p>Both trackers change every week. A scheduled task can pull the new data, rerun the analysis, rebuild the pages and tell you what changed. You review the result; the Claude artifact keeps the same link, so readers see the update.</p>
+    <div class="tmpl usedtask">
+      <div class="eqhead">The scheduled task used for this site</div>
+      <p class="why" style="margin:0">&ldquo;weekly data refresh&rdquo; &middot; runs every Sunday at 1:55 p.m. Eastern &middot; created November 23, 2026 &middot; runs approve automatically</p>
+      <pre>Weekly refresh of the U.S. Data Center Atlas. Work only inside the attached "data centers" folder.
+
+1. FracTracker: read the "FracTracker Data Centers" tab of the FracTracker Google Sheet (ID 1JJ6kcVo-NjlAYtznwHOki2DVl4WWV6lhy-eXhFCdKKU) through the Google Sheets connector. Save a dated copy to data/fractracker_YYYY-MM-DD.csv.
+2. Policy database: use policies.csv in the folder. Report the newest record date in it. If it is older than 14 days, say so at the top of your report and continue.
+3. Rebuild: run the build scripts in scripts/ in order (prepare the operating, restrictions and backlash data, then combine the site). Keep all existing corrections, including Laurens County in South Carolina.
+4. Check before saving: compare with last week's numbers (operating sites, proposals, local actions, counties, states). If any count drops by more than 10%, or a required column is missing, stop, don't overwrite site/, and explain what changed.
+5. Update every "Last updated" date to today, and the export dates in the footers.
+6. Save the rebuilt site/ folder, then republish the Atlas artifact at the same link.
+7. Write CHANGES.md: new and removed operating sites, new proposals, new local restrictions by state, any change in the page 3 statistics (60% / 48%, match scores, regression), and anything that needs a human look.
+
+Do not push to GitHub, delete files, or change files outside this folder.</pre>
+    </div>
     <h3>How to set it up</h3>
     <ol class="steps">
       <li><b class="t">Open Scheduled tasks</b><span>In the desktop app, click <b>Scheduled</b> in the left sidebar, then <b>New task</b>. Choose <b>Set up manually</b> to paste the prompt below, or <b>Create with Claude</b> to describe it and let Claude draft it. You can also describe the task in any chat and ask Claude to schedule it. See Claude&rsquo;s <a href="https://support.claude.com/en/articles/13854387-schedule-recurring-tasks-in-claude-cowork" target="_blank" rel="noopener">help article on scheduled tasks</a>.</span></li>
