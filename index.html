@@ -1575,16 +1575,16 @@ new MutationObserver(all).observe(document.documentElement,{attributes:true,attr
     <p>Both trackers change every week. A scheduled task can pull the new data, rerun the analysis, rebuild the pages and tell you what changed. You review the result; the Claude artifact keeps the same link, so readers see the update.</p>
     <div class="tmpl usedtask">
       <div class="eqhead">The scheduled task used for this site</div>
-      <p class="why" style="margin:0">&ldquo;weekly data refresh&rdquo; &middot; runs every Sunday at 1:55 p.m. Eastern &middot; created November 23, 2026 &middot; runs approve automatically</p>
-      <pre>Weekly refresh of the U.S. Data Center Atlas. Work only inside the attached "data centers" folder.
+      <p class="why" style="margin:0">&ldquo;Weekly data refresh: U.S. Data Center Atlas&rdquo; &middot; every Sunday at 1:55 p.m. Eastern &middot; runs on the editor&rsquo;s computer with the &ldquo;data centers&rdquo; folder attached, so the computer must be on with the Claude desktop app open &middot; approves automatically</p>
+      <pre>Weekly refresh of the U.S. Data Center Atlas. Work only inside the attached "data centers" folder. The build is described in scripts/README.md.
 
-1. FracTracker: read the "FracTracker Data Centers" tab of the FracTracker Google Sheet (ID 1JJ6kcVo-NjlAYtznwHOki2DVl4WWV6lhy-eXhFCdKKU) through the Google Sheets connector. Save a dated copy to data/fractracker_YYYY-MM-DD.csv.
-2. Policy database: use policies.csv in the folder. Report the newest record date in it. If it is older than 14 days, say so at the top of your report and continue.
-3. Rebuild: run the build scripts in scripts/ in order (prepare the operating, restrictions and backlash data, then combine the site). Keep all existing corrections, including Laurens County in South Carolina.
-4. Check before saving: compare with last week's numbers (operating sites, proposals, local actions, counties, states). If any count drops by more than 10%, or a required column is missing, stop, don't overwrite site/, and explain what changed.
-5. Update every "Last updated" date to today, and the export dates in the footers.
-6. Save the rebuilt site/ folder, then republish the Atlas artifact at the same link.
-7. Write CHANGES.md: new and removed operating sites, new proposals, new local restrictions by state, any change in the page 3 statistics (60% / 48%, match scores, regression), and anything that needs a human look.
+1. FracTracker: read the whole "FracTracker Data Centers" tab (columns A through AR, every row) of Google Sheet 1JJ6kcVo-NjlAYtznwHOki2DVl4WWV6lhy-eXhFCdKKU with the Google Sheets connector, in chunks if needed. Save it with its header row as data/fractracker_YYYY-MM-DD.csv (today's date). Keep older copies.
+2. Policy database: check https://www.datacenterpolicy.com/database for the number of records and the newest "Last Update". If it shows more records than policies.csv has (1,801 as of Nov 22, 2026), say at the top of your report that a new export should be downloaded into the folder as policies.csv. Otherwise use the policies.csv that is there.
+3. Set "refreshed" in data_meta.json to today's date (YYYY-MM-DD). This becomes the "Last data refresh" date in every footer and the cutoff for expired moratoria.
+4. Make sure Python has pandas, numpy, scipy and statsmodels (pip install them if missing), then run: python scripts/run_all.py from the folder. It backs up site/, rebuilds everything, and stops and restores site/ if a step fails or a key count drops by more than 10%. If it stops, do not publish; report what it printed and set data_meta.json "refreshed" back to its previous value.
+5. Compare build/stats_previous.json with build/stats.json. If the page 3 numbers changed (share of restrictions after a nearby proposal, random-town share, the two match scores, the regression effects per doubling), note the old and new values. Do not edit the page text yourself; list them as needing a human look, because they are written into sources/backlash.html.
+6. Republish the Atlas at https://claude.ai/artifact/4KcEsvqH2iqNQBH37cdvFe: read it with the Artifact tool first, then publish site/index.html to that same URL with site/facilities.json, site/policies.json and site/backlash2.json as its files, so the link stays the same.
+7. Write CHANGES.md in the folder: today's date; new and removed operating sites; new proposals; new local restrictions by state; any page 3 changes from step 5; and anything that needs a human look.
 
 Do not push to GitHub, delete files, or change files outside this folder.</pre>
     </div>
