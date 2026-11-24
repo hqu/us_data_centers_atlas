@@ -536,7 +536,7 @@ tlBtn.onclick=()=>{ if(tlTimer){tlStop();return} if(+tlSl.value>=TL.length-1) tl
   tlTimer=setInterval(()=>{ if(+tlSl.value>=TL.length-1){tlStop();return} tlSl.value=+tlSl.value+1; tlFrame(+tlSl.value); }, reduceM?300:700); };
 tlSl.oninput=()=>{tlStop();tlFrame(+tlSl.value)};
 const unmapped=pols.filter(p=>!p.fips.length);
-document.getElementById("m-foot").innerHTML=`<p style="margin:0 0 8px">Map notes: ${pols.length} local policies with status Passed or Signed/Enacted. Town and township actions are shown on the county that contains them; a county is colored by its strongest action (ban, then moratorium, then zoning). "Zoning &amp; siting rules" covers zoning, land-use, setback, noise and water ordinances and can include rules that set where data centers are allowed, not only limits. Moratoria count as expired when their listed end date is before ${fmt(TODAY)}. Corrections to the source data: the Laurens County moratorium (passed Sep 14, 2026) is listed under Alabama but is in Laurens County, South Carolina, per its own source and <a href="https://www.foxcarolina.com/2026/09/14/laurens-county-council-votes-approve-one-year-data-center-pause/" target="_blank" rel="noopener">FOX Carolina</a>; misspelled county names (Dubeque, Nicolett, Mongtomery, Winsdor) were matched to Dubuque, Nicollet, Montgomery and Windsor.${unmapped.length?` Not mapped: ${unmapped.map(p=>esc(p.locality+", "+p.state)).join("; ")} (no county by that name in that state).`:""}</p><p style="margin:0">Data source: <a href="https://www.datacenterpolicy.com/" target="_blank" rel="noopener">The Data Center Policy Database</a> (UVA Environmental Institute and Digital Infrastructure initiative). Suggested citation: Bridges, Lauren, Grace Gould, Catarina Coelho Herrera, Isabella Scoresone, and Jack Hauger. 2026. <i>The Data Center Policy Database</i>. June 1. <a href="https://doi.org/10.17613/PVSTG-4A775" target="_blank" rel="noopener">https://doi.org/10.17613/PVSTG-4A775</a>. Export downloaded Nov 2026 (records dated through Nov 17, 2026). The database summarizes public policy records and does not guarantee accuracy or completeness. Last updated: November 23, 2026; Last data refresh on <b>November 22, 2026</b> [Data Center Policy Database: most recent record November 17, 2026].</p>`;
+document.getElementById("m-foot").innerHTML=`<p style="margin:0 0 8px">Map notes: ${pols.length} local policies with status Passed or Signed/Enacted. Town and township actions are shown on the county that contains them; a county is colored by its strongest action (ban, then moratorium, then zoning). "Zoning &amp; siting rules" covers zoning, land-use, setback, noise and water ordinances and can include rules that set where data centers are allowed, not only limits. Moratoria count as expired when their listed end date is before ${fmt(TODAY)}. Corrections to the source data: the Laurens County moratorium (passed Sep 14, 2026) is listed under Alabama but is in Laurens County, South Carolina, per its own source and <a href="https://www.foxcarolina.com/2026/09/14/laurens-county-council-votes-approve-one-year-data-center-pause/" target="_blank" rel="noopener">FOX Carolina</a>; misspelled county names (Dubeque, Nicolett, Mongtomery, Winsdor) were matched to Dubuque, Nicollet, Montgomery and Windsor.${unmapped.length?` Not mapped: ${unmapped.map(p=>esc(p.locality+", "+p.state)).join("; ")} (no county by that name in that state).`:""}</p><p style="margin:0">Data source: <a href="https://www.datacenterpolicy.com/" target="_blank" rel="noopener">The Data Center Policy Database</a> (UVA Environmental Institute and Digital Infrastructure initiative). Suggested citation: Bridges, Lauren, Grace Gould, Catarina Coelho Herrera, Isabella Scoresone, and Jack Hauger. 2026. <i>The Data Center Policy Database</i>. June 1. <a href="https://doi.org/10.17613/PVSTG-4A775" target="_blank" rel="noopener">https://doi.org/10.17613/PVSTG-4A775</a>. Export downloaded Nov 2026 (records dated through Nov 17, 2026). The database summarizes public policy records and does not guarantee accuracy or completeness. Last updated: November 24, 2026; Last data refresh on <b>November 22, 2026</b> [Data Center Policy Database: most recent record November 17, 2026].</p>`;
 document.querySelectorAll("#m-rlegend [data-lr]").forEach(el=>{ const on=()=>{lrKey=el.dataset.lr;lrHL()}, off=()=>{lrKey=null;lrHL()};
   el.addEventListener("mouseenter",on); el.addEventListener("focus",on); el.addEventListener("mouseleave",off); el.addEventListener("blur",off); });
 tlFrame(TL.length-1);
@@ -724,7 +724,7 @@ new MutationObserver(render).observe(document.documentElement,{attributes:true,a
 
 const latest=d3.max(raw,d=>d.up?new Date(d.up):null);
 document.getElementById("o-foot").innerHTML=`<p>Map notes: all rows from the "FracTracker Data Centers" sheet with status Operating (${fmtN(raw.length)} facilities, of which ${raw.filter(d=>d.lc==="High").length} have high location confidence, ${raw.filter(d=>d.lc==="Medium").length} medium and ${raw.filter(d=>d.lc==="Low").length} low; latest record update ${latest?latest.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}):"n/a"}). Dot size and color follow the sheet's size class; ${raw.length-raw.filter(d=>d.sz&&d.sz!=="Unknown").length} facilities have no size reported. Reported MW totals use only rows with a single number and skip ranges such as "150-400".${dropped?` ${dropped} facilities fall outside the map projection and are not drawn.`:""}</p>
-<p>Data source: <a href="https://www.fractracker.org/data-centers/" target="_blank" rel="noopener">FracTracker Alliance, Data Centers Identified by FracTracker Alliance</a>. Data provided by FracTracker Alliance (2026). Accessed via https://www.fractracker.org/data-centers/. FracTracker provides the data as is and notes that its list of existing data centers is still being filled in, so this map undercounts operating facilities. Last updated: November 23, 2026; Last data refresh on <b>November 22, 2026</b> [FracTracker Alliance: most recent record October 27, 2026].</p>`;
+<p>Data source: <a href="https://www.fractracker.org/data-centers/" target="_blank" rel="noopener">FracTracker Alliance, Data Centers Identified by FracTracker Alliance</a>. Data provided by FracTracker Alliance (2026). Accessed via https://www.fractracker.org/data-centers/. FracTracker provides the data as is and notes that its list of existing data centers is still being filled in, so this map undercounts operating facilities. Last updated: November 24, 2026; Last data refresh on <b>November 22, 2026</b> [FracTracker Alliance: most recent record October 27, 2026].</p>`;
 render();
 })();
 </script>
@@ -1244,7 +1244,7 @@ document.getElementById("b-take").innerHTML=[
  `<b>Outliers.</b> About 40% of restrictions have no logged proposal nearby beforehand, including preemptive waves around Wichita, mid-Michigan and the Carolina coast. Some may instead reflect gaps in FracTracker Alliance&rsquo;s data: operating sites it hasn&rsquo;t listed yet, or proposals that were never public, logged late or mislocated.`
 ].map(t=>`<li>${t}</li>`).join("");
 
-document.getElementById("b-foot").innerHTML=`<p style="margin:0">Data sources: local restrictions from <a href="https://www.datacenterpolicy.com/" target="_blank" rel="noopener">The Data Center Policy Database</a> (Bridges et al., 2026, <a href="https://doi.org/10.17613/PVSTG-4A775" target="_blank" rel="noopener">doi.org/10.17613/PVSTG-4A775</a>); operating and proposed data centers from <a href="https://www.fractracker.org/data-centers/" target="_blank" rel="noopener">FracTracker Alliance</a> (Data provided by FracTracker Alliance (2026). Accessed via https://www.fractracker.org/data-centers/); town locations from GeoNames (CC BY 4.0). Last updated: November 23, 2026; Last data refresh on <b>November 22, 2026</b> [FracTracker Alliance: most recent record October 27, 2026; Data Center Policy Database: most recent record November 17, 2026].</p>`;
+document.getElementById("b-foot").innerHTML=`<p style="margin:0">Data sources: local restrictions from <a href="https://www.datacenterpolicy.com/" target="_blank" rel="noopener">The Data Center Policy Database</a> (Bridges et al., 2026, <a href="https://doi.org/10.17613/PVSTG-4A775" target="_blank" rel="noopener">doi.org/10.17613/PVSTG-4A775</a>); operating and proposed data centers from <a href="https://www.fractracker.org/data-centers/" target="_blank" rel="noopener">FracTracker Alliance</a> (Data provided by FracTracker Alliance (2026). Accessed via https://www.fractracker.org/data-centers/); town locations from GeoNames (CC BY 4.0). Last updated: November 24, 2026; Last data refresh on <b>November 22, 2026</b> [FracTracker Alliance: most recent record October 27, 2026; Data Center Policy Database: most recent record November 17, 2026].</p>`;
 
 function all(){ forest(); drawHubs(); hubBars(); drawCols(); scatter("b-sc1","op","Operating data centers (FracTracker)",s.rho_op,s.p_op); scatter("b-sc2","pr","Proposed projects (FracTracker)",s.rho_pr,s.p_pr);
   frameA(+document.getElementById("b-sliderA").value||framesA.length-1,false); frameB(+document.getElementById("b-sliderB").value||framesB.length-1,false);
@@ -1301,6 +1301,15 @@ new MutationObserver(all).observe(document.documentElement,{attributes:true,attr
 #view-howto .ph ol{list-style:none;padding:0;margin:0;display:grid;gap:6px}
 #view-howto .ph li{font-size:12.5px;line-height:1.4;border:1px solid var(--line);border-left:3px solid var(--c);border-radius:6px;padding:6px 8px;background:var(--surface);max-width:none}
 #view-howto .ph li i{font-style:normal;color:var(--muted);font-family:var(--f-data);font-size:11px;display:block;margin-bottom:1px}
+#view-howto .ph li{position:relative;cursor:help}
+#view-howto .ph li:hover,#view-howto .ph li:focus{border-color:var(--c);outline:none}
+#view-howto .ph li .pop{display:none;position:absolute;z-index:20;left:0;top:calc(100% + 6px);width:min(300px,80vw);background:var(--ink);color:var(--surface);border-radius:8px;padding:10px 12px;box-shadow:0 6px 20px rgba(0,0,0,.25);font-size:12.5px;line-height:1.45}
+#view-howto .ph li:hover .pop,#view-howto .ph li:focus .pop,#view-howto .ph li:focus-within .pop{display:grid;gap:6px}
+#view-howto .ph:nth-child(4) li .pop,#view-howto .ph:nth-child(5) li .pop{left:auto;right:0}
+#view-howto .pop .pl{font:600 10.5px var(--f-data);text-transform:uppercase;letter-spacing:.08em;opacity:.7}
+#view-howto .pop .pq{font-family:var(--f-data);font-size:12px}
+#view-howto .pop .pq::before{content:"\201C"} #view-howto .pop .pq::after{content:"\201D"}
+@media (max-width:980px){#view-howto .ph:nth-child(4) li .pop,#view-howto .ph:nth-child(5) li .pop{left:0;right:auto}}
 #view-howto .loop{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted);border:1px dashed var(--line);border-radius:8px;padding:8px 12px}
 #view-howto .loop b{color:var(--ink)}
 #view-howto .p1{--c:#5b6b8c} #view-howto .p2{--c:#2f78c6} #view-howto .p3{--c:#6a1fb0} #view-howto .p4{--c:#2a9d8f} #view-howto .p5{--c:#c77700}
@@ -1508,37 +1517,37 @@ new MutationObserver(all).observe(document.documentElement,{attributes:true,attr
 
   <section class="card" id="h-flow">
     <h2>7. From idea to finished site: the process</h2>
-    <p class="muted">Each box is a prompt or group of prompts from the conversation. Work moved left to right, but the last two stages looped many times.</p>
+    <p class="muted">Each box is a prompt or group of prompts from the conversation. Work moved left to right, but the last two stages looped many times. Hover over or tap a box to see the prompt behind it.</p>
     <div class="flow" role="img" aria-label="Flow diagram in five stages: Conceive, Design, Analyze, Iterate, Refine and polish">
       <div class="ph p1"><div class="hd">Conceive <span>explore</span></div><ol>
-        <li><i>brainstorm</i>Dashboard ideas from the FracTracker sheet</li>
-        <li><i>scope</i>Narrow to proposals and 2026 cancellations</li>
-        <li><i>verify</i>Compare the Excel tracker with FracTracker</li>
-        <li><i>context</i>Court cases and docket alerts; moratoria vs. cancellations; top sponsors</li>
+        <li tabindex="0"><i>brainstorm</i>Dashboard ideas from the FracTracker sheet<span class="pop" role="tooltip"><span class="pl">Prompt</span><span class="pq">/data:build-dashboard Use the sheet to build a dashboard tracking news and campaigns against data centers. Brainstorm, don't build yet.</span></span></li>
+        <li tabindex="0"><i>scope</i>Narrow to proposals and 2026 cancellations<span class="pop" role="tooltip"><span class="pl">Prompt</span><span class="pq">Scope down to data center proposals and projects cancelled in 2026.</span></span></li>
+        <li tabindex="0"><i>verify</i>Compare the Excel tracker with FracTracker<span class="pop" role="tooltip"><span class="pl">Prompt</span><span class="pq">Compare the cancellations in my Excel file with the Google Sheet. Which source is more accurate?</span></span></li>
+        <li tabindex="0"><i>context</i>Court cases and docket alerts; moratoria vs. cancellations; top sponsors<span class="pop" role="tooltip"><span class="pl">Prompts</span><span class="pq">Find court cases related to the cancelled 2026 projects.</span><span class="pq">Analyze whether cancelled projects correlate with moratoria by state.</span><span class="pq">List the top 20 most active sponsors, federal and state.</span></span></li>
       </ol></div>
       <div class="ph p2"><div class="hd">Design <span>build</span></div><ol>
-        <li><i>map</i>County map of local restrictions</li>
-        <li><i>map</i>Symbol map of operating data centers</li>
-        <li><i>site</i>Combine into one site with tabs; order the pages</li>
-        <li><i>charts</i>Datawrapper trend line; Flourish treemap</li>
+        <li tabindex="0"><i>map</i>County map of local restrictions<span class="pop" role="tooltip"><span class="pl">Prompt</span><span class="pq">Make a map of local counties with moratoria or restrictions.</span></span></li>
+        <li tabindex="0"><i>map</i>Symbol map of operating data centers<span class="pop" role="tooltip"><span class="pl">Prompt</span><span class="pq">Make a symbol map of operating data centers.</span></span></li>
+        <li tabindex="0"><i>site</i>Combine into one site with tabs; order the pages<span class="pop" role="tooltip"><span class="pl">Prompts</span><span class="pq">Combine the 2 maps into one website with navigation.</span><span class="pq">Swap the page order: operating data centers first.</span></span></li>
+        <li tabindex="0"><i>charts</i>Datawrapper trend line; Flourish treemap<span class="pop" role="tooltip"><span class="pl">Prompts</span><span class="pq">Use Datawrapper for the line chart and replace the current one.</span><span class="pq">Make a table for a Flourish treemap by state and type.</span></span></li>
       </ol></div>
       <div class="ph p3"><div class="hd">Analyze <span>test</span></div><ol>
-        <li><i>method</i>Propose a geographic correlation method</li>
-        <li><i>page 3</i>Distance bands: &ldquo;Backlash next door&rdquo;</li>
-        <li><i>revamp</i>Fan-out map, column chart, proposals time-lapse, state scatter plots</li>
-        <li><i>model</i>Regression and forest plot</li>
+        <li tabindex="0"><i>method</i>Propose a geographic correlation method<span class="pop" role="tooltip"><span class="pl">Prompt</span><span class="pq">Propose a methodology for geographic correlation.</span></span></li>
+        <li tabindex="0"><i>page 3</i>Distance bands: &ldquo;Backlash next door&rdquo;<span class="pop" role="tooltip"><span class="pl">Prompt</span><span class="pq">Go with b (distance bands). Create page 3, &#8220;Backlash next door,&#8221; covering insights, findings and outliers.</span></span></li>
+        <li tabindex="0"><i>revamp</i>Fan-out map, column chart, proposals time-lapse, state scatter plots<span class="pop" role="tooltip"><span class="pl">Prompt</span><span class="pq">Revamp page 3: an animated map, a column chart, a proposals time-lapse map and a state scatter plot.</span></span></li>
+        <li tabindex="0"><i>model</i>Regression and forest plot<span class="pop" role="tooltip"><span class="pl">Prompt</span><span class="pq">Run a multivariate regression and show it as a forest plot.</span></span></li>
       </ol></div>
       <div class="ph p4"><div class="hd">Iterate <span>fix</span></div><ol>
-        <li><i>accuracy</i>Fix Laurens County; cite sources; add last-updated</li>
-        <li><i>encoding</i>Distinct colors; pushback in orange; operator links</li>
-        <li><i>clarity</i>Plain-language labels; define &ldquo;big hub&rdquo;; FracTracker caveat</li>
-        <li><i>cut</i>Remove the page 1 timeline after finding its dates unreliable</li>
+        <li tabindex="0"><i>accuracy</i>Fix Laurens County; cite sources; add last-updated<span class="pop" role="tooltip"><span class="pl">Prompts</span><span class="pq">Laurens County, Alabama is an error; search for the closest match.</span><span class="pq">Cite https://www.datacenterpolicy.com/.</span><span class="pq">Add a &#8220;last updated&#8221; note at the end of the data source.</span></span></li>
+        <li tabindex="0"><i>encoding</i>Distinct colors; pushback in orange; operator links<span class="pop" role="tooltip"><span class="pl">Prompts</span><span class="pq">Change the colors to be easier to distinguish.</span><span class="pq">Color symbols by community pushback: Yes = bright orange.</span><span class="pq">Make operator names active links to their homepages.</span></span></li>
+        <li tabindex="0"><i>clarity</i>Plain-language labels; define &ldquo;big hub&rdquo;; FracTracker caveat<span class="pop" role="tooltip"><span class="pl">Prompts</span><span class="pq">Replace &#961; with plain language.</span><span class="pq">Define &#8220;big hub&#8221; precisely in the first map&#8217;s subtitle.</span><span class="pq">Add a caveat that outliers could be due to incomplete or inaccurate FracTracker data.</span></span></li>
+        <li tabindex="0"><i>cut</i>Remove the page 1 timeline after finding its dates unreliable<span class="pop" role="tooltip"><span class="pl">Prompt</span><span class="pq">Remove the play button and timeline below the map in operating data centers. The data is not accurate.</span></span></li>
       </ol></div>
       <div class="ph p5"><div class="hd">Refine <span>polish</span></div><ol>
-        <li><i>motion</i>Timelines and play buttons, made thin and consistent</li>
-        <li><i>linking</i>Legend and chart hovers highlight the maps</li>
-        <li><i>tables</i>Sortable columns; notes; info boxes match map height</li>
-        <li><i>explain</i>State labels and pop-ups; model equation; this page</li>
+        <li tabindex="0"><i>motion</i>Timelines and play buttons, made thin and consistent<span class="pop" role="tooltip"><span class="pl">Prompts</span><span class="pq">Add a play button and timeline below the restrictions map.</span><span class="pq">Make the style thin and streamlined.</span></span></li>
+        <li tabindex="0"><i>linking</i>Legend and chart hovers highlight the maps<span class="pop" role="tooltip"><span class="pl">Prompts</span><span class="pq">When the mouse is over the legend, highlight the map.</span><span class="pq">Hovering over column segments highlights the map.</span></span></li>
+        <li tabindex="0"><i>tables</i>Sortable columns; notes; info boxes match map height<span class="pop" role="tooltip"><span class="pl">Prompts</span><span class="pq">Add sort options for all tables.</span><span class="pq">Add a note under the table.</span><span class="pq">Decrease the height of the info box to match the map height.</span></span></li>
+        <li tabindex="0"><i>explain</i>State labels and pop-ups; model equation; this page<span class="pop" role="tooltip"><span class="pl">Prompts</span><span class="pq">Add text labels in the 2 scatterplots where there is space to fit them.</span><span class="pq">Above the forest plot, write out the main model equation and explain each parameter.</span><span class="pq">Add a &#8220;How Claude built this site&#8221; link that goes to a new page.</span></span></li>
       </ol></div>
     </div>
     <div class="loop"><b>&#8634; Loop</b> Each change was checked in a browser screenshot, published, and reviewed by the editor, whose next prompt often reacted to what they saw.</div>
@@ -1585,7 +1594,7 @@ new MutationObserver(all).observe(document.documentElement,{attributes:true,attr
 Do not push to GitHub, delete files, or change files outside this folder.</pre><p class="why">Adapt the folder names to your own setup. The checks in step 4 matter most: a broken or half-loaded source should stop the run, not quietly shrink the map.</p></div>
   </section>
 
-  <footer>Data sources: FracTracker Alliance (2026), accessed via <a href="https://www.fractracker.org/data-centers/" target="_blank" rel="noopener">fractracker.org/data-centers</a>; The Data Center Policy Database (Bridges et al., 2026); GeoNames (CC BY 4.0); us-atlas. Built with Claude. Last updated: November 23, 2026; Last data refresh on <b>November 22, 2026</b> [FracTracker Alliance: most recent record October 27, 2026; Data Center Policy Database: most recent record November 17, 2026].</footer>
+  <footer>Data sources: FracTracker Alliance (2026), accessed via <a href="https://www.fractracker.org/data-centers/" target="_blank" rel="noopener">fractracker.org/data-centers</a>; The Data Center Policy Database (Bridges et al., 2026); GeoNames (CC BY 4.0); us-atlas. Built with Claude. Last updated: November 24, 2026; Last data refresh on <b>November 22, 2026</b> [FracTracker Alliance: most recent record October 27, 2026; Data Center Policy Database: most recent record November 17, 2026].</footer>
 </div>
 </section>
 <script>
