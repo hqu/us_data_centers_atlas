@@ -1468,7 +1468,7 @@ new MutationObserver(all).observe(document.documentElement,{attributes:true,attr
 
   <section class="card" id="h-prompts">
     <h2>3. Key prompts: the critical path</h2>
-    <p class="muted">Prompts 1&ndash;29 (sections A&ndash;F) are required: they rebuild the core of this site in order, without the design polish, and end with a Claude artifact link you can share. Sections G and H are optional extras. Run the prompts one at a time and check each result before moving on. Do the setup in section 2 first.</p>
+    <p class="muted">Prompts 1&ndash;29 (sections A&ndash;F) are required: they rebuild the core of this site in order, without the design polish, and end with a Claude artifact link you can share. Sections G, H and I are optional extras. Run the prompts one at a time and check each result before moving on. Do the setup in section 2 first.</p>
     <div class="tips"><b>Tips that prevent most confusion:</b> Give one instruction per prompt. Name the exact sheet, file and columns. Say &ldquo;don&rsquo;t build yet&rdquo; when you want a plan. Ask to see corrections before they&rsquo;re made. After each change, look at the published page before the next prompt.</div>
     <h3>A. Check the data before building</h3>
     <p class="muted">Do these in a new chat inside your Project, after the setup in section 2.</p>
@@ -1538,6 +1538,29 @@ new MutationObserver(all).observe(document.documentElement,{attributes:true,attr
       <li><q>Make a GitHub Pages version of the site that replaces the two chart images with the Datawrapper and Flourish embed codes.</q><span class="why">GitHub Pages allows embed code; a Claude artifact doesn&rsquo;t.</span></li>
       <li><q>Push it to my repository &lt;your-username/your-repo&gt;.</q><span class="why">Use the exact name of the empty repository you created.</span></li>
       <li><q>Walk me through turning on GitHub Pages for that repository, then check that both charts load at the Pages address.</q><span class="why">Settings &rarr; Pages &rarr; Deploy from a branch &rarr; main / (root).</span></li>
+    </ol>
+    </div>
+    <div class="optional">
+    <span class="optlabel">Optional</span>
+    <h3>I. Make the maps more interactive</h3>
+    <p class="muted">The prompts used, word for word, to add links, definitions, filters, search results and highlighting to the two maps and their info boxes.</p>
+    <ol class="prompts">
+      <li><q style="white-space:pre-line">in the operating data centers map, if there is link(s) for community pushback, add them in the info box.</q><span class="why">Shows every community group and petition link FracTracker lists, and a note when a pushback site has none.</span></li>
+      <li><q style="white-space:pre-line">for the column headings: Facilities
+Hyperscale or mega
+With reported MW
+Reported MW
+Top operator
+Add small ? icon and on mouseover pop up a definition/description of what these metrics mean.</q><span class="why">Plain-language definitions without cluttering the table.</span></li>
+      <li><q style="white-space:pre-line">do the same for heading in the other table: 
+Policies
+Moratoria
+Bans
+Zoning
+Mix</q><span class="why">Same treatment for the Local restrictions table.</span></li>
+      <li><q style="white-space:pre-line">in local restriction map, when user click on the buttons on top or the legend, update the info box to filter for only those sites.</q><span class="why">Lets readers list just the bans, or just the expired moratoria, and see them on the map.</span></li>
+      <li><q style="white-space:pre-line">in the search box on the operating data centers page, if user presses enter key, filter the info box for that search results.</q><span class="why">Turns the search box into a full results list.</span></li>
+      <li><q style="white-space:pre-line">on both maps, when user mouseover the data center in the infobox, highlight it on the map.</q><span class="why">Links each list entry to its place on the map.</span></li>
     </ol>
     </div>
   </section>
