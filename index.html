@@ -252,7 +252,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 
   <div class="controls">
     <button type="button" class="chip stchip" id="o-f-state" hidden title="Clear the state filter"></button>
-    <label class="ctl" for="o-f-q">Search <input type="search" id="o-f-q" placeholder="Name, operator, city"></label>
+    <label class="ctl" for="o-f-q">Search <input type="search" id="o-f-q" placeholder="Name, operator, city" enterkeyhint="search" title="Press Enter to list every match in the info box"></label>
     <label class="ctl" for="o-f-push"><input type="checkbox" id="o-f-push"> Only sites with community pushback</label>
   </div>
 
@@ -675,6 +675,13 @@ function renderPanel(){
   const panel=document.getElementById("o-panel");
   const d=data.find(x=>x.id===state.sel);
   if(d && match(d)){ panel.innerHTML=facHTML(d); document.getElementById("o-back").onclick=()=>{state.sel=null;render()}; return; }
+  if(state.qlist && state.q){
+    const res=visibleList.slice().sort((a,b)=>SIZES.indexOf(a.sz)-SIZES.indexOf(b.sz)||(b.mw||0)-(a.mw||0));
+    panel.innerHTML=`<h2>${res.length} result${res.length===1?"":"s"} for &ldquo;${esc(state.q)}&rdquo;</h2><p class="sub" style="margin:0 0 6px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">${state.lk?`<span class="badge" style="color:var(--ink)">Filter: ${esc(LKNAME[state.lk])}</span>`:""}<button class="chip" id="o-qclear" style="font-size:11px;padding:2px 9px">Clear search</button></p><p class="sub">${res.length?"Matches on name, operator, tenant, city or county, largest first. Click one, or a dot on the map.":"No facilities match. Check the spelling or try part of a name."}</p><div class="list">${res.map(d=>`<button class="item" data-id="${d.id}"><b>${esc(d.n||"Unnamed facility")}</b><span>${esc(d.op||"Operator not listed")} &middot; ${esc(d.c)}, ${esc(d.s)} &middot; ${d.mwr?esc(d.mwr)+" MW":esc(SHORT[d.sz])}</span></button>`).join("")}</div>`;
+    panel.querySelectorAll(".item").forEach(b=>b.onclick=()=>select(+b.dataset.id,true));
+    document.getElementById("o-qclear").onclick=()=>{ const i=document.getElementById("o-f-q"); i.value=""; state.q=""; state.qlist=false; render(); i.focus(); };
+    return;
+  }
   const top=visibleList.slice().sort((a,b)=>SIZES.indexOf(a.sz)-SIZES.indexOf(b.sz)||(b.mw||0)-(a.mw||0)).slice(0,25);
   panel.innerHTML=`<h2>Largest facilities shown</h2>${state.lk?`<p class="sub" style="margin:0 0 6px;display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span class="badge" style="color:var(--ink)">Filter: ${esc(LKNAME[state.lk])}</span><button class="chip" id="o-lkclear" style="font-size:11px;padding:2px 9px">Clear</button></p>`:""}<p class="sub">${visibleList.length?`Top ${top.length} of ${fmtN(visibleList.length)} by size. Click one, or a dot on the map.`:"Nothing matches these filters."}</p><div class="list">${top.map(d=>`<button class="item" data-id="${d.id}"><b>${esc(d.n||"Unnamed facility")}</b><span>${esc(d.op||"Operator not listed")} &middot; ${esc(d.c)}, ${esc(d.s)} &middot; ${d.mwr?esc(d.mwr)+" MW":esc(SHORT[d.sz])}</span></button>`).join("")}</div>`;
   panel.querySelectorAll(".item").forEach(b=>b.onclick=()=>select(+b.dataset.id,true));
@@ -762,7 +769,11 @@ svg.on("mousemove",e=>{
 }).on("mouseleave",()=>tip.hidden=true).on("click",e=>{const d=nearest(e); if(d) select(d.id,false);});
 
 stSel.onclick=()=>{state.st="";state.sel=null;render();zoomToState();};
-document.getElementById("o-f-q").oninput=e=>{state.q=e.target.value.trim();render()};
+document.getElementById("o-f-q").oninput=e=>{state.q=e.target.value.trim(); if(!state.q) state.qlist=false; render()};
+// Enter in the search box lists every match in the info box (one match opens its details)
+document.getElementById("o-f-q").onkeydown=e=>{ if(e.key!=="Enter") return; e.preventDefault(); state.q=e.target.value.trim(); state.sel=null; state.qlist=!!state.q; render();
+  if(state.q&&visibleList.length===1) select(visibleList[0].id,true);
+  if(innerWidth<900) document.getElementById("o-panel").scrollIntoView({behavior:"smooth",block:"nearest"}); };
 document.getElementById("o-f-push").onchange=e=>{state.push=e.target.checked;render()};
 matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change",render);
 new MutationObserver(render).observe(document.documentElement,{attributes:true,attributeFilter:["data-theme"]});
