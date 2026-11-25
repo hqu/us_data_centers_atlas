@@ -191,6 +191,12 @@ footer{border-top:4px solid var(--ink);padding-top:18px;margin-top:8px;max-width
 #view-operating th .sortbtn:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:2px}
 #view-operating th[aria-sort="ascending"],#view-operating th[aria-sort="descending"]{color:var(--ink)}
 #view-operating th .arr{font-size:9px}
+#view-operating .thwrap{display:inline-flex;align-items:center;gap:5px}
+#view-operating th.n .thwrap{justify-content:flex-end;width:100%}
+#view-operating th.n .thwrap .sortbtn{width:auto}
+#view-operating .qi{display:inline-grid;place-items:center;width:14px;height:14px;border-radius:50%;border:1px solid currentColor;font:600 9.5px var(--f-body);text-transform:none;letter-spacing:0;cursor:help;opacity:.7;flex:none}
+#view-operating .qi:hover,#view-operating .qi:focus{opacity:1;outline:none;background:var(--ink);color:var(--surface);border-color:var(--ink)}
+#view-operating .qtip{position:fixed;z-index:50;background:var(--ink);color:var(--surface);font:400 12.5px/1.45 var(--f-body);padding:8px 10px;border-radius:6px;box-shadow:0 6px 18px rgba(0,0,0,.25);pointer-events:none;text-transform:none;letter-spacing:0}
 #view-operating th.n .sortbtn{justify-content:flex-end;width:100%}
 #view-operating td.n,#view-operating th.n{text-align:right}
 #view-operating td.n{font-family:var(--f-data);font-variant-numeric:tabular-nums}
@@ -255,7 +261,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 
   <section class="ledger">
     <h2>By state</h2>
-    <div class="tbl"><table id="o-ledger"><thead><tr><th>State</th><th class="n">Facilities</th><th class="n">Hyperscale or mega</th><th class="n">With reported MW</th><th class="n">Reported MW</th><th>Top operator</th></tr></thead><tbody></tbody></table></div>
+    <div class="tbl"><table id="o-ledger"><thead><tr><th>State</th><th class="n" data-tip="Operating data centers FracTracker lists in the state, at every location-confidence level.">Facilities</th><th class="n" data-tip="Facilities FracTracker classes as Hyperscale (100&ndash;999 MW) or Mega campus (1,000+ MW).">Hyperscale or mega</th><th class="n" data-tip="How many of the state&rsquo;s facilities have a single capacity figure in megawatts. Sites with no figure, or only a range such as &ldquo;150&ndash;400&rdquo;, aren&rsquo;t counted.">With reported MW</th><th class="n" data-tip="Total capacity of just the facilities with a reported figure, in megawatts. It&rsquo;s a minimum, because most sites list no capacity.">Reported MW</th><th data-tip="The operator with the most facilities in the state, with its count in parentheses. Linked to the operator&rsquo;s homepage when known.">Top operator</th></tr></thead><tbody></tbody></table></div>
     <p class="tblnote"><b>With reported MW</b> counts the facilities in each state that have a capacity figure in FracTracker&rsquo;s data. <b>Reported MW</b> adds up the capacity of just those facilities. Sites with no capacity listed, or listed only as a range such as &ldquo;150&ndash;400&rdquo;, are left out, so Reported MW is a minimum. For example, Virginia has 180 operating data centers, but only 12 have a reported capacity, and those 12 total 943 MW.</p>
   </section>
 
@@ -666,7 +672,7 @@ function renderLedger(){
 // sortable table headers: click a header to sort, click again to reverse
 function makeSortable(table,defaultCol,defaultDir){
   const ths=[...table.tHead.rows[0].cells]; let col=defaultCol, dir=defaultDir;
-  ths.forEach((th,i)=>{ const lab=th.innerHTML; th.innerHTML=`<button type="button" class="sortbtn">${lab}<span class="arr" aria-hidden="true"></span></button>`;
+  ths.forEach((th,i)=>{ const lab=th.innerHTML, tip=th.dataset.tip; th.innerHTML=`<span class="thwrap"><button type="button" class="sortbtn">${lab}<span class="arr" aria-hidden="true"></span></button>${tip?`<span class="qi" tabindex="0" role="button" aria-label="What ${lab} means" data-tip="${tip.replace(/"/g,"&quot;")}">?</span>`:""}</span>`;
     th.querySelector("button").onclick=()=>{ if(col===i) dir=-dir; else { col=i; dir=th.classList.contains("n")||th.dataset.num!=null?-1:1; } apply(); }; });
   const key=td=>{ const v=td.dataset.sort??td.textContent.trim(); const n=parseFloat(String(v).replace(/[,%]/g,"")); return isNaN(n)?(v==="–"||v===""?null:String(v).toLowerCase()):n; };
   function apply(){
@@ -679,6 +685,16 @@ function makeSortable(table,defaultCol,defaultDir){
   return apply;
 }
 const sortLedger=makeSortable(document.getElementById("o-ledger"),1,-1);
+// "?" definitions on the table headings (fixed-position so the scrolling table doesn't clip them)
+const qtip=document.createElement("div"); qtip.className="qtip"; qtip.setAttribute("role","tooltip"); qtip.hidden=true; document.body.appendChild(qtip);
+document.querySelectorAll("#o-ledger .qi").forEach(q=>{
+  const show=()=>{ qtip.innerHTML=q.dataset.tip; qtip.hidden=false; const r=q.getBoundingClientRect(), w=Math.min(260,innerWidth-24);
+    qtip.style.width=w+"px"; qtip.style.left=Math.max(12,Math.min(innerWidth-w-12,r.left+r.width/2-w/2))+"px"; qtip.style.top=(r.bottom+8)+"px"; };
+  const hide=()=>{ qtip.hidden=true; };
+  q.addEventListener("mouseenter",show); q.addEventListener("focus",show); q.addEventListener("mouseleave",hide); q.addEventListener("blur",hide);
+  q.addEventListener("click",e=>{ e.stopPropagation(); qtip.hidden?show():hide(); });
+});
+addEventListener("scroll",()=>{ qtip.hidden=true; },{passive:true});
 
 function zoomToState(){
   if(!state.st){ svg.transition().duration(400).call(zoom.transform,d3.zoomIdentity); return; }
