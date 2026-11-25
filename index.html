@@ -132,6 +132,8 @@ footer{border-top:4px solid var(--ink);padding-top:18px;margin-top:8px;max-width
 .stchip[hidden]{display:none}
 @media (min-width:901px){.stage.fitstage{align-items:stretch} .panel.fitpanel{height:0;min-height:100%;max-height:none}}
 .stchip{font-size:12.5px}
+.srcline{margin:8px 4px 0;font-size:11.5px;line-height:1.4;color:var(--muted)}
+.srcline a{color:var(--link)}
 
 /* Operating map */
 #view-operating .wrap{max-width:1240px;margin:0 auto;padding-block:28px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:grid;gap:22px}
@@ -189,6 +191,8 @@ footer{border-top:4px solid var(--ink);padding-top:18px;margin-top:8px;max-width
 #view-operating .badge.push{border-color:var(--push);color:var(--push)}
 #view-operating .ledger{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;min-width:0}
 #view-operating .ledger h2{font-size:18px;margin:0 0 10px}
+#view-operating .srcline{margin:8px 4px 0;font-size:11.5px;line-height:1.4;color:var(--muted)}
+#view-operating .srcline a{color:var(--link)}
 #view-operating .tblnote{margin:10px 0 0;font-size:12.5px;color:var(--muted);max-width:92ch;line-height:1.5}
 #view-operating .tblnote b{color:var(--ink);font-weight:600}
 #view-operating .tbl{overflow-x:auto}
@@ -264,6 +268,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
       <div class="zoombtns"><button id="o-zin" aria-label="Zoom in">+</button><button id="o-zout" aria-label="Zoom out">&minus;</button><button id="o-zreset" aria-label="Reset zoom">&#8634;</button></div>
       <div class="tip" id="o-tip" hidden></div>
       <div class="legend" id="o-legend"></div>
+      <p class="srcline">Source: <a href="https://www.fractracker.org/data-centers/" target="_blank" rel="noopener">FracTracker Alliance, Data Centers Identified by FracTracker Alliance</a></p>
     </div>
     <aside class="panel fitpanel" id="o-panel" aria-live="polite"></aside>
   </div>
@@ -271,6 +276,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
   <section class="ledger">
     <h2>By state</h2>
     <div class="tbl"><table id="o-ledger"><thead><tr><th>State</th><th class="n" data-tip="Operating data centers FracTracker lists in the state, at every location-confidence level.">Facilities</th><th class="n" data-tip="Facilities FracTracker classes as Hyperscale (100&ndash;999 MW) or Mega campus (1,000+ MW).">Hyperscale or mega</th><th class="n" data-tip="How many of the state&rsquo;s facilities have a single capacity figure in megawatts. Sites with no figure, or only a range such as &ldquo;150&ndash;400&rdquo;, aren&rsquo;t counted.">With reported MW</th><th class="n" data-tip="Total capacity of just the facilities with a reported figure, in megawatts. It&rsquo;s a minimum, because most sites list no capacity.">Reported MW</th><th data-tip="The operator with the most facilities in the state, with its count in parentheses. Linked to the operator&rsquo;s homepage when known.">Top operator</th></tr></thead><tbody></tbody></table></div>
+    <p class="srcline" style="margin:8px 0 0">Source: <a href="https://www.fractracker.org/data-centers/" target="_blank" rel="noopener">FracTracker Alliance, Data Centers Identified by FracTracker Alliance</a></p>
     <p class="tblnote"><b>With reported MW</b> counts the facilities in each state that have a capacity figure in FracTracker&rsquo;s data. <b>Reported MW</b> adds up the capacity of just those facilities. Sites with no capacity listed, or listed only as a range such as &ldquo;150&ndash;400&rdquo;, are left out, so Reported MW is a minimum. For example, Virginia has 180 operating data centers, but only 12 have a reported capacity, and those 12 total 943 MW.</p>
   </section>
 
@@ -310,6 +316,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
         <span class="when" id="m-tl-when"></span>
       </div>
       <p class="tlstatus" id="m-tl-status"></p>
+      <p class="srcline">Source: <a href="https://www.datacenterpolicy.com/" target="_blank" rel="noopener">The Data Center Policy Database</a> (Bridges et al., 2026)</p>
     </div>
     <aside class="panel fitpanel" id="m-panel" aria-live="polite"></aside>
   </div>
@@ -339,6 +346,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
   <section class="ledger">
     <h2>By state</h2>
     <div class="tbl"><table id="m-ledger"><thead><tr><th>State</th><th class="n">Counties</th><th class="n" data-tip="Local data center policies passed or enacted in the state (Data Center Policy Database), counting only the types and dates the filters above let through.">Policies</th><th class="n" data-tip="Policies that pause new data centers for a set time. Includes moratoria that have since expired.">Moratoria</th><th class="n" data-tip="Policies that prohibit new data centers outright, in a town, county or zone.">Bans</th><th class="n" data-tip="Zoning, land-use, setback, noise and water rules. Some limit data centers; others set where they&rsquo;re allowed.">Zoning</th><th data-num data-tip="Each bar&rsquo;s length shows the state&rsquo;s number of policies; its colors show the split between moratoria, bans and zoning rules. Sorting uses the share that are moratoria.">Mix</th></tr></thead><tbody></tbody></table></div>
+    <p class="srcline" style="margin:8px 0 0">Source: <a href="https://www.datacenterpolicy.com/" target="_blank" rel="noopener">The Data Center Policy Database</a> (Bridges et al., 2026)</p>
   </section>
 
   <footer id="m-foot"></footer>
@@ -860,6 +868,8 @@ render();
 #view-backlash .fp .ref{stroke:var(--ink);stroke-dasharray:3 3;opacity:.6}
 #view-backlash .fp .gl{stroke:var(--line)}
 #view-backlash .fpwrap{grid-template-columns:minmax(0,2fr) minmax(0,1fr);align-items:center}
+#view-backlash .srcline{margin:8px 4px 0;font-size:11.5px;line-height:1.4;color:var(--muted)}
+#view-backlash .srcline a{color:var(--link)}
 #view-backlash .eqbox{display:grid;gap:10px;padding:14px 16px;border:1px solid var(--line);border-radius:8px;background:var(--bg)}
 #view-backlash .eqhead{font:600 12px var(--f-data);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
 #view-backlash .eq{font:500 15px var(--f-data);color:var(--ink);display:grid;gap:4px;overflow-x:auto;white-space:nowrap}
@@ -924,6 +934,7 @@ render();
       <div class="mapcol">
         <div class="mapwrap" id="b-wrapA"><svg id="b-mapA" viewBox="0 0 975 610" role="img" aria-label="Animated map of local restrictions spreading out from data center hubs"></svg><div class="tip2" id="b-tipA" hidden></div></div>
         <div class="key" id="b-keyA"></div>
+        <p class="srcline">Sources: <a href="https://www.fractracker.org/data-centers/" target="_blank" rel="noopener">FracTracker Alliance</a> (operating sites and proposals); <a href="https://www.datacenterpolicy.com/" target="_blank" rel="noopener">The Data Center Policy Database</a> (local restrictions)</p>
       </div>
       <div class="sidecharts">
         <p class="status" style="font-size:12px;font-weight:600;color:var(--ink)">Big hubs: operating data centers</p>
@@ -963,6 +974,7 @@ render();
         <span class="when" id="b-whenB"></span>
       </div>
       <p class="status thin" id="b-statusB"></p>
+      <p class="srcline">Sources: <a href="https://www.fractracker.org/data-centers/" target="_blank" rel="noopener">FracTracker Alliance</a> (operating sites and proposals); <a href="https://www.datacenterpolicy.com/" target="_blank" rel="noopener">The Data Center Policy Database</a> (local restrictions)</p>
       </div>
     </div>
     <div class="outrow">
