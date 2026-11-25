@@ -1386,7 +1386,8 @@ new MutationObserver(all).observe(document.documentElement,{attributes:true,attr
 #view-howto .pop .pq::before{content:"\201C"} #view-howto .pop .pq::after{content:"\201D"}
 @media (max-width:980px){#view-howto .ph:nth-child(4) li .pop,#view-howto .ph:nth-child(5) li .pop{left:0;right:auto}}
 #view-howto .ph li .nf{display:block;margin-top:5px;padding-top:4px;border-top:1px dashed var(--line);font-size:11.5px;font-style:italic;color:var(--muted)}
-#view-howto .ph li.nf-no{border-style:dashed;border-left-style:solid;opacity:.85}
+#view-howto .ph li.nf-no{border-style:dashed;border-left-style:solid;color:color-mix(in srgb,var(--ink) 75%,var(--surface))}
+#view-howto .ph li:hover,#view-howto .ph li:focus,#view-howto .ph li:focus-within{z-index:30}
 #view-howto .loop{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted);border:1px dashed var(--line);border-radius:8px;padding:8px 12px}
 #view-howto .loop b{color:var(--ink)}
 #view-howto .p1{--c:#5b6b8c} #view-howto .p2{--c:#2f78c6} #view-howto .p3{--c:#6a1fb0} #view-howto .p4{--c:#2a9d8f} #view-howto .p5{--c:#c77700}
