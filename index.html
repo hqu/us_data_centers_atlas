@@ -78,6 +78,12 @@ th .sortbtn:hover{color:var(--ink)}
 th .sortbtn:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:2px}
 th[aria-sort="ascending"],th[aria-sort="descending"]{color:var(--ink)}
 th .arr{font-size:9px}
+.thwrap{display:inline-flex;align-items:center;gap:5px}
+th.n .thwrap{justify-content:flex-end;width:100%}
+th.n .thwrap .sortbtn{width:auto}
+.qi{display:inline-grid;place-items:center;width:14px;height:14px;border-radius:50%;border:1px solid currentColor;font:600 9.5px var(--f-body);text-transform:none;letter-spacing:0;cursor:help;opacity:.7;flex:none}
+.qi:hover,.qi:focus{opacity:1;outline:none;background:var(--ink);color:var(--surface);border-color:var(--ink)}
+.qtip{position:fixed;z-index:50;background:var(--ink);color:var(--surface);font:400 12.5px/1.45 var(--f-body);padding:8px 10px;border-radius:6px;box-shadow:0 6px 18px rgba(0,0,0,.25);pointer-events:none;text-transform:none;letter-spacing:0}
 th.n .sortbtn{justify-content:flex-end;width:100%}
 td.n{font-family:var(--f-data);font-variant-numeric:tabular-nums;text-align:right}
 th.n{text-align:right}
@@ -329,7 +335,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 
   <section class="ledger">
     <h2>By state</h2>
-    <div class="tbl"><table id="m-ledger"><thead><tr><th>State</th><th class="n">Counties</th><th class="n">Policies</th><th class="n">Moratoria</th><th class="n">Bans</th><th class="n">Zoning</th><th data-num title="Sort by share of policies that are moratoria">Mix</th></tr></thead><tbody></tbody></table></div>
+    <div class="tbl"><table id="m-ledger"><thead><tr><th>State</th><th class="n">Counties</th><th class="n" data-tip="Local data center policies passed or enacted in the state (Data Center Policy Database), counting only the types and dates the filters above let through.">Policies</th><th class="n" data-tip="Policies that pause new data centers for a set time. Includes moratoria that have since expired.">Moratoria</th><th class="n" data-tip="Policies that prohibit new data centers outright, in a town, county or zone.">Bans</th><th class="n" data-tip="Zoning, land-use, setback, noise and water rules. Some limit data centers; others set where they&rsquo;re allowed.">Zoning</th><th data-num data-tip="Each bar&rsquo;s length shows the state&rsquo;s number of policies; its colors show the split between moratoria, bans and zoning rules. Sorting uses the share that are moratoria.">Mix</th></tr></thead><tbody></tbody></table></div>
   </section>
 
   <footer id="m-foot"></footer>
@@ -424,7 +430,7 @@ function renderLedger(list){
 // sortable table headers: click a header to sort, click again to reverse
 function makeSortable(table,defaultCol,defaultDir){
   const ths=[...table.tHead.rows[0].cells]; let col=defaultCol, dir=defaultDir;
-  ths.forEach((th,i)=>{ const lab=th.innerHTML; th.innerHTML=`<button type="button" class="sortbtn">${lab}<span class="arr" aria-hidden="true"></span></button>`;
+  ths.forEach((th,i)=>{ const lab=th.innerHTML, tip=th.dataset.tip; th.innerHTML=`<span class="thwrap"><button type="button" class="sortbtn">${lab}<span class="arr" aria-hidden="true"></span></button>${tip?`<span class="qi" tabindex="0" role="button" aria-label="What ${lab} means" data-tip="${tip.replace(/"/g,"&quot;")}">?</span>`:""}</span>`;
     th.querySelector("button").onclick=()=>{ if(col===i) dir=-dir; else { col=i; dir=th.classList.contains("n")||th.dataset.num!=null?-1:1; } apply(); }; });
   const key=td=>{ const v=td.dataset.sort??td.textContent.trim(); const n=parseFloat(String(v).replace(/[,%]/g,"")); return isNaN(n)?(v==="–"||v===""?null:String(v).toLowerCase()):n; };
   function apply(){
@@ -437,6 +443,16 @@ function makeSortable(table,defaultCol,defaultDir){
   return apply;
 }
 const sortLedger=makeSortable(document.getElementById("m-ledger"),1,-1);
+// "?" definitions on the table headings (fixed-position so the scrolling table doesn't clip them)
+const rqtip=document.createElement("div"); rqtip.className="qtip"; rqtip.setAttribute("role","tooltip"); rqtip.hidden=true; document.body.appendChild(rqtip);
+document.querySelectorAll("#m-ledger .qi").forEach(q=>{
+  const show=()=>{ rqtip.innerHTML=q.dataset.tip; rqtip.hidden=false; const r=q.getBoundingClientRect(), w=Math.min(260,innerWidth-24);
+    rqtip.style.width=w+"px"; rqtip.style.left=Math.max(12,Math.min(innerWidth-w-12,r.left+r.width/2-w/2))+"px"; rqtip.style.top=(r.bottom+8)+"px"; };
+  const hide=()=>{ rqtip.hidden=true; };
+  q.addEventListener("mouseenter",show); q.addEventListener("focus",show); q.addEventListener("mouseleave",hide); q.addEventListener("blur",hide);
+  q.addEventListener("click",e=>{ e.stopPropagation(); rqtip.hidden?show():hide(); });
+});
+addEventListener("scroll",()=>{ rqtip.hidden=true; },{passive:true});
 
 function renderTrend(list){
   const el=d3.select("#trend"); el.selectAll("*").remove();
