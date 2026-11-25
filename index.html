@@ -51,8 +51,9 @@ svg{display:block;width:100%;height:auto}
 .states{fill:none;stroke:var(--stateline);stroke-width:1.1;pointer-events:none}
 .legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12.5px;color:var(--muted);padding:6px 4px 0}
 .legend span{display:inline-flex;align-items:center;gap:6px}
-.legend [data-lr]{cursor:default;padding:2px 6px;margin:-2px -6px;border-radius:5px}
+.legend [data-lr]{cursor:pointer;padding:2px 6px;margin:-2px -6px;border-radius:5px}
 .legend [data-lr]:hover,.legend [data-lr].on{background:var(--bg);color:var(--ink)}
+.legend [data-lr].pick{background:var(--ink);color:var(--surface)}
 .tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--bg);font-size:12.5px;padding:6px 9px;border-radius:6px;max-width:240px;line-height:1.35}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;min-width:0;max-height:640px;overflow:auto;font-size:12px}
 .panel h2{font-family:var(--f-display);font-size:18px;margin:0 0 2px}
@@ -359,7 +360,7 @@ const svg = d3.select("#m-map");
 const cls = {"Moratorium":"mor","Ban":"ban","Zoning & siting rules":"zone"};
 const css = n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 
-const state = {types:new Set(Object.keys(cls)), activeOnly:false, st:"", sel:null, until:null};
+const state = {types:new Set(Object.keys(cls)), activeOnly:false, st:"", sel:null, until:null, lk:null};
 const asOf=()=>state.until||TODAY;
 const isExp=p=>!!p.end&&p.end<asOf();
 const stSel = document.getElementById("m-f-state");
@@ -385,7 +386,7 @@ function catFor(list){
 let lrKey=null;
 function lrHL(){
   countyPaths.attr("fill-opacity",d=>!lrKey||!M.has(d.id)||catFor(M.get(d.id))===lrKey?1:.12);
-  document.querySelectorAll("#m-rlegend [data-lr]").forEach(el=>el.classList.toggle("on",el.dataset.lr===lrKey));
+  document.querySelectorAll("#m-rlegend [data-lr]").forEach(el=>{ el.classList.toggle("on",el.dataset.lr===lrKey); el.classList.toggle("pick",el.dataset.lr===state.lk); el.setAttribute("aria-pressed",String(el.dataset.lr===state.lk)); });
 }
 function colorFor(list){
   if(list.some(p=>p.type==="Ban")) return css("--ban");
@@ -411,8 +412,16 @@ function renderPanel(m){
     const st=stateNames[state.sel.slice(0,2)];
     panel.innerHTML=`<h2>${esc(cname[state.sel])}${/city$/i.test(cname[state.sel])?"":" County"}, ${esc(st)}</h2><p class="sub">${list.length} polic${list.length>1?"ies":"y"} passed here</p>`+list.map(polHTML).join("");
   } else {
-    const recent=visible().slice().sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8);
-    panel.innerHTML=`<h2>Most recent actions</h2><p class="sub">Click a shaded county for its full list.</p>`+(recent.length?recent.map(polHTML).join(""):`<p class="empty-note">Nothing matches these filters.</p>`);
+    const LKN={ban:"Ban",mor:"Moratorium in effect",exp:"Moratorium expired",zone:"Zoning & siting rules only"};
+    const f=[]; if(state.types.size<Object.keys(cls).length) f.push([...state.types].join(", ")); if(state.lk) f.push("Map: "+LKN[state.lk]); if(state.activeOnly) f.push("Expired moratoria hidden");
+    const all=[...new Set([...m.values()].flat())].sort((a,b)=>b.date.localeCompare(a.date));
+    if(f.length){
+      panel.innerHTML=`<h2>${all.length} matching polic${all.length===1?"y":"ies"}</h2><p class="sub" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">${f.map(x=>`<span class="tag" style="border:1px solid var(--line);color:var(--ink)">${esc(x)}</span>`).join("")}<button class="chip" id="m-pclear" style="font-size:11px;padding:2px 9px">Clear</button></p><p class="sub">${m.size} counties, newest first. Click a county on the map for its full list.</p>`+(all.length?all.map(polHTML).join(""):`<p class="empty-note">Nothing matches these filters.</p>`);
+      document.getElementById("m-pclear").onclick=()=>{ state.types=new Set(Object.keys(cls)); state.lk=null; state.activeOnly=false; document.getElementById("m-f-active").checked=false; document.querySelectorAll(".chip[data-type]").forEach(c=>c.setAttribute("aria-pressed","true")); render(); };
+    } else {
+      const recent=all.slice(0,8);
+      panel.innerHTML=`<h2>Most recent actions</h2><p class="sub">Click a shaded county for its full list, or a filter button or legend item to list only those.</p>`+(recent.length?recent.map(polHTML).join(""):`<p class="empty-note">Nothing matches these filters.</p>`);
+    }
   }
 }
 function renderFacts(list,m){
@@ -516,11 +525,13 @@ const abbr={"Alabama":"AL","Alaska":"AK","Arizona":"AZ","Arkansas":"AR","Califor
 let M=new Map();
 function render(){
   showSt();
-  const list=visible(); M=byCounty(list);
+  let list=visible(); M=byCounty(list);
+  if(state.lk){ M=new Map([...M].filter(([f,l])=>catFor(l)===state.lk)); const keep=new Set([...M.values()].flat()); list=list.filter(p=>keep.has(p)); }
   countyPaths.attr("class",d=>"county "+(M.has(d.id)?"hit":"empty")+(d.id===state.sel?" sel":"")).attr("fill",d=>M.has(d.id)?colorFor(M.get(d.id)):null);
   countyPaths.filter(d=>d.id===state.sel).raise();
   lrHL();
   renderFacts(list,M); renderPanel(M); renderLedger(list);
+  const k=state.tlk; if(k) document.getElementById("m-tl-status").innerHTML=`<b>${list.length}</b> local actions in <b>${M.size}</b> counties`+(k!=="all"&&k!=="pre"?` &middot; <b>${list.filter(p=>p.date&&p.date.slice(0,7)===k).length}</b> passed this month`:"");
   const all=pols.filter(p=>(!state.until||(p.date&&p.date<=state.until))&&(!state.activeOnly||!isExp(p))&&(!state.st||p.state===state.st));
   document.getElementById("m-c-mor").textContent=all.filter(p=>p.type==="Moratorium").length;
   document.getElementById("m-c-ban").textContent=all.filter(p=>p.type==="Ban").length;
@@ -550,8 +561,7 @@ const tlSl=document.getElementById("m-tl-slider"), tlBtn=document.getElementById
 const tlEnd=k=>k==="pre"?"2024-12-31":k==="all"?null:k+"-31";
 function tlLabel(k){ return k==="pre"?"Before 2025":k==="all"?"Through Nov 2026":"Through "+new Date(+k.slice(0,4),+k.slice(5,7)-1,1).toLocaleDateString("en-US",{month:"short",year:"numeric"}); }
 function tlFrame(i){ const k=TL[i]; state.until=tlEnd(k); document.getElementById("m-tl-when").textContent=tlLabel(k);
-  const v=visible(); document.getElementById("m-tl-status").innerHTML=`<b>${v.length}</b> local actions in <b>${new Set(v.flatMap(p=>p.fips)).size}</b> counties`+(k!=="all"&&k!=="pre"?` &middot; <b>${v.filter(p=>p.date&&p.date.slice(0,7)===k).length}</b> passed this month`:"");
-  render(); }
+  state.tlk=k; render(); }
 let tlTimer=null; const reduceM=matchMedia("(prefers-reduced-motion: reduce)").matches;
 const tlStop=()=>{clearInterval(tlTimer);tlTimer=null;tlBtn.innerHTML="&#9654;";tlBtn.setAttribute("aria-label","Play timeline")};
 tlBtn.onclick=()=>{ if(tlTimer){tlStop();return} if(+tlSl.value>=TL.length-1) tlSl.value=0; tlFrame(+tlSl.value); tlBtn.innerHTML="&#10074;&#10074;"; tlBtn.setAttribute("aria-label","Pause timeline");
@@ -560,7 +570,10 @@ tlSl.oninput=()=>{tlStop();tlFrame(+tlSl.value)};
 const unmapped=pols.filter(p=>!p.fips.length);
 document.getElementById("m-foot").innerHTML=`<p style="margin:0 0 8px">Map notes: ${pols.length} local policies with status Passed or Signed/Enacted. Town and township actions are shown on the county that contains them; a county is colored by its strongest action (ban, then moratorium, then zoning). "Zoning &amp; siting rules" covers zoning, land-use, setback, noise and water ordinances and can include rules that set where data centers are allowed, not only limits. Moratoria count as expired when their listed end date is before ${fmt(TODAY)}. Corrections to the source data: the Laurens County moratorium (passed Sep 14, 2026) is listed under Alabama but is in Laurens County, South Carolina, per its own source and <a href="https://www.foxcarolina.com/2026/09/14/laurens-county-council-votes-approve-one-year-data-center-pause/" target="_blank" rel="noopener">FOX Carolina</a>; misspelled county names (Dubeque, Nicolett, Mongtomery, Winsdor) were matched to Dubuque, Nicollet, Montgomery and Windsor.${unmapped.length?` Not mapped: ${unmapped.map(p=>esc(p.locality+", "+p.state)).join("; ")} (no county by that name in that state).`:""}</p><p style="margin:0">Data source: <a href="https://www.datacenterpolicy.com/" target="_blank" rel="noopener">The Data Center Policy Database</a> (UVA Environmental Institute and Digital Infrastructure initiative). Suggested citation: Bridges, Lauren, Grace Gould, Catarina Coelho Herrera, Isabella Scoresone, and Jack Hauger. 2026. <i>The Data Center Policy Database</i>. June 1. <a href="https://doi.org/10.17613/PVSTG-4A775" target="_blank" rel="noopener">https://doi.org/10.17613/PVSTG-4A775</a>. Export downloaded Nov 2026 (records dated through Nov 17, 2026). The database summarizes public policy records and does not guarantee accuracy or completeness. Last updated: November 25, 2026; Last data refresh on <b>November 22, 2026</b> [Data Center Policy Database: most recent record November 17, 2026].</p>`;
 document.querySelectorAll("#m-rlegend [data-lr]").forEach(el=>{ const on=()=>{lrKey=el.dataset.lr;lrHL()}, off=()=>{lrKey=null;lrHL()};
-  el.addEventListener("mouseenter",on); el.addEventListener("focus",on); el.addEventListener("mouseleave",off); el.addEventListener("blur",off); });
+  el.addEventListener("mouseenter",on); el.addEventListener("focus",on); el.addEventListener("mouseleave",off); el.addEventListener("blur",off);
+  el.setAttribute("role","button"); el.title="Click to show only these counties; click again to clear";
+  const pick=()=>{ state.lk=state.lk===el.dataset.lr?null:el.dataset.lr; state.sel=null; lrKey=null; render(); };
+  el.addEventListener("click",pick); el.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); pick(); } }); });
 tlFrame(TL.length-1);
 })();
 </script>
