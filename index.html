@@ -29,6 +29,21 @@ header{display:grid;gap:10px}
 h1{font-family:var(--f-display);font-weight:800;font-size:clamp(26px,4vw,40px);line-height:1.08;margin:0;text-wrap:balance;letter-spacing:-.01em}
 .lede{margin:0;color:var(--muted);max-width:68ch}
 .facts{display:flex;flex-wrap:wrap;gap:10px 28px;margin-top:6px}
+.factrow{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px 28px}
+.alertcta{flex:0 1 400px;min-width:min(100%,280px);display:grid;gap:8px;padding:14px 16px;border:1.5px solid color-mix(in srgb,var(--link) 55%,var(--line));border-radius:10px;background:color-mix(in srgb,var(--link) 9%,var(--surface))}
+.alertcta h2{font-size:16px;margin:0;line-height:1.25}
+.alertcta p{margin:0;font-size:13px;line-height:1.45;color:var(--muted)}
+.alertcta form{display:flex;gap:8px;flex-wrap:wrap}
+.alertcta input{flex:1 1 180px;min-width:0;font:inherit;font-size:14px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:7px 10px}
+.alertcta button{font:600 14px var(--f-body);color:var(--surface);background:var(--ink);border:0;border-radius:6px;padding:8px 14px;cursor:pointer}
+.alertcta button:hover{opacity:.88}
+.alertcta .alertnote{font-size:11.5px}
+.alertcta .alertnote a{color:var(--link)}
+.alertcta .ssbtn{display:inline-flex;align-items:center;gap:6px;justify-self:start;font:600 14px var(--f-body);color:var(--surface);background:var(--ink);border-radius:6px;padding:9px 16px;text-decoration:none}
+.alertcta .ssbtn:hover{opacity:.88}
+.alertcta .ssbtn:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.alertcta iframe{display:block;width:100%;height:120px;border:0;background:transparent;color-scheme:light}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .fact{display:grid}
 .fact b{font-family:var(--f-data);font-weight:500;font-size:26px;font-variant-numeric:tabular-nums;line-height:1.1}
 .fact span{font-size:12.5px;color:var(--muted)}
@@ -50,7 +65,7 @@ svg{display:block;width:100%;height:auto}
 .county.hit:hover{stroke:var(--focus);stroke-width:1}
 .county.sel{stroke:var(--focus);stroke-width:1.6}
 .county.hl{stroke:var(--focus);stroke-width:2}
-.pol[data-fips]:hover{background:var(--bg)}
+.pol[data-fips]:hover{background:var(--bg);box-shadow:0 2px 8px rgba(0,0,0,.06)}
 .states{fill:none;stroke:var(--stateline);stroke-width:1.1;pointer-events:none}
 .legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:12.5px;color:var(--muted);padding:6px 4px 0}
 .legend span{display:inline-flex;align-items:center;gap:6px}
@@ -61,12 +76,24 @@ svg{display:block;width:100%;height:auto}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;min-width:0;max-height:640px;overflow:auto;font-size:12px}
 .panel h2{font-family:var(--f-display);font-size:18px;margin:0 0 2px}
 .panel .sub{font-size:11.5px;color:var(--muted);margin:0 0 12px}
-.pol{border-top:1px solid var(--line);padding:10px 0;display:grid;gap:4px}
+.feed{display:grid;gap:8px;margin-top:6px}
+.feedmonth{font:600 11px var(--f-data);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:8px 0 0;padding-bottom:4px;border-bottom:1px solid var(--line)}
+.feed .feedmonth:first-child{margin-top:0}
+.loadmore{display:block;width:100%;margin:10px 0 4px;padding:9px 12px;font:600 13px var(--f-body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;cursor:pointer}
+.loadmore:hover{background:var(--bg)} .loadmore:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.loadmore span{font-weight:400;color:var(--muted)}
+.feedend{margin:10px 0 2px;text-align:center;font-size:12px;color:var(--muted)}
+.pol{border:1px solid var(--line);border-left:4px solid var(--zone);border-radius:8px;padding:10px 12px;display:grid;gap:5px;background:var(--surface);transition:background .12s ease,box-shadow .12s ease}
+.pol.mor{border-left-color:var(--mor)} .pol.ban{border-left-color:var(--ban)}
+.pol .dateline{display:flex;align-items:baseline;gap:8px}
+.pol .dateline time{font:700 14px var(--f-data);color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.pol .dateline .verb{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.pol h3.place{margin:0;font-size:14px;line-height:1.3}
 .pol .top{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
 .tag{font:500 10px var(--f-data);letter-spacing:.04em;text-transform:uppercase;padding:2px 6px;border-radius:4px;color:var(--tagtext)}
 .tag.mor{background:var(--mor)}.tag.ban{background:var(--ban)}.tag.zone{background:var(--zone);color:var(--zonetext)}
 .tag.exp{background:transparent;color:var(--muted);border:1px solid var(--line)}
-.pol .place{font-weight:600;font-size:12.5px}
+
 .pol .meta{font-family:var(--f-data);font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
 .pol p{margin:0;font-size:12px;color:var(--ink)}
 .pol a{color:var(--link);font-size:11.5px;word-break:break-word}
@@ -303,7 +330,15 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
     <div class="eyebrow">Local government action &middot; passed or enacted &middot; Source: <a href="https://www.datacenterpolicy.com/" target="_blank" rel="noopener" style="color:inherit">Data Center Policy Database</a></div>
     <h1>Counties with local data center moratoria, bans and zoning rules</h1>
     <p class="lede">Each shaded county has at least one city, town, township or county government that passed a data center moratorium, ban, or zoning/siting rule. Click a county to see what was passed and where it came from.</p>
-    <div class="facts" id="m-facts"></div>
+    <div class="factrow">
+      <div class="facts" id="m-facts"></div>
+      <aside class="alertcta" aria-labelledby="alert-h">
+        <h2 id="m-alert-h">Get an email when new restrictions pass</h2>
+        <p>We&rsquo;ll send an alert when a county or town passes a new data center moratorium, ban or zoning rule.</p>
+        <div class="ssub"><iframe src="https://mappingdatacenters.substack.com/embed" title="Subscribe to Mapping Data Centers on Substack" scrolling="no" loading="lazy"></iframe></div>
+        <p class="alertnote">Free alerts from <i>Mapping Data Centers</i> on Substack, which stores your email address (<a href="https://substack.com/privacy" target="_blank" rel="noopener">Substack privacy policy</a>).</p>
+      </aside>
+    </div>
   </header>
 
   <div class="controls" role="group" aria-label="Filters">
@@ -423,30 +458,50 @@ const fmt=d=>d?new Date(d+"T00:00:00").toLocaleDateString("en-US",{month:"short"
 
 function polHTML(p){
   const exp = p.type==="Moratorium" ? (isExp(p)?`<span class="tag exp">Expired ${fmt(p.end)}</span>`:(p.end?`<span class="tag exp">Until ${fmt(p.end)}</span>`:"")) : "";
-  return `<div class="pol" data-fips="${p.fips.join(",")}"><div class="top"><span class="tag ${cls[p.type]}">${esc(p.type)}</span>${exp}</div>
-    <div class="place">${esc(p.locality)}, ${esc(p.state)}</div>
-    <div class="meta">${esc(p.name)} &middot;${esc(p.status)} ${fmt(p.date)}</div>
+  const verb = /sign|enact/i.test(p.status) ? "Enacted" : "Passed";
+  return `<article class="pol ${cls[p.type]}" data-fips="${p.fips.join(",")}">
+    <div class="dateline">${p.date?`<time datetime="${p.date}">${fmt(p.date)}</time><span class="verb">${verb}</span>`:`<span class="verb">Date not listed</span>`}</div>
+    <h3 class="place">${esc(p.locality)}, ${esc(p.state)}</h3>
+    <div class="top"><span class="tag ${cls[p.type]}">${esc(p.type)}</span>${exp}</div>
+    ${p.name?`<div class="meta">${esc(p.name)}</div>`:""}
     ${p.desc?`<p>${esc(p.desc)}${p.desc.length>=400?"\u2026":""}</p>`:""}
-    ${p.url?`<a href="${esc(p.url)}" target="_blank" rel="noopener">Source</a>`:""}</div>`;
+    ${p.url?`<a href="${esc(p.url)}" target="_blank" rel="noopener">Source</a>`:""}</article>`;
 }
+// news-feed list: newest first, with a month heading whenever the month changes
+const FEED_STEP=10; let feedN=FEED_STEP, feedSig="";
+function feedHTML(full){
+  const list=full.slice(0,feedN); let last=null; const out=[];
+  list.forEach(p=>{ const m=p.date?p.date.slice(0,7):"none";
+    if(m!==last){ last=m; out.push(`<div class="feedmonth">${p.date?new Date(p.date+"T00:00:00").toLocaleDateString("en-US",{month:"long",year:"numeric"}):"Date not listed"}</div>`); }
+    out.push(polHTML(p)); });
+  const left=full.length-list.length;
+  const more=left>0?`<button type="button" class="loadmore" id="m-loadmore">Load ${Math.min(FEED_STEP,left)} more <span>&middot; ${left} older</span></button>`:(full.length>FEED_STEP?`<p class="feedend">You&rsquo;ve reached the oldest action.</p>`:"");
+  return `<div class="feed">${out.join("")}</div>${more}`;
+}
+function wireLoadMore(){ const b=document.getElementById("m-loadmore"); if(!b) return;
+  b.onclick=()=>{ const panel=document.getElementById("m-panel"), y=panel.scrollTop, n=feedN; feedN+=FEED_STEP; renderPanel(M); panel.scrollTop=y;
+    const cards=panel.querySelectorAll(".pol"); if(cards[n]) cards[n].setAttribute("tabindex","-1"), cards[n].focus({preventScroll:true}); }; }
 function renderPanel(m){
   const panel=document.getElementById("m-panel");
+  const sig=[state.sel,[...state.types].join(),state.lk,state.activeOnly,state.until,state.st,[...m.keys()].length].join("|");
+  if(sig!==feedSig){ feedSig=sig; feedN=FEED_STEP; }
   if(state.sel && m.has(state.sel)){
     const list=m.get(state.sel).slice().sort((a,b)=>b.date.localeCompare(a.date));
     const st=stateNames[state.sel.slice(0,2)];
-    panel.innerHTML=`<h2>${esc(cname[state.sel])}${/city$/i.test(cname[state.sel])?"":" County"}, ${esc(st)}</h2><p class="sub">${list.length} polic${list.length>1?"ies":"y"} passed here</p>`+list.map(polHTML).join("");
+    panel.innerHTML=`<h2>${esc(cname[state.sel])}${/city$/i.test(cname[state.sel])?"":" County"}, ${esc(st)}</h2><p class="sub">${list.length} polic${list.length>1?"ies":"y"} passed here</p>`+feedHTML(list);
   } else {
     const LKN={ban:"Ban",mor:"Moratorium in effect",exp:"Moratorium expired",zone:"Zoning & siting rules only"};
     const f=[]; if(state.types.size<Object.keys(cls).length) f.push([...state.types].join(", ")); if(state.lk) f.push("Map: "+LKN[state.lk]); if(state.activeOnly) f.push("Expired moratoria hidden");
     const all=[...new Set([...m.values()].flat())].sort((a,b)=>b.date.localeCompare(a.date));
     if(f.length){
-      panel.innerHTML=`<h2>${all.length} matching polic${all.length===1?"y":"ies"}</h2><p class="sub" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">${f.map(x=>`<span class="tag" style="border:1px solid var(--line);color:var(--ink)">${esc(x)}</span>`).join("")}<button class="chip" id="m-pclear" style="font-size:11px;padding:2px 9px">Clear</button></p><p class="sub">${m.size} counties, newest first. Click a county on the map for its full list.</p>`+(all.length?all.map(polHTML).join(""):`<p class="empty-note">Nothing matches these filters.</p>`);
+      panel.innerHTML=`<h2>${all.length} matching polic${all.length===1?"y":"ies"}</h2><p class="sub" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">${f.map(x=>`<span class="tag" style="border:1px solid var(--line);color:var(--ink)">${esc(x)}</span>`).join("")}<button class="chip" id="m-pclear" style="font-size:11px;padding:2px 9px">Clear</button></p><p class="sub">${m.size} counties, newest first. Click a county on the map for its full list.</p>`+(all.length?feedHTML(all):`<p class="empty-note">Nothing matches these filters.</p>`);
       document.getElementById("m-pclear").onclick=()=>{ state.types=new Set(Object.keys(cls)); state.lk=null; state.activeOnly=false; document.getElementById("m-f-active").checked=false; document.querySelectorAll(".chip[data-type]").forEach(c=>c.setAttribute("aria-pressed","true")); render(); };
     } else {
-      const recent=all.slice(0,8);
-      panel.innerHTML=`<h2>Most recent actions</h2><p class="sub">Click a shaded county for its full list, or a filter button or legend item to list only those.</p>`+(recent.length?recent.map(polHTML).join(""):`<p class="empty-note">Nothing matches these filters.</p>`);
+      const recent=all;
+      panel.innerHTML=`<h2>Most recent actions</h2><p class="sub">Click a shaded county for its full list, or a filter button or legend item to list only those.</p>`+(recent.length?feedHTML(recent):`<p class="empty-note">Nothing matches these filters.</p>`);
     }
   }
+  wireLoadMore();
 }
 function renderFacts(list,m){
   const statesN=new Set(list.map(p=>p.state)).size;
