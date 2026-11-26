@@ -233,6 +233,19 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .tabs a{color:var(--navfg);text-decoration:none;font:600 14px var(--f-body);padding:7px 12px;border-radius:999px;opacity:.75;border:1px solid transparent}
 .tabs a:hover{opacity:1;border-color:rgba(255,255,255,.25)}
 .tabs{align-items:center}
+.pagenav{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin:18px 0 6px}
+.pagenav .pn-prev{font-size:13px;color:var(--muted);text-decoration:none;padding:6px 0}
+.pagenav .pn-prev:hover{color:var(--ink);text-decoration:underline}
+.pagenav .pn-next{display:grid;gap:3px;min-width:min(100%,380px);max-width:460px;margin-left:auto;padding:16px 20px;border-radius:12px;background:var(--ink);color:var(--surface);text-decoration:none;box-shadow:0 6px 18px rgba(0,0,0,.12);transition:transform .15s ease,box-shadow .15s ease}
+.pagenav .pn-next:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(0,0,0,.18)}
+.pagenav .pn-next:focus-visible,.pagenav .pn-prev:focus-visible{outline:2px solid var(--focus);outline-offset:3px}
+.pagenav .pn-eye{font:600 11px var(--f-data);text-transform:uppercase;letter-spacing:.08em;opacity:.75}
+.pagenav .pn-title{font:800 22px/1.15 var(--f-body);letter-spacing:-.01em}
+.pagenav .pn-arrow{display:inline-block;transition:transform .15s ease}
+.pagenav .pn-next:hover .pn-arrow{transform:translateX(4px)}
+.pagenav .pn-sub{font-size:13px;opacity:.85;line-height:1.4}
+@media (max-width:640px){.pagenav{flex-direction:column-reverse;align-items:stretch}.pagenav .pn-next{margin-left:0;max-width:none}.pagenav .pn-prev{align-self:flex-start}}
+@media (prefers-reduced-motion:reduce){.pagenav .pn-next,.pagenav .pn-arrow{transition:none}}
 .themebtn{width:34px;height:34px;flex:none;border-radius:50%;border:1px solid color-mix(in srgb,var(--navfg) 35%,transparent);background:none;color:var(--navfg);cursor:pointer;display:inline-grid;place-items:center;padding:0;margin-left:4px}
 .themebtn:hover{background:color-mix(in srgb,var(--navfg) 14%,transparent)}
 .themebtn:focus-visible{outline:2px solid var(--navfg);outline-offset:2px}
@@ -578,7 +591,7 @@ tlBtn.onclick=()=>{ if(tlTimer){tlStop();return} if(+tlSl.value>=TL.length-1) tl
   tlTimer=setInterval(()=>{ if(+tlSl.value>=TL.length-1){tlStop();return} tlSl.value=+tlSl.value+1; tlFrame(+tlSl.value); }, reduceM?300:700); };
 tlSl.oninput=()=>{tlStop();tlFrame(+tlSl.value)};
 const unmapped=pols.filter(p=>!p.fips.length);
-document.getElementById("m-foot").innerHTML=`<p style="margin:0 0 8px">Map notes: ${pols.length} local policies with status Passed or Signed/Enacted. Town and township actions are shown on the county that contains them; a county is colored by its strongest action (ban, then moratorium, then zoning). "Zoning &amp; siting rules" covers zoning, land-use, setback, noise and water ordinances and can include rules that set where data centers are allowed, not only limits. Moratoria count as expired when their listed end date is before ${fmt(TODAY)}. Corrections to the source data: the Laurens County moratorium (passed Sep 14, 2026) is listed under Alabama but is in Laurens County, South Carolina, per its own source and <a href="https://www.foxcarolina.com/2026/09/14/laurens-county-council-votes-approve-one-year-data-center-pause/" target="_blank" rel="noopener">FOX Carolina</a>; misspelled county names (Dubeque, Nicolett, Mongtomery, Winsdor) were matched to Dubuque, Nicollet, Montgomery and Windsor.${unmapped.length?` Not mapped: ${unmapped.map(p=>esc(p.locality+", "+p.state)).join("; ")} (no county by that name in that state).`:""}</p><p style="margin:0">Data source: <a href="https://www.datacenterpolicy.com/" target="_blank" rel="noopener">The Data Center Policy Database</a> (UVA Environmental Institute and Digital Infrastructure initiative). Suggested citation: Bridges, Lauren, Grace Gould, Catarina Coelho Herrera, Isabella Scoresone, and Jack Hauger. 2026. <i>The Data Center Policy Database</i>. June 1. <a href="https://doi.org/10.17613/PVSTG-4A775" target="_blank" rel="noopener">https://doi.org/10.17613/PVSTG-4A775</a>. Export downloaded Nov 2026 (records dated through Nov 17, 2026). The database summarizes public policy records and does not guarantee accuracy or completeness. Last updated: November 25, 2026; Last data refresh on <b>November 22, 2026</b> [Data Center Policy Database: most recent record November 17, 2026].</p>`;
+document.getElementById("m-foot").innerHTML=`<p style="margin:0 0 8px">Map notes: ${pols.length} local policies with status Passed or Signed/Enacted. Town and township actions are shown on the county that contains them; a county is colored by its strongest action (ban, then moratorium, then zoning). "Zoning &amp; siting rules" covers zoning, land-use, setback, noise and water ordinances and can include rules that set where data centers are allowed, not only limits. Moratoria count as expired when their listed end date is before ${fmt(TODAY)}. Corrections to the source data: the Laurens County moratorium (passed Sep 14, 2026) is listed under Alabama but is in Laurens County, South Carolina, per its own source and <a href="https://www.foxcarolina.com/2026/09/14/laurens-county-council-votes-approve-one-year-data-center-pause/" target="_blank" rel="noopener">FOX Carolina</a>; misspelled county names (Dubeque, Nicolett, Mongtomery, Winsdor) were matched to Dubuque, Nicollet, Montgomery and Windsor.${unmapped.length?` Not mapped: ${unmapped.map(p=>esc(p.locality+", "+p.state)).join("; ")} (no county by that name in that state).`:""}</p><p style="margin:0">Data source: <a href="https://www.datacenterpolicy.com/" target="_blank" rel="noopener">The Data Center Policy Database</a> (UVA Environmental Institute and Digital Infrastructure initiative). Suggested citation: Bridges, Lauren, Grace Gould, Catarina Coelho Herrera, Isabella Scoresone, and Jack Hauger. 2026. <i>The Data Center Policy Database</i>. June 1. <a href="https://doi.org/10.17613/PVSTG-4A775" target="_blank" rel="noopener">https://doi.org/10.17613/PVSTG-4A775</a>. Export downloaded Nov 2026 (records dated through Nov 17, 2026). The database summarizes public policy records and does not guarantee accuracy or completeness. Last updated: November 26, 2026; Last data refresh on <b>November 22, 2026</b> [Data Center Policy Database: most recent record November 17, 2026].</p>`;
 // hovering a policy in the info box highlights its county on the map
 (()=>{ const panel=document.getElementById("m-panel"); let cur="";
   const ringG=svg.append("g").attr("pointer-events","none");
@@ -807,7 +820,7 @@ new MutationObserver(render).observe(document.documentElement,{attributes:true,a
 
 const latest=d3.max(raw,d=>d.up?new Date(d.up):null);
 document.getElementById("o-foot").innerHTML=`<p>Map notes: all rows from the "FracTracker Data Centers" sheet with status Operating (${fmtN(raw.length)} facilities, of which ${raw.filter(d=>d.lc==="High").length} have high location confidence, ${raw.filter(d=>d.lc==="Medium").length} medium and ${raw.filter(d=>d.lc==="Low").length} low; latest record update ${latest?latest.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}):"n/a"}). Dot size and color follow the sheet's size class; ${raw.length-raw.filter(d=>d.sz&&d.sz!=="Unknown").length} facilities have no size reported. Reported MW totals use only rows with a single number and skip ranges such as "150-400".${dropped?` ${dropped} facilities fall outside the map projection and are not drawn.`:""}</p>
-<p>Data source: <a href="https://www.fractracker.org/data-centers/" target="_blank" rel="noopener">FracTracker Alliance, Data Centers Identified by FracTracker Alliance</a>. Data provided by FracTracker Alliance (2026). Accessed via https://www.fractracker.org/data-centers/. FracTracker provides the data as is and notes that its list of existing data centers is still being filled in, so this map undercounts operating facilities. Last updated: November 25, 2026; Last data refresh on <b>November 22, 2026</b> [FracTracker Alliance: most recent record October 27, 2026].</p>`;
+<p>Data source: <a href="https://www.fractracker.org/data-centers/" target="_blank" rel="noopener">FracTracker Alliance, Data Centers Identified by FracTracker Alliance</a>. Data provided by FracTracker Alliance (2026). Accessed via https://www.fractracker.org/data-centers/. FracTracker provides the data as is and notes that its list of existing data centers is still being filled in, so this map undercounts operating facilities. Last updated: November 26, 2026; Last data refresh on <b>November 22, 2026</b> [FracTracker Alliance: most recent record October 27, 2026].</p>`;
 render();
 })();
 </script>
@@ -1331,7 +1344,7 @@ document.getElementById("b-take").innerHTML=[
  `<b>Outliers.</b> About 40% of restrictions have no logged proposal nearby beforehand, including preemptive waves around Wichita, mid-Michigan and the Carolina coast. Some may instead reflect gaps in FracTracker Alliance&rsquo;s data: operating sites it hasn&rsquo;t listed yet, or proposals that were never public, logged late or mislocated.`
 ].map(t=>`<li>${t}</li>`).join("");
 
-document.getElementById("b-foot").innerHTML=`<p style="margin:0">Data sources: local restrictions from <a href="https://www.datacenterpolicy.com/" target="_blank" rel="noopener">The Data Center Policy Database</a> (Bridges et al., 2026, <a href="https://doi.org/10.17613/PVSTG-4A775" target="_blank" rel="noopener">doi.org/10.17613/PVSTG-4A775</a>); operating and proposed data centers from <a href="https://www.fractracker.org/data-centers/" target="_blank" rel="noopener">FracTracker Alliance</a> (Data provided by FracTracker Alliance (2026). Accessed via https://www.fractracker.org/data-centers/); town locations from GeoNames (CC BY 4.0). Last updated: November 25, 2026; Last data refresh on <b>November 22, 2026</b> [FracTracker Alliance: most recent record October 27, 2026; Data Center Policy Database: most recent record November 17, 2026].</p>`;
+document.getElementById("b-foot").innerHTML=`<p style="margin:0">Data sources: local restrictions from <a href="https://www.datacenterpolicy.com/" target="_blank" rel="noopener">The Data Center Policy Database</a> (Bridges et al., 2026, <a href="https://doi.org/10.17613/PVSTG-4A775" target="_blank" rel="noopener">doi.org/10.17613/PVSTG-4A775</a>); operating and proposed data centers from <a href="https://www.fractracker.org/data-centers/" target="_blank" rel="noopener">FracTracker Alliance</a> (Data provided by FracTracker Alliance (2026). Accessed via https://www.fractracker.org/data-centers/); town locations from GeoNames (CC BY 4.0). Last updated: November 26, 2026; Last data refresh on <b>November 22, 2026</b> [FracTracker Alliance: most recent record October 27, 2026; Data Center Policy Database: most recent record November 17, 2026].</p>`;
 
 function all(){ forest(); drawHubs(); hubBars(); drawCols(); scatter("b-sc1","op","Operating data centers (FracTracker)",s.rho_op,s.p_op); scatter("b-sc2","pr","Proposed projects (FracTracker)",s.rho_pr,s.p_pr);
   frameA(+document.getElementById("b-sliderA").value||framesA.length-1,false); frameB(+document.getElementById("b-sliderB").value||framesB.length-1,false);
@@ -1713,7 +1726,7 @@ Do not push to GitHub, delete files, or change files outside the data centers fo
     </ol>
   </section>
 
-  <footer>Data sources: FracTracker Alliance (2026), accessed via <a href="https://www.fractracker.org/data-centers/" target="_blank" rel="noopener">fractracker.org/data-centers</a>; The Data Center Policy Database (Bridges et al., 2026); GeoNames (CC BY 4.0); us-atlas. Built with Claude. Last updated: November 25, 2026; Last data refresh on <b>November 22, 2026</b> [FracTracker Alliance: most recent record October 27, 2026; Data Center Policy Database: most recent record November 17, 2026].</footer>
+  <footer>Data sources: FracTracker Alliance (2026), accessed via <a href="https://www.fractracker.org/data-centers/" target="_blank" rel="noopener">fractracker.org/data-centers</a>; The Data Center Policy Database (Bridges et al., 2026); GeoNames (CC BY 4.0); us-atlas. Built with Claude. Last updated: November 26, 2026; Last data refresh on <b>November 22, 2026</b> [FracTracker Alliance: most recent record October 27, 2026; Data Center Policy Database: most recent record November 17, 2026].</footer>
 </div>
 </section>
 <script>
@@ -1729,6 +1742,18 @@ document.querySelectorAll("#view-howto [data-jump]").forEach(a=>a.addEventListen
     document.querySelectorAll(".tabs a").forEach(a=>a.setAttribute("aria-current",a.dataset.view===k?"page":"false"));
     window.scrollTo(0,0);
   }
+  // bottom-of-page navigation (the three story pages loop: operating -> restrictions -> backlash -> operating)
+  const ORDER=[["operating","Operating data centers","Where the industry&rsquo;s installed base sits, and where neighbors have pushed back."],
+               ["restrictions","Local restrictions","Where communities are saying no: local moratoria, bans and zoning rules."],
+               ["backlash","Backlash next door","What sparks a restriction: the next proposal, not the data center already there."]];
+  const FOOT={operating:"o-foot",restrictions:"m-foot",backlash:"b-foot"};
+  ORDER.forEach(([k],i)=>{
+    const prev=ORDER[(i+ORDER.length-1)%ORDER.length], next=ORDER[(i+1)%ORDER.length], loop=i===ORDER.length-1;
+    const nav=document.createElement("nav"); nav.className="pagenav"; nav.setAttribute("aria-label","Page navigation");
+    nav.innerHTML=`<a class="pn-prev" href="#${prev[0]}"><span aria-hidden="true">&larr;</span> Previous: ${prev[1]}</a>`+
+      `<a class="pn-next" href="#${next[0]}"><span class="pn-eye">${loop?"Back to the start":"Next"} &middot; ${i===ORDER.length-1?1:i+2} of 3</span><span class="pn-title">${next[1]} <span class="pn-arrow" aria-hidden="true">&rarr;</span></span><span class="pn-sub">${next[2]}</span></a>`;
+    const f=document.getElementById(FOOT[k]); if(f) f.parentNode.insertBefore(nav,f);
+  });
   addEventListener("hashchange",show); show();
   // light/dark toggle: remembers the choice in this browser, otherwise follows the system setting
   const root=document.documentElement, btn=document.getElementById("themebtn"), mq=matchMedia("(prefers-color-scheme: dark)");
