@@ -974,6 +974,12 @@ render();
         </ul>
       </div>
       <div class="mapcol">
+      <div class="player">
+        <button class="play" id="b-playB" aria-label="Play time-lapse">&#9654;</button>
+        <input type="range" id="b-sliderB" min="0" value="0" aria-label="Month">
+        <span class="when" id="b-whenB"></span>
+      </div>
+      <p class="status" id="b-statusB"></p>
       <div class="mapwrap" id="b-wrapB"><svg id="b-mapB" viewBox="0 0 975 610" role="img" aria-label="Time-lapse map of proposed projects followed by local restrictions"></svg><div class="tip2" id="b-tipB" hidden></div></div>
       <div class="key">
         <span data-k="prop" tabindex="0"><i class="diamond" aria-hidden="true"></i>Proposed project</span>
@@ -982,12 +988,6 @@ render();
         <span data-k="link" tabindex="0"><i style="width:16px;height:2px;background:var(--prop);display:inline-block"></i>Proposal it followed</span>
         <span data-k="far" tabindex="0"><i class="dot" style="width:11px;height:11px;background:var(--nopre);box-shadow:0 0 0 2px var(--ink)"></i>Far from any operating or proposed site</span>
       </div>
-      <div class="player thin">
-        <button class="play" id="b-playB" aria-label="Play time-lapse">&#9654;</button>
-        <input type="range" id="b-sliderB" min="0" value="0" aria-label="Month">
-        <span class="when" id="b-whenB"></span>
-      </div>
-      <p class="status thin" id="b-statusB"></p>
       <p class="srcline">Sources: <a href="https://www.fractracker.org/data-centers/" target="_blank" rel="noopener">FracTracker Alliance</a> (operating sites and proposals); <a href="https://www.datacenterpolicy.com/" target="_blank" rel="noopener">The Data Center Policy Database</a> (local restrictions)</p>
       </div>
     </div>
