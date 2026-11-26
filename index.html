@@ -29,8 +29,10 @@ header{display:grid;gap:10px}
 h1{font-family:var(--f-display);font-weight:800;font-size:clamp(26px,4vw,40px);line-height:1.08;margin:0;text-wrap:balance;letter-spacing:-.01em}
 .lede{margin:0;color:var(--muted);max-width:68ch}
 .facts{display:flex;flex-wrap:wrap;gap:10px 28px;margin-top:6px}
-.factrow{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px 28px}
-.alertcta{flex:0 1 400px;min-width:min(100%,280px);display:grid;gap:8px;padding:14px 16px;border:1.5px solid color-mix(in srgb,var(--link) 55%,var(--line));border-radius:10px;background:color-mix(in srgb,var(--link) 9%,var(--surface))}
+.hsplit{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px 32px;align-items:center}
+.hleft{display:grid;gap:10px;min-width:0}
+@media (max-width:900px){.hsplit{grid-template-columns:minmax(0,1fr)}}
+.alertcta{min-width:0;display:grid;gap:8px;padding:14px 16px;border:1.5px solid color-mix(in srgb,var(--link) 55%,var(--line));border-radius:10px;background:color-mix(in srgb,var(--link) 9%,var(--surface))}
 .alertcta h2{font-size:16px;margin:0;line-height:1.25}
 .alertcta p{margin:0;font-size:13px;line-height:1.45;color:var(--muted)}
 .alertcta form{display:flex;gap:8px;flex-wrap:wrap}
@@ -326,19 +328,19 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 
 </section>
 <section class="view" id="view-restrictions" hidden><div class="wrap">
-  <header>
-    <div class="eyebrow">Local government action &middot; passed or enacted &middot; Source: <a href="https://www.datacenterpolicy.com/" target="_blank" rel="noopener" style="color:inherit">Data Center Policy Database</a></div>
-    <h1>Counties with local data center moratoria, bans and zoning rules</h1>
-    <p class="lede">Each shaded county has at least one city, town, township or county government that passed a data center moratorium, ban, or zoning/siting rule. Click a county to see what was passed and where it came from.</p>
-    <div class="factrow">
+  <header class="hsplit">
+    <div class="hleft">
+      <div class="eyebrow">Local government action &middot; passed or enacted &middot; Source: <a href="https://www.datacenterpolicy.com/" target="_blank" rel="noopener" style="color:inherit">Data Center Policy Database</a></div>
+      <h1>Counties with local data center moratoria, bans and zoning rules</h1>
+      <p class="lede">Each shaded county has at least one city, town, township or county government that passed a data center moratorium, ban, or zoning/siting rule. Click a county to see what was passed and where it came from.</p>
       <div class="facts" id="m-facts"></div>
-      <aside class="alertcta" aria-labelledby="alert-h">
-        <h2 id="m-alert-h">Get an email when new restrictions pass</h2>
-        <p>We&rsquo;ll send an alert when a county or town passes a new data center moratorium, ban or zoning rule.</p>
-        <div class="ssub"><iframe src="https://mappingdatacenters.substack.com/embed" title="Subscribe to Mapping Data Centers on Substack" scrolling="no" loading="lazy"></iframe></div>
-        <p class="alertnote">Free alerts from <i>Mapping Data Centers</i> on Substack, which stores your email address (<a href="https://substack.com/privacy" target="_blank" rel="noopener">Substack privacy policy</a>).</p>
-      </aside>
     </div>
+    <aside class="alertcta" aria-labelledby="alert-h">
+      <h2 id="m-alert-h">Get an email when new restrictions pass</h2>
+      <p>We&rsquo;ll send an alert when a county or town passes a new data center moratorium, ban or zoning rule.</p>
+      <div class="ssub"><iframe src="https://mappingdatacenters.substack.com/embed" title="Subscribe to Mapping Data Centers on Substack" scrolling="no" loading="lazy"></iframe></div>
+      <p class="alertnote">Free alerts from <i>Mapping Data Centers</i> on Substack, which stores your email address (<a href="https://substack.com/privacy" target="_blank" rel="noopener">Substack privacy policy</a>).</p>
+    </aside>
   </header>
 
   <div class="controls" role="group" aria-label="Filters">
