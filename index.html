@@ -85,6 +85,9 @@ svg{display:block;width:100%;height:auto}
 .loadmore:hover{background:var(--bg)} .loadmore:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 .loadmore span{font-weight:400;color:var(--muted)}
 .feedend{margin:10px 0 2px;text-align:center;font-size:12px;color:var(--muted)}
+.subplain{display:block;margin:6px 0 2px;padding:8px 12px;text-align:center;font:500 13px var(--f-body);color:var(--link);border:1px solid var(--line);border-radius:8px;text-decoration:none;background:transparent}
+.subplain:hover{background:var(--bg);text-decoration:underline}
+.subplain:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 .pol{border:1px solid var(--line);border-left:4px solid var(--zone);border-radius:8px;padding:10px 12px;display:grid;gap:5px;background:var(--surface);transition:background .12s ease,box-shadow .12s ease}
 .pol.mor{border-left-color:var(--mor)} .pol.ban{border-left-color:var(--ban)}
 .pol .dateline{display:flex;align-items:baseline;gap:8px}
@@ -478,7 +481,7 @@ function feedHTML(full){
     out.push(polHTML(p)); });
   const left=full.length-list.length;
   const more=left>0?`<button type="button" class="loadmore" id="m-loadmore">Load ${Math.min(FEED_STEP,left)} more <span>&middot; ${left} older</span></button>`:(full.length>FEED_STEP?`<p class="feedend">You&rsquo;ve reached the oldest action.</p>`:"");
-  return `<div class="feed">${out.join("")}</div>${more}`;
+  return `<div class="feed">${out.join("")}</div>${more}<a class="subplain" href="https://mappingdatacenters.substack.com/subscribe" target="_blank" rel="noopener">Subscribe on Substack</a>`;
 }
 function wireLoadMore(){ const b=document.getElementById("m-loadmore"); if(!b) return;
   b.onclick=()=>{ const panel=document.getElementById("m-panel"), y=panel.scrollTop, n=feedN; feedN+=FEED_STEP; renderPanel(M); panel.scrollTop=y;
