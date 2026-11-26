@@ -279,6 +279,14 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .pagenav .pn-sub{font-size:13px;opacity:.85;line-height:1.4}
 @media (max-width:640px){.pagenav{flex-direction:column-reverse;align-items:stretch}.pagenav .pn-next{margin-left:0;max-width:none}.pagenav .pn-prev{align-self:flex-start}}
 @media (prefers-reduced-motion:reduce){.pagenav .pn-next,.pagenav .pn-arrow{transition:none}}
+.subbar{display:flex;align-items:center;gap:8px 20px;flex-wrap:wrap;margin:14px 0 4px;padding:8px 14px;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+.subbar .sb-label{margin:0;font-size:13px;color:var(--muted);flex:0 0 auto}
+.subbar .sb-label b{color:var(--ink);font-weight:600}
+.subbar .ssub{flex:1 1 320px;min-width:0;display:flex;justify-content:flex-end}
+.subbar .sb-btn{font:600 13px var(--f-body);color:var(--link);text-decoration:none;padding:6px 12px;border:1px solid var(--line);border-radius:6px;white-space:nowrap}
+.subbar .sb-btn:hover{background:var(--bg);text-decoration:underline}
+.subbar iframe{display:block;width:100%;height:76px;border:0;background:transparent;color-scheme:light}
+@media (max-width:640px){.subbar{padding:10px 12px}.subbar .ssub{justify-content:flex-start}}
 .themebtn{width:34px;height:34px;flex:none;border-radius:50%;border:1px solid color-mix(in srgb,var(--navfg) 35%,transparent);background:none;color:var(--navfg);cursor:pointer;display:inline-grid;place-items:center;padding:0;margin-left:4px}
 .themebtn:hover{background:color-mix(in srgb,var(--navfg) 14%,transparent)}
 .themebtn:focus-visible{outline:2px solid var(--navfg);outline-offset:2px}
@@ -326,7 +334,8 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
     <p class="tblnote"><b>With reported MW</b> counts the facilities in each state that have a capacity figure in FracTracker&rsquo;s data. <b>Reported MW</b> adds up the capacity of just those facilities. Sites with no capacity listed, or listed only as a range such as &ldquo;150&ndash;400&rdquo;, are left out, so Reported MW is a minimum. For example, Virginia has 180 operating data centers, but only 12 have a reported capacity, and those 12 total 943 MW.</p>
   </section>
 
-  <footer id="o-foot"></footer>
+  <div class="subbar" aria-label="Email alerts"><p class="sb-label"><b>Get email alerts</b> when new local restrictions pass</p><div class="ssub"><iframe src="https://mappingdatacenters.substack.com/embed" title="Subscribe to Mapping Data Centers on Substack" scrolling="no" loading="lazy"></iframe></div></div>
+<footer id="o-foot"></footer>
 </div>
 
 </section>
@@ -403,7 +412,8 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
     <p class="srcline" style="margin:8px 0 0">Source: <a href="https://www.datacenterpolicy.com/" target="_blank" rel="noopener">The Data Center Policy Database</a> (Bridges et al., 2026)</p>
   </section>
 
-  <footer id="m-foot"></footer>
+  <div class="subbar" aria-label="Email alerts"><p class="sb-label"><b>Get email alerts</b> when new local restrictions pass</p><div class="ssub"><iframe src="https://mappingdatacenters.substack.com/embed" title="Subscribe to Mapping Data Centers on Substack" scrolling="no" loading="lazy"></iframe></div></div>
+<footer id="m-foot"></footer>
 </div>
 
 </section>
@@ -1109,7 +1119,8 @@ render();
     <p>Restrictions: 469 passed or enacted local policies from the Data Center Policy Database, collapsed to 432 places and placed at the town that passed them (196) or the county center (236). Data centers: 536 operating sites and 1,197 proposed, approved, suspended, expanding or cancelled projects from FracTracker Alliance. Distances are straight-line miles. Hub zones are 25-mile circles around operating sites; hub names come from grouping sites that are within 25 miles of each other. A proposal's date is when FracTracker first logged it (tracking began in April 2024), which can lag the public announcement, so "proposal first" is a conservative test. The random-town baseline uses 3,000 U.S. places with 1,000+ residents given the same dates as the restrictions. FracTracker lists no operating sites in Florida, Kansas or Utah and one in Michigan, so distances there are overstated. These are associations, not proof of cause.</p>
   </section>
 
-  <footer id="b-foot"></footer>
+  <div class="subbar" aria-label="Email alerts"><p class="sb-label"><b>Get email alerts</b> when new local restrictions pass</p><div class="ssub"><iframe src="https://mappingdatacenters.substack.com/embed" title="Subscribe to Mapping Data Centers on Substack" scrolling="no" loading="lazy"></iframe></div></div>
+<footer id="b-foot"></footer>
 </div>
 </section>
 <script>
@@ -1813,7 +1824,7 @@ document.querySelectorAll("#view-howto [data-jump]").forEach(a=>a.addEventListen
     const nav=document.createElement("nav"); nav.className="pagenav"; nav.setAttribute("aria-label","Page navigation");
     nav.innerHTML=`<a class="pn-prev" href="#${prev[0]}"><span aria-hidden="true">&larr;</span> Previous: ${prev[1]}</a>`+
       `<a class="pn-next" href="#${next[0]}"><span class="pn-eye">${loop?"Back to the start":"Next"} &middot; ${i===ORDER.length-1?1:i+2} of 3</span><span class="pn-title">${next[1]} <span class="pn-arrow" aria-hidden="true">&rarr;</span></span><span class="pn-sub">${next[2]}</span></a>`;
-    const f=document.getElementById(FOOT[k]); if(f) f.parentNode.insertBefore(nav,f);
+    const f=document.getElementById(FOOT[k]); if(f){ const sb=f.previousElementSibling; f.parentNode.insertBefore(nav,(sb&&sb.classList.contains("subbar"))?sb:f); }
   });
   addEventListener("hashchange",show); show();
   // light/dark toggle: remembers the choice in this browser, otherwise follows the system setting
