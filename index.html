@@ -299,7 +299,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .view[hidden]{display:none!important}
 </style>
 <nav class="sitenav" aria-label="Site"><div class="in">
-  <a class="brand" href="#operating">U.S. Data Center Atlas</a>
+  <a class="brand" href="#restrictions">U.S. Data Center Atlas</a>
   <div class="tabs"><a href="#operating" data-view="operating">Operating data centers</a><a href="#restrictions" data-view="restrictions">Local restrictions</a><a href="#backlash" data-view="backlash">Backlash next door</a><a href="#howto" data-view="howto" class="how">How Claude built this site</a><button type="button" class="themebtn" id="themebtn" aria-label="Switch to dark mode" title="Switch to dark mode"><svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" fill="currentColor"/></svg><svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></g></svg></button></div>
 </div></nav>
 <section class="view" id="view-operating"><div class="wrap">
@@ -1809,7 +1809,7 @@ document.querySelectorAll("#view-howto [data-jump]").forEach(a=>a.addEventListen
 (function(){
   const views={operating:"view-operating",restrictions:"view-restrictions",backlash:"view-backlash",howto:"view-howto"};
   function show(){
-    let k=(location.hash||"").slice(1); if(!views[k]) k="operating";
+    let k=(location.hash||"").slice(1); if(!views[k]) k="restrictions"; // Local restrictions is the home page
     for(const [name,id] of Object.entries(views)) document.getElementById(id).hidden = name!==k;
     document.querySelectorAll(".tabs a").forEach(a=>a.setAttribute("aria-current",a.dataset.view===k?"page":"false"));
     window.scrollTo(0,0);
