@@ -1,4 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
 <meta charset="utf-8">
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  // Consent Mode: analytics cookies stay off until the visitor clicks Accept
+  var atlasConsent = null; try { atlasConsent = localStorage.getItem("atlas-consent"); } catch(e) {}
+  gtag("consent", "default", {analytics_storage: atlasConsent === "granted" ? "granted" : "denied", ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied", wait_for_update: 500});
+  gtag("js", new Date());
+</script>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-NLL4LQ32');</script>
+<!-- End Google Tag Manager -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>U.S. Data Center Atlas</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -298,6 +313,11 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .tabs a:focus-visible{outline:2px solid var(--navfg);outline-offset:2px}
 .view[hidden]{display:none!important}
 </style>
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NLL4LQ32" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
 <nav class="sitenav" aria-label="Site"><div class="in">
   <a class="brand" href="#restrictions">U.S. Data Center Atlas</a>
   <div class="tabs"><a href="#operating" data-view="operating">Operating data centers</a><a href="#restrictions" data-view="restrictions">Local restrictions</a><a href="#backlash" data-view="backlash">Backlash next door</a><a href="#howto" data-view="howto" class="how">How Claude built this site</a><button type="button" class="themebtn" id="themebtn" aria-label="Switch to dark mode" title="Switch to dark mode"><svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" fill="currentColor"/></svg><svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></g></svg></button></div>
@@ -662,7 +682,7 @@ tlBtn.onclick=()=>{ if(tlTimer){tlStop();return} if(+tlSl.value>=TL.length-1) tl
   tlTimer=setInterval(()=>{ if(+tlSl.value>=TL.length-1){tlStop();return} tlSl.value=+tlSl.value+1; tlFrame(+tlSl.value); }, reduceM?300:700); };
 tlSl.oninput=()=>{tlStop();tlFrame(+tlSl.value)};
 const unmapped=pols.filter(p=>!p.fips.length);
-document.getElementById("m-foot").innerHTML=`<p style="margin:0 0 8px">Map notes: ${pols.length} local policies with status Passed or Signed/Enacted. Town and township actions are shown on the county that contains them; a county is colored by its strongest action (ban, then moratorium, then zoning). "Zoning &amp; siting rules" covers zoning, land-use, setback, noise and water ordinances and can include rules that set where data centers are allowed, not only limits. Moratoria count as expired when their listed end date is before ${fmt(TODAY)}. Corrections to the source data: the Laurens County moratorium (passed Sep 14, 2026) is listed under Alabama but is in Laurens County, South Carolina, per its own source and <a href="https://www.foxcarolina.com/2026/09/14/laurens-county-council-votes-approve-one-year-data-center-pause/" target="_blank" rel="noopener">FOX Carolina</a>; misspelled county names (Dubeque, Nicolett, Mongtomery, Winsdor) were matched to Dubuque, Nicollet, Montgomery and Windsor.${unmapped.length?` Not mapped: ${unmapped.map(p=>esc(p.locality+", "+p.state)).join("; ")} (no county by that name in that state).`:""}</p><p style="margin:0">Data source: <a href="https://www.datacenterpolicy.com/" target="_blank" rel="noopener">The Data Center Policy Database</a> (UVA Environmental Institute and Digital Infrastructure initiative). Suggested citation: Bridges, Lauren, Grace Gould, Catarina Coelho Herrera, Isabella Scoresone, and Jack Hauger. 2026. <i>The Data Center Policy Database</i>. June 1. <a href="https://doi.org/10.17613/PVSTG-4A775" target="_blank" rel="noopener">https://doi.org/10.17613/PVSTG-4A775</a>. Export downloaded Nov 2026 (records dated through Nov 17, 2026). The database summarizes public policy records and does not guarantee accuracy or completeness. Last updated: November 26, 2026; Last data refresh on <b>November 22, 2026</b> [Data Center Policy Database: most recent record November 17, 2026].</p>`;
+document.getElementById("m-foot").innerHTML=`<p style="margin:0 0 8px">Map notes: ${pols.length} local policies with status Passed or Signed/Enacted. Town and township actions are shown on the county that contains them; a county is colored by its strongest action (ban, then moratorium, then zoning). "Zoning &amp; siting rules" covers zoning, land-use, setback, noise and water ordinances and can include rules that set where data centers are allowed, not only limits. Moratoria count as expired when their listed end date is before ${fmt(TODAY)}. Corrections to the source data: the Laurens County moratorium (passed Sep 14, 2026) is listed under Alabama but is in Laurens County, South Carolina, per its own source and <a href="https://www.foxcarolina.com/2026/09/14/laurens-county-council-votes-approve-one-year-data-center-pause/" target="_blank" rel="noopener">FOX Carolina</a>; misspelled county names (Dubeque, Nicolett, Mongtomery, Winsdor) were matched to Dubuque, Nicollet, Montgomery and Windsor.${unmapped.length?` Not mapped: ${unmapped.map(p=>esc(p.locality+", "+p.state)).join("; ")} (no county by that name in that state).`:""}</p><p style="margin:0">Data source: <a href="https://www.datacenterpolicy.com/" target="_blank" rel="noopener">The Data Center Policy Database</a> (UVA Environmental Institute and Digital Infrastructure initiative). Suggested citation: Bridges, Lauren, Grace Gould, Catarina Coelho Herrera, Isabella Scoresone, and Jack Hauger. 2026. <i>The Data Center Policy Database</i>. June 1. <a href="https://doi.org/10.17613/PVSTG-4A775" target="_blank" rel="noopener">https://doi.org/10.17613/PVSTG-4A775</a>. Export downloaded Nov 2026 (records dated through Nov 17, 2026). The database summarizes public policy records and does not guarantee accuracy or completeness. Last updated: November 27, 2026; Last data refresh on <b>November 22, 2026</b> [Data Center Policy Database: most recent record November 17, 2026].</p>`;
 // hovering a policy in the info box highlights its county on the map
 (()=>{ const panel=document.getElementById("m-panel"); let cur="";
   const ringG=svg.append("g").attr("pointer-events","none");
@@ -891,7 +911,7 @@ new MutationObserver(render).observe(document.documentElement,{attributes:true,a
 
 const latest=d3.max(raw,d=>d.up?new Date(d.up):null);
 document.getElementById("o-foot").innerHTML=`<p>Map notes: all rows from the "FracTracker Data Centers" sheet with status Operating (${fmtN(raw.length)} facilities, of which ${raw.filter(d=>d.lc==="High").length} have high location confidence, ${raw.filter(d=>d.lc==="Medium").length} medium and ${raw.filter(d=>d.lc==="Low").length} low; latest record update ${latest?latest.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}):"n/a"}). Dot size and color follow the sheet's size class; ${raw.length-raw.filter(d=>d.sz&&d.sz!=="Unknown").length} facilities have no size reported. Reported MW totals use only rows with a single number and skip ranges such as "150-400".${dropped?` ${dropped} facilities fall outside the map projection and are not drawn.`:""}</p>
-<p>Data source: <a href="https://www.fractracker.org/data-centers/" target="_blank" rel="noopener">FracTracker Alliance, Data Centers Identified by FracTracker Alliance</a>. Data provided by FracTracker Alliance (2026). Accessed via https://www.fractracker.org/data-centers/. FracTracker provides the data as is and notes that its list of existing data centers is still being filled in, so this map undercounts operating facilities. Last updated: November 26, 2026; Last data refresh on <b>November 22, 2026</b> [FracTracker Alliance: most recent record October 27, 2026].</p>`;
+<p>Data source: <a href="https://www.fractracker.org/data-centers/" target="_blank" rel="noopener">FracTracker Alliance, Data Centers Identified by FracTracker Alliance</a>. Data provided by FracTracker Alliance (2026). Accessed via https://www.fractracker.org/data-centers/. FracTracker provides the data as is and notes that its list of existing data centers is still being filled in, so this map undercounts operating facilities. Last updated: November 27, 2026; Last data refresh on <b>November 22, 2026</b> [FracTracker Alliance: most recent record October 27, 2026].</p>`;
 render();
 })();
 </script>
@@ -1416,7 +1436,7 @@ document.getElementById("b-take").innerHTML=[
  `<b>Outliers.</b> About 40% of restrictions have no logged proposal nearby beforehand, including preemptive waves around Wichita, mid-Michigan and the Carolina coast. Some may instead reflect gaps in FracTracker Alliance&rsquo;s data: operating sites it hasn&rsquo;t listed yet, or proposals that were never public, logged late or mislocated.`
 ].map(t=>`<li>${t}</li>`).join("");
 
-document.getElementById("b-foot").innerHTML=`<p style="margin:0">Data sources: local restrictions from <a href="https://www.datacenterpolicy.com/" target="_blank" rel="noopener">The Data Center Policy Database</a> (Bridges et al., 2026, <a href="https://doi.org/10.17613/PVSTG-4A775" target="_blank" rel="noopener">doi.org/10.17613/PVSTG-4A775</a>); operating and proposed data centers from <a href="https://www.fractracker.org/data-centers/" target="_blank" rel="noopener">FracTracker Alliance</a> (Data provided by FracTracker Alliance (2026). Accessed via https://www.fractracker.org/data-centers/); town locations from GeoNames (CC BY 4.0). Last updated: November 26, 2026; Last data refresh on <b>November 22, 2026</b> [FracTracker Alliance: most recent record October 27, 2026; Data Center Policy Database: most recent record November 17, 2026].</p>`;
+document.getElementById("b-foot").innerHTML=`<p style="margin:0">Data sources: local restrictions from <a href="https://www.datacenterpolicy.com/" target="_blank" rel="noopener">The Data Center Policy Database</a> (Bridges et al., 2026, <a href="https://doi.org/10.17613/PVSTG-4A775" target="_blank" rel="noopener">doi.org/10.17613/PVSTG-4A775</a>); operating and proposed data centers from <a href="https://www.fractracker.org/data-centers/" target="_blank" rel="noopener">FracTracker Alliance</a> (Data provided by FracTracker Alliance (2026). Accessed via https://www.fractracker.org/data-centers/); town locations from GeoNames (CC BY 4.0). Last updated: November 27, 2026; Last data refresh on <b>November 22, 2026</b> [FracTracker Alliance: most recent record October 27, 2026; Data Center Policy Database: most recent record November 17, 2026].</p>`;
 
 function all(){ forest(); drawHubs(); hubBars(); drawCols(); scatter("b-sc1","op","Operating data centers (FracTracker)",s.rho_op,s.p_op); scatter("b-sc2","pr","Proposed projects (FracTracker)",s.rho_pr,s.p_pr);
   frameA(+document.getElementById("b-sliderA").value||framesA.length-1,false); frameB(+document.getElementById("b-sliderB").value||framesB.length-1,false);
@@ -1798,7 +1818,7 @@ Do not push to GitHub, delete files, or change files outside the data centers fo
     </ol>
   </section>
 
-  <footer>Data sources: FracTracker Alliance (2026), accessed via <a href="https://www.fractracker.org/data-centers/" target="_blank" rel="noopener">fractracker.org/data-centers</a>; The Data Center Policy Database (Bridges et al., 2026); GeoNames (CC BY 4.0); us-atlas. Built with Claude. Last updated: November 26, 2026; Last data refresh on <b>November 22, 2026</b> [FracTracker Alliance: most recent record October 27, 2026; Data Center Policy Database: most recent record November 17, 2026].</footer>
+  <footer>Data sources: FracTracker Alliance (2026), accessed via <a href="https://www.fractracker.org/data-centers/" target="_blank" rel="noopener">fractracker.org/data-centers</a>; The Data Center Policy Database (Bridges et al., 2026); GeoNames (CC BY 4.0); us-atlas. Built with Claude. Last updated: November 27, 2026; Last data refresh on <b>November 22, 2026</b> [FracTracker Alliance: most recent record October 27, 2026; Data Center Policy Database: most recent record November 17, 2026].</footer>
 </div>
 </section>
 <script>
@@ -1826,7 +1846,7 @@ document.querySelectorAll("#view-howto [data-jump]").forEach(a=>a.addEventListen
       `<a class="pn-next" href="#${next[0]}"><span class="pn-eye">${loop?"Back to the start":"Next"} &middot; ${i===ORDER.length-1?1:i+2} of 3</span><span class="pn-title">${next[1]} <span class="pn-arrow" aria-hidden="true">&rarr;</span></span><span class="pn-sub">${next[2]}</span></a>`;
     const f=document.getElementById(FOOT[k]); if(f){ const sb=f.previousElementSibling; f.parentNode.insertBefore(nav,(sb&&sb.classList.contains("subbar"))?sb:f); }
   });
-  addEventListener("hashchange",show); show();
+  addEventListener("hashchange",function(){ show(); try{ if(window.dataLayer){ const k=views[(location.hash||"").slice(1)]?location.hash.slice(1):"restrictions"; dataLayer.push({event:"atlas_tab_view",atlas_tab:k,page_path:location.pathname+"#"+k,page_title:document.title+" | "+k}); } }catch(e){} }); show();
   // light/dark toggle: remembers the choice in this browser, otherwise follows the system setting
   const root=document.documentElement, btn=document.getElementById("themebtn"), mq=matchMedia("(prefers-color-scheme: dark)");
   let saved=null; try{ saved=localStorage.getItem("atlas-theme"); }catch(e){}
@@ -1837,3 +1857,31 @@ document.querySelectorAll("#view-howto [data-jump]").forEach(a=>a.addEventListen
   mq.addEventListener?.("change",sync); sync();
 })();
 </script>
+<div id="cookiebar" role="region" aria-label="Cookie notice" hidden>
+  <p>We use cookies for anonymous visitor statistics (Google Analytics). No ads, no selling data.</p>
+  <div class="cb-btns"><button type="button" data-c="denied">Decline</button><button type="button" data-c="granted" class="cb-ok">Accept</button></div>
+</div>
+<style>
+#cookiebar{position:fixed;left:12px;right:12px;bottom:12px;z-index:9999;max-width:760px;margin:0 auto;display:flex;align-items:center;gap:8px 16px;flex-wrap:wrap;padding:10px 14px;border:1px solid var(--line,#ccc);border-radius:10px;background:var(--surface,#fff);color:var(--ink,#111);box-shadow:0 4px 18px rgba(0,0,0,.15);font:13px/1.4 var(--f-body,system-ui,sans-serif)}
+#cookiebar[hidden]{display:none}
+#cookiebar p{margin:0;flex:1 1 260px}
+#cookiebar .cb-btns{display:flex;gap:8px}
+#cookiebar button{font:600 13px var(--f-body,system-ui,sans-serif);padding:6px 14px;border-radius:6px;border:1px solid var(--line,#ccc);background:transparent;color:var(--ink,#111);cursor:pointer}
+#cookiebar button.cb-ok{background:var(--link,#1a5fb4);border-color:var(--link,#1a5fb4);color:#fff}
+</style>
+<script>
+(function(){
+  var bar=document.getElementById("cookiebar"), saved=null;
+  try{ saved=localStorage.getItem("atlas-consent"); }catch(e){}
+  if(!saved) bar.hidden=false;
+  bar.addEventListener("click",function(e){
+    var c=e.target.getAttribute&&e.target.getAttribute("data-c"); if(!c) return;
+    try{ localStorage.setItem("atlas-consent",c); }catch(err){}
+    gtag("consent","update",{analytics_storage:c});
+    if(c==="granted") dataLayer.push({event:"atlas_consent_granted"});
+    bar.hidden=true;
+  });
+})();
+</script>
+</body>
+</html>
